@@ -1,3 +1,3 @@
-F:/Gitrepo/singleLeg2023/build/CMakeFiles/ellipseTrajectoryTest.dir
-F:/Gitrepo/singleLeg2023/build/CMakeFiles/edit_cache.dir
-F:/Gitrepo/singleLeg2023/build/CMakeFiles/rebuild_cache.dir
+/home/kaanh/Desktop/DoNotTouch/elliptical_trajectory_231021/build/CMakeFiles/rebuild_cache.dir
+/home/kaanh/Desktop/DoNotTouch/elliptical_trajectory_231021/build/CMakeFiles/edit_cache.dir
+/home/kaanh/Desktop/DoNotTouch/elliptical_trajectory_231021/build/CMakeFiles/ellipseTrajectoryTest.dir

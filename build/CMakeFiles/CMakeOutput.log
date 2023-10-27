@@ -28,28 +28,28 @@ The CXX compiler identification is GNU, found in "/home/kaanh/Desktop/DoNotTouch
 Determining if the C compiler works passed with the following output:
 Change Dir: /home/kaanh/Desktop/DoNotTouch/elliptical_trajectory_231021/build/CMakeFiles/CMakeTmp
 
-Run Build Command:"/usr/bin/make" "cmTC_a5773/fast"
-/usr/bin/make -f CMakeFiles/cmTC_a5773.dir/build.make CMakeFiles/cmTC_a5773.dir/build
+Run Build Command:"/usr/bin/make" "cmTC_b9449/fast"
+/usr/bin/make -f CMakeFiles/cmTC_b9449.dir/build.make CMakeFiles/cmTC_b9449.dir/build
 make[1]: Entering directory '/home/kaanh/Desktop/DoNotTouch/elliptical_trajectory_231021/build/CMakeFiles/CMakeTmp'
-Building C object CMakeFiles/cmTC_a5773.dir/testCCompiler.c.o
-/usr/bin/x86_64-linux-gnu-gcc-8    -o CMakeFiles/cmTC_a5773.dir/testCCompiler.c.o   -c /home/kaanh/Desktop/DoNotTouch/elliptical_trajectory_231021/build/CMakeFiles/CMakeTmp/testCCompiler.c
-Linking C executable cmTC_a5773
-/usr/cmake-3.12.3-Linux-x86_64/bin/cmake -E cmake_link_script CMakeFiles/cmTC_a5773.dir/link.txt --verbose=1
-/usr/bin/x86_64-linux-gnu-gcc-8      CMakeFiles/cmTC_a5773.dir/testCCompiler.c.o  -o cmTC_a5773 
+Building C object CMakeFiles/cmTC_b9449.dir/testCCompiler.c.o
+/usr/bin/x86_64-linux-gnu-gcc-8    -o CMakeFiles/cmTC_b9449.dir/testCCompiler.c.o   -c /home/kaanh/Desktop/DoNotTouch/elliptical_trajectory_231021/build/CMakeFiles/CMakeTmp/testCCompiler.c
+Linking C executable cmTC_b9449
+/usr/cmake-3.12.3-Linux-x86_64/bin/cmake -E cmake_link_script CMakeFiles/cmTC_b9449.dir/link.txt --verbose=1
+/usr/bin/x86_64-linux-gnu-gcc-8      CMakeFiles/cmTC_b9449.dir/testCCompiler.c.o  -o cmTC_b9449 
 make[1]: Leaving directory '/home/kaanh/Desktop/DoNotTouch/elliptical_trajectory_231021/build/CMakeFiles/CMakeTmp'
 
 
 Detecting C compiler ABI info compiled with the following output:
 Change Dir: /home/kaanh/Desktop/DoNotTouch/elliptical_trajectory_231021/build/CMakeFiles/CMakeTmp
 
-Run Build Command:"/usr/bin/make" "cmTC_b71c2/fast"
-/usr/bin/make -f CMakeFiles/cmTC_b71c2.dir/build.make CMakeFiles/cmTC_b71c2.dir/build
+Run Build Command:"/usr/bin/make" "cmTC_7a37a/fast"
+/usr/bin/make -f CMakeFiles/cmTC_7a37a.dir/build.make CMakeFiles/cmTC_7a37a.dir/build
 make[1]: Entering directory '/home/kaanh/Desktop/DoNotTouch/elliptical_trajectory_231021/build/CMakeFiles/CMakeTmp'
-Building C object CMakeFiles/cmTC_b71c2.dir/CMakeCCompilerABI.c.o
-/usr/bin/x86_64-linux-gnu-gcc-8    -o CMakeFiles/cmTC_b71c2.dir/CMakeCCompilerABI.c.o   -c /usr/cmake-3.12.3-Linux-x86_64/share/cmake-3.12/Modules/CMakeCCompilerABI.c
-Linking C executable cmTC_b71c2
-/usr/cmake-3.12.3-Linux-x86_64/bin/cmake -E cmake_link_script CMakeFiles/cmTC_b71c2.dir/link.txt --verbose=1
-/usr/bin/x86_64-linux-gnu-gcc-8     -v CMakeFiles/cmTC_b71c2.dir/CMakeCCompilerABI.c.o  -o cmTC_b71c2 
+Building C object CMakeFiles/cmTC_7a37a.dir/CMakeCCompilerABI.c.o
+/usr/bin/x86_64-linux-gnu-gcc-8    -o CMakeFiles/cmTC_7a37a.dir/CMakeCCompilerABI.c.o   -c /usr/cmake-3.12.3-Linux-x86_64/share/cmake-3.12/Modules/CMakeCCompilerABI.c
+Linking C executable cmTC_7a37a
+/usr/cmake-3.12.3-Linux-x86_64/bin/cmake -E cmake_link_script CMakeFiles/cmTC_7a37a.dir/link.txt --verbose=1
+/usr/bin/x86_64-linux-gnu-gcc-8     -v CMakeFiles/cmTC_7a37a.dir/CMakeCCompilerABI.c.o  -o cmTC_7a37a 
 Using built-in specs.
 COLLECT_GCC=/usr/bin/x86_64-linux-gnu-gcc-8
 COLLECT_LTO_WRAPPER=/usr/lib/gcc/x86_64-linux-gnu/8/lto-wrapper
@@ -61,9 +61,9 @@ Thread model: posix
 gcc version 8.4.0 (Ubuntu 8.4.0-1ubuntu1~16.04.1) 
 COMPILER_PATH=/usr/lib/gcc/x86_64-linux-gnu/8/:/usr/lib/gcc/x86_64-linux-gnu/8/:/usr/lib/gcc/x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/8/:/usr/lib/gcc/x86_64-linux-gnu/
 LIBRARY_PATH=/usr/lib/gcc/x86_64-linux-gnu/8/:/usr/lib/gcc/x86_64-linux-gnu/8/../../../x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/8/../../../../lib/:/lib/x86_64-linux-gnu/:/lib/../lib/:/usr/lib/x86_64-linux-gnu/:/usr/lib/../lib/:/usr/lib/gcc/x86_64-linux-gnu/8/../../../:/lib/:/usr/lib/
-COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_b71c2' '-mtune=generic' '-march=x86-64'
- /usr/lib/gcc/x86_64-linux-gnu/8/collect2 -plugin /usr/lib/gcc/x86_64-linux-gnu/8/liblto_plugin.so -plugin-opt=/usr/lib/gcc/x86_64-linux-gnu/8/lto-wrapper -plugin-opt=-fresolution=/tmp/ccF5LMJu.res -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc_s --build-id --eh-frame-hdr -m elf_x86_64 --hash-style=gnu --as-needed -dynamic-linker /lib64/ld-linux-x86-64.so.2 -z relro -o cmTC_b71c2 /usr/lib/gcc/x86_64-linux-gnu/8/../../../x86_64-linux-gnu/crt1.o /usr/lib/gcc/x86_64-linux-gnu/8/../../../x86_64-linux-gnu/crti.o /usr/lib/gcc/x86_64-linux-gnu/8/crtbegin.o -L/usr/lib/gcc/x86_64-linux-gnu/8 -L/usr/lib/gcc/x86_64-linux-gnu/8/../../../x86_64-linux-gnu -L/usr/lib/gcc/x86_64-linux-gnu/8/../../../../lib -L/lib/x86_64-linux-gnu -L/lib/../lib -L/usr/lib/x86_64-linux-gnu -L/usr/lib/../lib -L/usr/lib/gcc/x86_64-linux-gnu/8/../../.. CMakeFiles/cmTC_b71c2.dir/CMakeCCompilerABI.c.o -lgcc --push-state --as-needed -lgcc_s --pop-state -lc -lgcc --push-state --as-needed -lgcc_s --pop-state /usr/lib/gcc/x86_64-linux-gnu/8/crtend.o /usr/lib/gcc/x86_64-linux-gnu/8/../../../x86_64-linux-gnu/crtn.o
-COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_b71c2' '-mtune=generic' '-march=x86-64'
+COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_7a37a' '-mtune=generic' '-march=x86-64'
+ /usr/lib/gcc/x86_64-linux-gnu/8/collect2 -plugin /usr/lib/gcc/x86_64-linux-gnu/8/liblto_plugin.so -plugin-opt=/usr/lib/gcc/x86_64-linux-gnu/8/lto-wrapper -plugin-opt=-fresolution=/tmp/ccpRe0XS.res -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc_s --build-id --eh-frame-hdr -m elf_x86_64 --hash-style=gnu --as-needed -dynamic-linker /lib64/ld-linux-x86-64.so.2 -z relro -o cmTC_7a37a /usr/lib/gcc/x86_64-linux-gnu/8/../../../x86_64-linux-gnu/crt1.o /usr/lib/gcc/x86_64-linux-gnu/8/../../../x86_64-linux-gnu/crti.o /usr/lib/gcc/x86_64-linux-gnu/8/crtbegin.o -L/usr/lib/gcc/x86_64-linux-gnu/8 -L/usr/lib/gcc/x86_64-linux-gnu/8/../../../x86_64-linux-gnu -L/usr/lib/gcc/x86_64-linux-gnu/8/../../../../lib -L/lib/x86_64-linux-gnu -L/lib/../lib -L/usr/lib/x86_64-linux-gnu -L/usr/lib/../lib -L/usr/lib/gcc/x86_64-linux-gnu/8/../../.. CMakeFiles/cmTC_7a37a.dir/CMakeCCompilerABI.c.o -lgcc --push-state --as-needed -lgcc_s --pop-state -lc -lgcc --push-state --as-needed -lgcc_s --pop-state /usr/lib/gcc/x86_64-linux-gnu/8/crtend.o /usr/lib/gcc/x86_64-linux-gnu/8/../../../x86_64-linux-gnu/crtn.o
+COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_7a37a' '-mtune=generic' '-march=x86-64'
 make[1]: Leaving directory '/home/kaanh/Desktop/DoNotTouch/elliptical_trajectory_231021/build/CMakeFiles/CMakeTmp'
 
 
@@ -71,14 +71,14 @@ Parsed C implicit link information from above output:
   link line regex: [^( *|.*[/\])(ld|CMAKE_LINK_STARTFILE-NOTFOUND|([^/\]+-)?ld|collect2)[^/\]*( |$)]
   ignore line: [Change Dir: /home/kaanh/Desktop/DoNotTouch/elliptical_trajectory_231021/build/CMakeFiles/CMakeTmp]
   ignore line: []
-  ignore line: [Run Build Command:"/usr/bin/make" "cmTC_b71c2/fast"]
-  ignore line: [/usr/bin/make -f CMakeFiles/cmTC_b71c2.dir/build.make CMakeFiles/cmTC_b71c2.dir/build]
+  ignore line: [Run Build Command:"/usr/bin/make" "cmTC_7a37a/fast"]
+  ignore line: [/usr/bin/make -f CMakeFiles/cmTC_7a37a.dir/build.make CMakeFiles/cmTC_7a37a.dir/build]
   ignore line: [make[1]: Entering directory '/home/kaanh/Desktop/DoNotTouch/elliptical_trajectory_231021/build/CMakeFiles/CMakeTmp']
-  ignore line: [Building C object CMakeFiles/cmTC_b71c2.dir/CMakeCCompilerABI.c.o]
-  ignore line: [/usr/bin/x86_64-linux-gnu-gcc-8    -o CMakeFiles/cmTC_b71c2.dir/CMakeCCompilerABI.c.o   -c /usr/cmake-3.12.3-Linux-x86_64/share/cmake-3.12/Modules/CMakeCCompilerABI.c]
-  ignore line: [Linking C executable cmTC_b71c2]
-  ignore line: [/usr/cmake-3.12.3-Linux-x86_64/bin/cmake -E cmake_link_script CMakeFiles/cmTC_b71c2.dir/link.txt --verbose=1]
-  ignore line: [/usr/bin/x86_64-linux-gnu-gcc-8     -v CMakeFiles/cmTC_b71c2.dir/CMakeCCompilerABI.c.o  -o cmTC_b71c2 ]
+  ignore line: [Building C object CMakeFiles/cmTC_7a37a.dir/CMakeCCompilerABI.c.o]
+  ignore line: [/usr/bin/x86_64-linux-gnu-gcc-8    -o CMakeFiles/cmTC_7a37a.dir/CMakeCCompilerABI.c.o   -c /usr/cmake-3.12.3-Linux-x86_64/share/cmake-3.12/Modules/CMakeCCompilerABI.c]
+  ignore line: [Linking C executable cmTC_7a37a]
+  ignore line: [/usr/cmake-3.12.3-Linux-x86_64/bin/cmake -E cmake_link_script CMakeFiles/cmTC_7a37a.dir/link.txt --verbose=1]
+  ignore line: [/usr/bin/x86_64-linux-gnu-gcc-8     -v CMakeFiles/cmTC_7a37a.dir/CMakeCCompilerABI.c.o  -o cmTC_7a37a ]
   ignore line: [Using built-in specs.]
   ignore line: [COLLECT_GCC=/usr/bin/x86_64-linux-gnu-gcc-8]
   ignore line: [COLLECT_LTO_WRAPPER=/usr/lib/gcc/x86_64-linux-gnu/8/lto-wrapper]
@@ -90,13 +90,13 @@ Parsed C implicit link information from above output:
   ignore line: [gcc version 8.4.0 (Ubuntu 8.4.0-1ubuntu1~16.04.1) ]
   ignore line: [COMPILER_PATH=/usr/lib/gcc/x86_64-linux-gnu/8/:/usr/lib/gcc/x86_64-linux-gnu/8/:/usr/lib/gcc/x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/8/:/usr/lib/gcc/x86_64-linux-gnu/]
   ignore line: [LIBRARY_PATH=/usr/lib/gcc/x86_64-linux-gnu/8/:/usr/lib/gcc/x86_64-linux-gnu/8/../../../x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/8/../../../../lib/:/lib/x86_64-linux-gnu/:/lib/../lib/:/usr/lib/x86_64-linux-gnu/:/usr/lib/../lib/:/usr/lib/gcc/x86_64-linux-gnu/8/../../../:/lib/:/usr/lib/]
-  ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_b71c2' '-mtune=generic' '-march=x86-64']
-  link line: [ /usr/lib/gcc/x86_64-linux-gnu/8/collect2 -plugin /usr/lib/gcc/x86_64-linux-gnu/8/liblto_plugin.so -plugin-opt=/usr/lib/gcc/x86_64-linux-gnu/8/lto-wrapper -plugin-opt=-fresolution=/tmp/ccF5LMJu.res -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc_s --build-id --eh-frame-hdr -m elf_x86_64 --hash-style=gnu --as-needed -dynamic-linker /lib64/ld-linux-x86-64.so.2 -z relro -o cmTC_b71c2 /usr/lib/gcc/x86_64-linux-gnu/8/../../../x86_64-linux-gnu/crt1.o /usr/lib/gcc/x86_64-linux-gnu/8/../../../x86_64-linux-gnu/crti.o /usr/lib/gcc/x86_64-linux-gnu/8/crtbegin.o -L/usr/lib/gcc/x86_64-linux-gnu/8 -L/usr/lib/gcc/x86_64-linux-gnu/8/../../../x86_64-linux-gnu -L/usr/lib/gcc/x86_64-linux-gnu/8/../../../../lib -L/lib/x86_64-linux-gnu -L/lib/../lib -L/usr/lib/x86_64-linux-gnu -L/usr/lib/../lib -L/usr/lib/gcc/x86_64-linux-gnu/8/../../.. CMakeFiles/cmTC_b71c2.dir/CMakeCCompilerABI.c.o -lgcc --push-state --as-needed -lgcc_s --pop-state -lc -lgcc --push-state --as-needed -lgcc_s --pop-state /usr/lib/gcc/x86_64-linux-gnu/8/crtend.o /usr/lib/gcc/x86_64-linux-gnu/8/../../../x86_64-linux-gnu/crtn.o]
+  ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_7a37a' '-mtune=generic' '-march=x86-64']
+  link line: [ /usr/lib/gcc/x86_64-linux-gnu/8/collect2 -plugin /usr/lib/gcc/x86_64-linux-gnu/8/liblto_plugin.so -plugin-opt=/usr/lib/gcc/x86_64-linux-gnu/8/lto-wrapper -plugin-opt=-fresolution=/tmp/ccpRe0XS.res -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc_s --build-id --eh-frame-hdr -m elf_x86_64 --hash-style=gnu --as-needed -dynamic-linker /lib64/ld-linux-x86-64.so.2 -z relro -o cmTC_7a37a /usr/lib/gcc/x86_64-linux-gnu/8/../../../x86_64-linux-gnu/crt1.o /usr/lib/gcc/x86_64-linux-gnu/8/../../../x86_64-linux-gnu/crti.o /usr/lib/gcc/x86_64-linux-gnu/8/crtbegin.o -L/usr/lib/gcc/x86_64-linux-gnu/8 -L/usr/lib/gcc/x86_64-linux-gnu/8/../../../x86_64-linux-gnu -L/usr/lib/gcc/x86_64-linux-gnu/8/../../../../lib -L/lib/x86_64-linux-gnu -L/lib/../lib -L/usr/lib/x86_64-linux-gnu -L/usr/lib/../lib -L/usr/lib/gcc/x86_64-linux-gnu/8/../../.. CMakeFiles/cmTC_7a37a.dir/CMakeCCompilerABI.c.o -lgcc --push-state --as-needed -lgcc_s --pop-state -lc -lgcc --push-state --as-needed -lgcc_s --pop-state /usr/lib/gcc/x86_64-linux-gnu/8/crtend.o /usr/lib/gcc/x86_64-linux-gnu/8/../../../x86_64-linux-gnu/crtn.o]
     arg [/usr/lib/gcc/x86_64-linux-gnu/8/collect2] ==> ignore
     arg [-plugin] ==> ignore
     arg [/usr/lib/gcc/x86_64-linux-gnu/8/liblto_plugin.so] ==> ignore
     arg [-plugin-opt=/usr/lib/gcc/x86_64-linux-gnu/8/lto-wrapper] ==> ignore
-    arg [-plugin-opt=-fresolution=/tmp/ccF5LMJu.res] ==> ignore
+    arg [-plugin-opt=-fresolution=/tmp/ccpRe0XS.res] ==> ignore
     arg [-plugin-opt=-pass-through=-lgcc] ==> ignore
     arg [-plugin-opt=-pass-through=-lgcc_s] ==> ignore
     arg [-plugin-opt=-pass-through=-lc] ==> ignore
@@ -112,7 +112,7 @@ Parsed C implicit link information from above output:
     arg [/lib64/ld-linux-x86-64.so.2] ==> ignore
     arg [-zrelro] ==> ignore
     arg [-o] ==> ignore
-    arg [cmTC_b71c2] ==> ignore
+    arg [cmTC_7a37a] ==> ignore
     arg [/usr/lib/gcc/x86_64-linux-gnu/8/../../../x86_64-linux-gnu/crt1.o] ==> ignore
     arg [/usr/lib/gcc/x86_64-linux-gnu/8/../../../x86_64-linux-gnu/crti.o] ==> ignore
     arg [/usr/lib/gcc/x86_64-linux-gnu/8/crtbegin.o] ==> ignore
@@ -124,7 +124,7 @@ Parsed C implicit link information from above output:
     arg [-L/usr/lib/x86_64-linux-gnu] ==> dir [/usr/lib/x86_64-linux-gnu]
     arg [-L/usr/lib/../lib] ==> dir [/usr/lib/../lib]
     arg [-L/usr/lib/gcc/x86_64-linux-gnu/8/../../..] ==> dir [/usr/lib/gcc/x86_64-linux-gnu/8/../../..]
-    arg [CMakeFiles/cmTC_b71c2.dir/CMakeCCompilerABI.c.o] ==> ignore
+    arg [CMakeFiles/cmTC_7a37a.dir/CMakeCCompilerABI.c.o] ==> ignore
     arg [-lgcc] ==> lib [gcc]
     arg [--push-state] ==> ignore
     arg [--as-needed] ==> ignore
@@ -156,14 +156,14 @@ Parsed C implicit link information from above output:
 Detecting C [-std=c11] compiler features compiled with the following output:
 Change Dir: /home/kaanh/Desktop/DoNotTouch/elliptical_trajectory_231021/build/CMakeFiles/CMakeTmp
 
-Run Build Command:"/usr/bin/make" "cmTC_9ed20/fast"
-/usr/bin/make -f CMakeFiles/cmTC_9ed20.dir/build.make CMakeFiles/cmTC_9ed20.dir/build
+Run Build Command:"/usr/bin/make" "cmTC_bca8b/fast"
+/usr/bin/make -f CMakeFiles/cmTC_bca8b.dir/build.make CMakeFiles/cmTC_bca8b.dir/build
 make[1]: Entering directory '/home/kaanh/Desktop/DoNotTouch/elliptical_trajectory_231021/build/CMakeFiles/CMakeTmp'
-Building C object CMakeFiles/cmTC_9ed20.dir/feature_tests.c.o
-/usr/bin/x86_64-linux-gnu-gcc-8   -std=c11 -o CMakeFiles/cmTC_9ed20.dir/feature_tests.c.o   -c /home/kaanh/Desktop/DoNotTouch/elliptical_trajectory_231021/build/CMakeFiles/feature_tests.c
-Linking C executable cmTC_9ed20
-/usr/cmake-3.12.3-Linux-x86_64/bin/cmake -E cmake_link_script CMakeFiles/cmTC_9ed20.dir/link.txt --verbose=1
-/usr/bin/x86_64-linux-gnu-gcc-8      CMakeFiles/cmTC_9ed20.dir/feature_tests.c.o  -o cmTC_9ed20 
+Building C object CMakeFiles/cmTC_bca8b.dir/feature_tests.c.o
+/usr/bin/x86_64-linux-gnu-gcc-8   -std=c11 -o CMakeFiles/cmTC_bca8b.dir/feature_tests.c.o   -c /home/kaanh/Desktop/DoNotTouch/elliptical_trajectory_231021/build/CMakeFiles/feature_tests.c
+Linking C executable cmTC_bca8b
+/usr/cmake-3.12.3-Linux-x86_64/bin/cmake -E cmake_link_script CMakeFiles/cmTC_bca8b.dir/link.txt --verbose=1
+/usr/bin/x86_64-linux-gnu-gcc-8      CMakeFiles/cmTC_bca8b.dir/feature_tests.c.o  -o cmTC_bca8b 
 make[1]: Leaving directory '/home/kaanh/Desktop/DoNotTouch/elliptical_trajectory_231021/build/CMakeFiles/CMakeTmp'
 
 
@@ -176,14 +176,14 @@ make[1]: Leaving directory '/home/kaanh/Desktop/DoNotTouch/elliptical_trajectory
 Detecting C [-std=c99] compiler features compiled with the following output:
 Change Dir: /home/kaanh/Desktop/DoNotTouch/elliptical_trajectory_231021/build/CMakeFiles/CMakeTmp
 
-Run Build Command:"/usr/bin/make" "cmTC_670c7/fast"
-/usr/bin/make -f CMakeFiles/cmTC_670c7.dir/build.make CMakeFiles/cmTC_670c7.dir/build
+Run Build Command:"/usr/bin/make" "cmTC_bae9d/fast"
+/usr/bin/make -f CMakeFiles/cmTC_bae9d.dir/build.make CMakeFiles/cmTC_bae9d.dir/build
 make[1]: Entering directory '/home/kaanh/Desktop/DoNotTouch/elliptical_trajectory_231021/build/CMakeFiles/CMakeTmp'
-Building C object CMakeFiles/cmTC_670c7.dir/feature_tests.c.o
-/usr/bin/x86_64-linux-gnu-gcc-8   -std=c99 -o CMakeFiles/cmTC_670c7.dir/feature_tests.c.o   -c /home/kaanh/Desktop/DoNotTouch/elliptical_trajectory_231021/build/CMakeFiles/feature_tests.c
-Linking C executable cmTC_670c7
-/usr/cmake-3.12.3-Linux-x86_64/bin/cmake -E cmake_link_script CMakeFiles/cmTC_670c7.dir/link.txt --verbose=1
-/usr/bin/x86_64-linux-gnu-gcc-8      CMakeFiles/cmTC_670c7.dir/feature_tests.c.o  -o cmTC_670c7 
+Building C object CMakeFiles/cmTC_bae9d.dir/feature_tests.c.o
+/usr/bin/x86_64-linux-gnu-gcc-8   -std=c99 -o CMakeFiles/cmTC_bae9d.dir/feature_tests.c.o   -c /home/kaanh/Desktop/DoNotTouch/elliptical_trajectory_231021/build/CMakeFiles/feature_tests.c
+Linking C executable cmTC_bae9d
+/usr/cmake-3.12.3-Linux-x86_64/bin/cmake -E cmake_link_script CMakeFiles/cmTC_bae9d.dir/link.txt --verbose=1
+/usr/bin/x86_64-linux-gnu-gcc-8      CMakeFiles/cmTC_bae9d.dir/feature_tests.c.o  -o cmTC_bae9d 
 make[1]: Leaving directory '/home/kaanh/Desktop/DoNotTouch/elliptical_trajectory_231021/build/CMakeFiles/CMakeTmp'
 
 
@@ -196,14 +196,14 @@ make[1]: Leaving directory '/home/kaanh/Desktop/DoNotTouch/elliptical_trajectory
 Detecting C [-std=c90] compiler features compiled with the following output:
 Change Dir: /home/kaanh/Desktop/DoNotTouch/elliptical_trajectory_231021/build/CMakeFiles/CMakeTmp
 
-Run Build Command:"/usr/bin/make" "cmTC_12656/fast"
-/usr/bin/make -f CMakeFiles/cmTC_12656.dir/build.make CMakeFiles/cmTC_12656.dir/build
+Run Build Command:"/usr/bin/make" "cmTC_d3bed/fast"
+/usr/bin/make -f CMakeFiles/cmTC_d3bed.dir/build.make CMakeFiles/cmTC_d3bed.dir/build
 make[1]: Entering directory '/home/kaanh/Desktop/DoNotTouch/elliptical_trajectory_231021/build/CMakeFiles/CMakeTmp'
-Building C object CMakeFiles/cmTC_12656.dir/feature_tests.c.o
-/usr/bin/x86_64-linux-gnu-gcc-8   -std=c90 -o CMakeFiles/cmTC_12656.dir/feature_tests.c.o   -c /home/kaanh/Desktop/DoNotTouch/elliptical_trajectory_231021/build/CMakeFiles/feature_tests.c
-Linking C executable cmTC_12656
-/usr/cmake-3.12.3-Linux-x86_64/bin/cmake -E cmake_link_script CMakeFiles/cmTC_12656.dir/link.txt --verbose=1
-/usr/bin/x86_64-linux-gnu-gcc-8      CMakeFiles/cmTC_12656.dir/feature_tests.c.o  -o cmTC_12656 
+Building C object CMakeFiles/cmTC_d3bed.dir/feature_tests.c.o
+/usr/bin/x86_64-linux-gnu-gcc-8   -std=c90 -o CMakeFiles/cmTC_d3bed.dir/feature_tests.c.o   -c /home/kaanh/Desktop/DoNotTouch/elliptical_trajectory_231021/build/CMakeFiles/feature_tests.c
+Linking C executable cmTC_d3bed
+/usr/cmake-3.12.3-Linux-x86_64/bin/cmake -E cmake_link_script CMakeFiles/cmTC_d3bed.dir/link.txt --verbose=1
+/usr/bin/x86_64-linux-gnu-gcc-8      CMakeFiles/cmTC_d3bed.dir/feature_tests.c.o  -o cmTC_d3bed 
 make[1]: Leaving directory '/home/kaanh/Desktop/DoNotTouch/elliptical_trajectory_231021/build/CMakeFiles/CMakeTmp'
 
 
@@ -214,28 +214,28 @@ make[1]: Leaving directory '/home/kaanh/Desktop/DoNotTouch/elliptical_trajectory
 Determining if the CXX compiler works passed with the following output:
 Change Dir: /home/kaanh/Desktop/DoNotTouch/elliptical_trajectory_231021/build/CMakeFiles/CMakeTmp
 
-Run Build Command:"/usr/bin/make" "cmTC_ce5f2/fast"
-/usr/bin/make -f CMakeFiles/cmTC_ce5f2.dir/build.make CMakeFiles/cmTC_ce5f2.dir/build
+Run Build Command:"/usr/bin/make" "cmTC_920e2/fast"
+/usr/bin/make -f CMakeFiles/cmTC_920e2.dir/build.make CMakeFiles/cmTC_920e2.dir/build
 make[1]: Entering directory '/home/kaanh/Desktop/DoNotTouch/elliptical_trajectory_231021/build/CMakeFiles/CMakeTmp'
-Building CXX object CMakeFiles/cmTC_ce5f2.dir/testCXXCompiler.cxx.o
-/usr/bin/x86_64-linux-gnu-g++-8     -o CMakeFiles/cmTC_ce5f2.dir/testCXXCompiler.cxx.o -c /home/kaanh/Desktop/DoNotTouch/elliptical_trajectory_231021/build/CMakeFiles/CMakeTmp/testCXXCompiler.cxx
-Linking CXX executable cmTC_ce5f2
-/usr/cmake-3.12.3-Linux-x86_64/bin/cmake -E cmake_link_script CMakeFiles/cmTC_ce5f2.dir/link.txt --verbose=1
-/usr/bin/x86_64-linux-gnu-g++-8       CMakeFiles/cmTC_ce5f2.dir/testCXXCompiler.cxx.o  -o cmTC_ce5f2 
+Building CXX object CMakeFiles/cmTC_920e2.dir/testCXXCompiler.cxx.o
+/usr/bin/x86_64-linux-gnu-g++-8     -o CMakeFiles/cmTC_920e2.dir/testCXXCompiler.cxx.o -c /home/kaanh/Desktop/DoNotTouch/elliptical_trajectory_231021/build/CMakeFiles/CMakeTmp/testCXXCompiler.cxx
+Linking CXX executable cmTC_920e2
+/usr/cmake-3.12.3-Linux-x86_64/bin/cmake -E cmake_link_script CMakeFiles/cmTC_920e2.dir/link.txt --verbose=1
+/usr/bin/x86_64-linux-gnu-g++-8       CMakeFiles/cmTC_920e2.dir/testCXXCompiler.cxx.o  -o cmTC_920e2 
 make[1]: Leaving directory '/home/kaanh/Desktop/DoNotTouch/elliptical_trajectory_231021/build/CMakeFiles/CMakeTmp'
 
 
 Detecting CXX compiler ABI info compiled with the following output:
 Change Dir: /home/kaanh/Desktop/DoNotTouch/elliptical_trajectory_231021/build/CMakeFiles/CMakeTmp
 
-Run Build Command:"/usr/bin/make" "cmTC_9b537/fast"
-/usr/bin/make -f CMakeFiles/cmTC_9b537.dir/build.make CMakeFiles/cmTC_9b537.dir/build
+Run Build Command:"/usr/bin/make" "cmTC_a8f0f/fast"
+/usr/bin/make -f CMakeFiles/cmTC_a8f0f.dir/build.make CMakeFiles/cmTC_a8f0f.dir/build
 make[1]: Entering directory '/home/kaanh/Desktop/DoNotTouch/elliptical_trajectory_231021/build/CMakeFiles/CMakeTmp'
-Building CXX object CMakeFiles/cmTC_9b537.dir/CMakeCXXCompilerABI.cpp.o
-/usr/bin/x86_64-linux-gnu-g++-8     -o CMakeFiles/cmTC_9b537.dir/CMakeCXXCompilerABI.cpp.o -c /usr/cmake-3.12.3-Linux-x86_64/share/cmake-3.12/Modules/CMakeCXXCompilerABI.cpp
-Linking CXX executable cmTC_9b537
-/usr/cmake-3.12.3-Linux-x86_64/bin/cmake -E cmake_link_script CMakeFiles/cmTC_9b537.dir/link.txt --verbose=1
-/usr/bin/x86_64-linux-gnu-g++-8      -v CMakeFiles/cmTC_9b537.dir/CMakeCXXCompilerABI.cpp.o  -o cmTC_9b537 
+Building CXX object CMakeFiles/cmTC_a8f0f.dir/CMakeCXXCompilerABI.cpp.o
+/usr/bin/x86_64-linux-gnu-g++-8     -o CMakeFiles/cmTC_a8f0f.dir/CMakeCXXCompilerABI.cpp.o -c /usr/cmake-3.12.3-Linux-x86_64/share/cmake-3.12/Modules/CMakeCXXCompilerABI.cpp
+Linking CXX executable cmTC_a8f0f
+/usr/cmake-3.12.3-Linux-x86_64/bin/cmake -E cmake_link_script CMakeFiles/cmTC_a8f0f.dir/link.txt --verbose=1
+/usr/bin/x86_64-linux-gnu-g++-8      -v CMakeFiles/cmTC_a8f0f.dir/CMakeCXXCompilerABI.cpp.o  -o cmTC_a8f0f 
 Using built-in specs.
 COLLECT_GCC=/usr/bin/x86_64-linux-gnu-g++-8
 COLLECT_LTO_WRAPPER=/usr/lib/gcc/x86_64-linux-gnu/8/lto-wrapper
@@ -247,9 +247,9 @@ Thread model: posix
 gcc version 8.4.0 (Ubuntu 8.4.0-1ubuntu1~16.04.1) 
 COMPILER_PATH=/usr/lib/gcc/x86_64-linux-gnu/8/:/usr/lib/gcc/x86_64-linux-gnu/8/:/usr/lib/gcc/x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/8/:/usr/lib/gcc/x86_64-linux-gnu/
 LIBRARY_PATH=/usr/lib/gcc/x86_64-linux-gnu/8/:/usr/lib/gcc/x86_64-linux-gnu/8/../../../x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/8/../../../../lib/:/lib/x86_64-linux-gnu/:/lib/../lib/:/usr/lib/x86_64-linux-gnu/:/usr/lib/../lib/:/usr/lib/gcc/x86_64-linux-gnu/8/../../../:/lib/:/usr/lib/
-COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_9b537' '-shared-libgcc' '-mtune=generic' '-march=x86-64'
- /usr/lib/gcc/x86_64-linux-gnu/8/collect2 -plugin /usr/lib/gcc/x86_64-linux-gnu/8/liblto_plugin.so -plugin-opt=/usr/lib/gcc/x86_64-linux-gnu/8/lto-wrapper -plugin-opt=-fresolution=/tmp/ccJpCZA3.res -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc --build-id --eh-frame-hdr -m elf_x86_64 --hash-style=gnu --as-needed -dynamic-linker /lib64/ld-linux-x86-64.so.2 -z relro -o cmTC_9b537 /usr/lib/gcc/x86_64-linux-gnu/8/../../../x86_64-linux-gnu/crt1.o /usr/lib/gcc/x86_64-linux-gnu/8/../../../x86_64-linux-gnu/crti.o /usr/lib/gcc/x86_64-linux-gnu/8/crtbegin.o -L/usr/lib/gcc/x86_64-linux-gnu/8 -L/usr/lib/gcc/x86_64-linux-gnu/8/../../../x86_64-linux-gnu -L/usr/lib/gcc/x86_64-linux-gnu/8/../../../../lib -L/lib/x86_64-linux-gnu -L/lib/../lib -L/usr/lib/x86_64-linux-gnu -L/usr/lib/../lib -L/usr/lib/gcc/x86_64-linux-gnu/8/../../.. CMakeFiles/cmTC_9b537.dir/CMakeCXXCompilerABI.cpp.o -lstdc++ -lm -lgcc_s -lgcc -lc -lgcc_s -lgcc /usr/lib/gcc/x86_64-linux-gnu/8/crtend.o /usr/lib/gcc/x86_64-linux-gnu/8/../../../x86_64-linux-gnu/crtn.o
-COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_9b537' '-shared-libgcc' '-mtune=generic' '-march=x86-64'
+COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_a8f0f' '-shared-libgcc' '-mtune=generic' '-march=x86-64'
+ /usr/lib/gcc/x86_64-linux-gnu/8/collect2 -plugin /usr/lib/gcc/x86_64-linux-gnu/8/liblto_plugin.so -plugin-opt=/usr/lib/gcc/x86_64-linux-gnu/8/lto-wrapper -plugin-opt=-fresolution=/tmp/ccvoO7mf.res -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc --build-id --eh-frame-hdr -m elf_x86_64 --hash-style=gnu --as-needed -dynamic-linker /lib64/ld-linux-x86-64.so.2 -z relro -o cmTC_a8f0f /usr/lib/gcc/x86_64-linux-gnu/8/../../../x86_64-linux-gnu/crt1.o /usr/lib/gcc/x86_64-linux-gnu/8/../../../x86_64-linux-gnu/crti.o /usr/lib/gcc/x86_64-linux-gnu/8/crtbegin.o -L/usr/lib/gcc/x86_64-linux-gnu/8 -L/usr/lib/gcc/x86_64-linux-gnu/8/../../../x86_64-linux-gnu -L/usr/lib/gcc/x86_64-linux-gnu/8/../../../../lib -L/lib/x86_64-linux-gnu -L/lib/../lib -L/usr/lib/x86_64-linux-gnu -L/usr/lib/../lib -L/usr/lib/gcc/x86_64-linux-gnu/8/../../.. CMakeFiles/cmTC_a8f0f.dir/CMakeCXXCompilerABI.cpp.o -lstdc++ -lm -lgcc_s -lgcc -lc -lgcc_s -lgcc /usr/lib/gcc/x86_64-linux-gnu/8/crtend.o /usr/lib/gcc/x86_64-linux-gnu/8/../../../x86_64-linux-gnu/crtn.o
+COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_a8f0f' '-shared-libgcc' '-mtune=generic' '-march=x86-64'
 make[1]: Leaving directory '/home/kaanh/Desktop/DoNotTouch/elliptical_trajectory_231021/build/CMakeFiles/CMakeTmp'
 
 
@@ -257,14 +257,14 @@ Parsed CXX implicit link information from above output:
   link line regex: [^( *|.*[/\])(ld|CMAKE_LINK_STARTFILE-NOTFOUND|([^/\]+-)?ld|collect2)[^/\]*( |$)]
   ignore line: [Change Dir: /home/kaanh/Desktop/DoNotTouch/elliptical_trajectory_231021/build/CMakeFiles/CMakeTmp]
   ignore line: []
-  ignore line: [Run Build Command:"/usr/bin/make" "cmTC_9b537/fast"]
-  ignore line: [/usr/bin/make -f CMakeFiles/cmTC_9b537.dir/build.make CMakeFiles/cmTC_9b537.dir/build]
+  ignore line: [Run Build Command:"/usr/bin/make" "cmTC_a8f0f/fast"]
+  ignore line: [/usr/bin/make -f CMakeFiles/cmTC_a8f0f.dir/build.make CMakeFiles/cmTC_a8f0f.dir/build]
   ignore line: [make[1]: Entering directory '/home/kaanh/Desktop/DoNotTouch/elliptical_trajectory_231021/build/CMakeFiles/CMakeTmp']
-  ignore line: [Building CXX object CMakeFiles/cmTC_9b537.dir/CMakeCXXCompilerABI.cpp.o]
-  ignore line: [/usr/bin/x86_64-linux-gnu-g++-8     -o CMakeFiles/cmTC_9b537.dir/CMakeCXXCompilerABI.cpp.o -c /usr/cmake-3.12.3-Linux-x86_64/share/cmake-3.12/Modules/CMakeCXXCompilerABI.cpp]
-  ignore line: [Linking CXX executable cmTC_9b537]
-  ignore line: [/usr/cmake-3.12.3-Linux-x86_64/bin/cmake -E cmake_link_script CMakeFiles/cmTC_9b537.dir/link.txt --verbose=1]
-  ignore line: [/usr/bin/x86_64-linux-gnu-g++-8      -v CMakeFiles/cmTC_9b537.dir/CMakeCXXCompilerABI.cpp.o  -o cmTC_9b537 ]
+  ignore line: [Building CXX object CMakeFiles/cmTC_a8f0f.dir/CMakeCXXCompilerABI.cpp.o]
+  ignore line: [/usr/bin/x86_64-linux-gnu-g++-8     -o CMakeFiles/cmTC_a8f0f.dir/CMakeCXXCompilerABI.cpp.o -c /usr/cmake-3.12.3-Linux-x86_64/share/cmake-3.12/Modules/CMakeCXXCompilerABI.cpp]
+  ignore line: [Linking CXX executable cmTC_a8f0f]
+  ignore line: [/usr/cmake-3.12.3-Linux-x86_64/bin/cmake -E cmake_link_script CMakeFiles/cmTC_a8f0f.dir/link.txt --verbose=1]
+  ignore line: [/usr/bin/x86_64-linux-gnu-g++-8      -v CMakeFiles/cmTC_a8f0f.dir/CMakeCXXCompilerABI.cpp.o  -o cmTC_a8f0f ]
   ignore line: [Using built-in specs.]
   ignore line: [COLLECT_GCC=/usr/bin/x86_64-linux-gnu-g++-8]
   ignore line: [COLLECT_LTO_WRAPPER=/usr/lib/gcc/x86_64-linux-gnu/8/lto-wrapper]
@@ -276,13 +276,13 @@ Parsed CXX implicit link information from above output:
   ignore line: [gcc version 8.4.0 (Ubuntu 8.4.0-1ubuntu1~16.04.1) ]
   ignore line: [COMPILER_PATH=/usr/lib/gcc/x86_64-linux-gnu/8/:/usr/lib/gcc/x86_64-linux-gnu/8/:/usr/lib/gcc/x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/8/:/usr/lib/gcc/x86_64-linux-gnu/]
   ignore line: [LIBRARY_PATH=/usr/lib/gcc/x86_64-linux-gnu/8/:/usr/lib/gcc/x86_64-linux-gnu/8/../../../x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/8/../../../../lib/:/lib/x86_64-linux-gnu/:/lib/../lib/:/usr/lib/x86_64-linux-gnu/:/usr/lib/../lib/:/usr/lib/gcc/x86_64-linux-gnu/8/../../../:/lib/:/usr/lib/]
-  ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_9b537' '-shared-libgcc' '-mtune=generic' '-march=x86-64']
-  link line: [ /usr/lib/gcc/x86_64-linux-gnu/8/collect2 -plugin /usr/lib/gcc/x86_64-linux-gnu/8/liblto_plugin.so -plugin-opt=/usr/lib/gcc/x86_64-linux-gnu/8/lto-wrapper -plugin-opt=-fresolution=/tmp/ccJpCZA3.res -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc --build-id --eh-frame-hdr -m elf_x86_64 --hash-style=gnu --as-needed -dynamic-linker /lib64/ld-linux-x86-64.so.2 -z relro -o cmTC_9b537 /usr/lib/gcc/x86_64-linux-gnu/8/../../../x86_64-linux-gnu/crt1.o /usr/lib/gcc/x86_64-linux-gnu/8/../../../x86_64-linux-gnu/crti.o /usr/lib/gcc/x86_64-linux-gnu/8/crtbegin.o -L/usr/lib/gcc/x86_64-linux-gnu/8 -L/usr/lib/gcc/x86_64-linux-gnu/8/../../../x86_64-linux-gnu -L/usr/lib/gcc/x86_64-linux-gnu/8/../../../../lib -L/lib/x86_64-linux-gnu -L/lib/../lib -L/usr/lib/x86_64-linux-gnu -L/usr/lib/../lib -L/usr/lib/gcc/x86_64-linux-gnu/8/../../.. CMakeFiles/cmTC_9b537.dir/CMakeCXXCompilerABI.cpp.o -lstdc++ -lm -lgcc_s -lgcc -lc -lgcc_s -lgcc /usr/lib/gcc/x86_64-linux-gnu/8/crtend.o /usr/lib/gcc/x86_64-linux-gnu/8/../../../x86_64-linux-gnu/crtn.o]
+  ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_a8f0f' '-shared-libgcc' '-mtune=generic' '-march=x86-64']
+  link line: [ /usr/lib/gcc/x86_64-linux-gnu/8/collect2 -plugin /usr/lib/gcc/x86_64-linux-gnu/8/liblto_plugin.so -plugin-opt=/usr/lib/gcc/x86_64-linux-gnu/8/lto-wrapper -plugin-opt=-fresolution=/tmp/ccvoO7mf.res -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc --build-id --eh-frame-hdr -m elf_x86_64 --hash-style=gnu --as-needed -dynamic-linker /lib64/ld-linux-x86-64.so.2 -z relro -o cmTC_a8f0f /usr/lib/gcc/x86_64-linux-gnu/8/../../../x86_64-linux-gnu/crt1.o /usr/lib/gcc/x86_64-linux-gnu/8/../../../x86_64-linux-gnu/crti.o /usr/lib/gcc/x86_64-linux-gnu/8/crtbegin.o -L/usr/lib/gcc/x86_64-linux-gnu/8 -L/usr/lib/gcc/x86_64-linux-gnu/8/../../../x86_64-linux-gnu -L/usr/lib/gcc/x86_64-linux-gnu/8/../../../../lib -L/lib/x86_64-linux-gnu -L/lib/../lib -L/usr/lib/x86_64-linux-gnu -L/usr/lib/../lib -L/usr/lib/gcc/x86_64-linux-gnu/8/../../.. CMakeFiles/cmTC_a8f0f.dir/CMakeCXXCompilerABI.cpp.o -lstdc++ -lm -lgcc_s -lgcc -lc -lgcc_s -lgcc /usr/lib/gcc/x86_64-linux-gnu/8/crtend.o /usr/lib/gcc/x86_64-linux-gnu/8/../../../x86_64-linux-gnu/crtn.o]
     arg [/usr/lib/gcc/x86_64-linux-gnu/8/collect2] ==> ignore
     arg [-plugin] ==> ignore
     arg [/usr/lib/gcc/x86_64-linux-gnu/8/liblto_plugin.so] ==> ignore
     arg [-plugin-opt=/usr/lib/gcc/x86_64-linux-gnu/8/lto-wrapper] ==> ignore
-    arg [-plugin-opt=-fresolution=/tmp/ccJpCZA3.res] ==> ignore
+    arg [-plugin-opt=-fresolution=/tmp/ccvoO7mf.res] ==> ignore
     arg [-plugin-opt=-pass-through=-lgcc_s] ==> ignore
     arg [-plugin-opt=-pass-through=-lgcc] ==> ignore
     arg [-plugin-opt=-pass-through=-lc] ==> ignore
@@ -298,7 +298,7 @@ Parsed CXX implicit link information from above output:
     arg [/lib64/ld-linux-x86-64.so.2] ==> ignore
     arg [-zrelro] ==> ignore
     arg [-o] ==> ignore
-    arg [cmTC_9b537] ==> ignore
+    arg [cmTC_a8f0f] ==> ignore
     arg [/usr/lib/gcc/x86_64-linux-gnu/8/../../../x86_64-linux-gnu/crt1.o] ==> ignore
     arg [/usr/lib/gcc/x86_64-linux-gnu/8/../../../x86_64-linux-gnu/crti.o] ==> ignore
     arg [/usr/lib/gcc/x86_64-linux-gnu/8/crtbegin.o] ==> ignore
@@ -310,7 +310,7 @@ Parsed CXX implicit link information from above output:
     arg [-L/usr/lib/x86_64-linux-gnu] ==> dir [/usr/lib/x86_64-linux-gnu]
     arg [-L/usr/lib/../lib] ==> dir [/usr/lib/../lib]
     arg [-L/usr/lib/gcc/x86_64-linux-gnu/8/../../..] ==> dir [/usr/lib/gcc/x86_64-linux-gnu/8/../../..]
-    arg [CMakeFiles/cmTC_9b537.dir/CMakeCXXCompilerABI.cpp.o] ==> ignore
+    arg [CMakeFiles/cmTC_a8f0f.dir/CMakeCXXCompilerABI.cpp.o] ==> ignore
     arg [-lstdc++] ==> lib [stdc++]
     arg [-lm] ==> lib [m]
     arg [-lgcc_s] ==> lib [gcc_s]
@@ -338,14 +338,14 @@ Parsed CXX implicit link information from above output:
 Detecting CXX [-std=c++2a] compiler features compiled with the following output:
 Change Dir: /home/kaanh/Desktop/DoNotTouch/elliptical_trajectory_231021/build/CMakeFiles/CMakeTmp
 
-Run Build Command:"/usr/bin/make" "cmTC_98efe/fast"
-/usr/bin/make -f CMakeFiles/cmTC_98efe.dir/build.make CMakeFiles/cmTC_98efe.dir/build
+Run Build Command:"/usr/bin/make" "cmTC_caf8f/fast"
+/usr/bin/make -f CMakeFiles/cmTC_caf8f.dir/build.make CMakeFiles/cmTC_caf8f.dir/build
 make[1]: Entering directory '/home/kaanh/Desktop/DoNotTouch/elliptical_trajectory_231021/build/CMakeFiles/CMakeTmp'
-Building CXX object CMakeFiles/cmTC_98efe.dir/feature_tests.cxx.o
-/usr/bin/x86_64-linux-gnu-g++-8    -std=c++2a -o CMakeFiles/cmTC_98efe.dir/feature_tests.cxx.o -c /home/kaanh/Desktop/DoNotTouch/elliptical_trajectory_231021/build/CMakeFiles/feature_tests.cxx
-Linking CXX executable cmTC_98efe
-/usr/cmake-3.12.3-Linux-x86_64/bin/cmake -E cmake_link_script CMakeFiles/cmTC_98efe.dir/link.txt --verbose=1
-/usr/bin/x86_64-linux-gnu-g++-8       CMakeFiles/cmTC_98efe.dir/feature_tests.cxx.o  -o cmTC_98efe 
+Building CXX object CMakeFiles/cmTC_caf8f.dir/feature_tests.cxx.o
+/usr/bin/x86_64-linux-gnu-g++-8    -std=c++2a -o CMakeFiles/cmTC_caf8f.dir/feature_tests.cxx.o -c /home/kaanh/Desktop/DoNotTouch/elliptical_trajectory_231021/build/CMakeFiles/feature_tests.cxx
+Linking CXX executable cmTC_caf8f
+/usr/cmake-3.12.3-Linux-x86_64/bin/cmake -E cmake_link_script CMakeFiles/cmTC_caf8f.dir/link.txt --verbose=1
+/usr/bin/x86_64-linux-gnu-g++-8       CMakeFiles/cmTC_caf8f.dir/feature_tests.cxx.o  -o cmTC_caf8f 
 make[1]: Leaving directory '/home/kaanh/Desktop/DoNotTouch/elliptical_trajectory_231021/build/CMakeFiles/CMakeTmp'
 
 
@@ -411,14 +411,14 @@ make[1]: Leaving directory '/home/kaanh/Desktop/DoNotTouch/elliptical_trajectory
 Detecting CXX [-std=c++17] compiler features compiled with the following output:
 Change Dir: /home/kaanh/Desktop/DoNotTouch/elliptical_trajectory_231021/build/CMakeFiles/CMakeTmp
 
-Run Build Command:"/usr/bin/make" "cmTC_a0291/fast"
-/usr/bin/make -f CMakeFiles/cmTC_a0291.dir/build.make CMakeFiles/cmTC_a0291.dir/build
+Run Build Command:"/usr/bin/make" "cmTC_cdf34/fast"
+/usr/bin/make -f CMakeFiles/cmTC_cdf34.dir/build.make CMakeFiles/cmTC_cdf34.dir/build
 make[1]: Entering directory '/home/kaanh/Desktop/DoNotTouch/elliptical_trajectory_231021/build/CMakeFiles/CMakeTmp'
-Building CXX object CMakeFiles/cmTC_a0291.dir/feature_tests.cxx.o
-/usr/bin/x86_64-linux-gnu-g++-8    -std=c++17 -o CMakeFiles/cmTC_a0291.dir/feature_tests.cxx.o -c /home/kaanh/Desktop/DoNotTouch/elliptical_trajectory_231021/build/CMakeFiles/feature_tests.cxx
-Linking CXX executable cmTC_a0291
-/usr/cmake-3.12.3-Linux-x86_64/bin/cmake -E cmake_link_script CMakeFiles/cmTC_a0291.dir/link.txt --verbose=1
-/usr/bin/x86_64-linux-gnu-g++-8       CMakeFiles/cmTC_a0291.dir/feature_tests.cxx.o  -o cmTC_a0291 
+Building CXX object CMakeFiles/cmTC_cdf34.dir/feature_tests.cxx.o
+/usr/bin/x86_64-linux-gnu-g++-8    -std=c++17 -o CMakeFiles/cmTC_cdf34.dir/feature_tests.cxx.o -c /home/kaanh/Desktop/DoNotTouch/elliptical_trajectory_231021/build/CMakeFiles/feature_tests.cxx
+Linking CXX executable cmTC_cdf34
+/usr/cmake-3.12.3-Linux-x86_64/bin/cmake -E cmake_link_script CMakeFiles/cmTC_cdf34.dir/link.txt --verbose=1
+/usr/bin/x86_64-linux-gnu-g++-8       CMakeFiles/cmTC_cdf34.dir/feature_tests.cxx.o  -o cmTC_cdf34 
 make[1]: Leaving directory '/home/kaanh/Desktop/DoNotTouch/elliptical_trajectory_231021/build/CMakeFiles/CMakeTmp'
 
 
@@ -484,14 +484,14 @@ make[1]: Leaving directory '/home/kaanh/Desktop/DoNotTouch/elliptical_trajectory
 Detecting CXX [-std=c++14] compiler features compiled with the following output:
 Change Dir: /home/kaanh/Desktop/DoNotTouch/elliptical_trajectory_231021/build/CMakeFiles/CMakeTmp
 
-Run Build Command:"/usr/bin/make" "cmTC_66981/fast"
-/usr/bin/make -f CMakeFiles/cmTC_66981.dir/build.make CMakeFiles/cmTC_66981.dir/build
+Run Build Command:"/usr/bin/make" "cmTC_0d4cb/fast"
+/usr/bin/make -f CMakeFiles/cmTC_0d4cb.dir/build.make CMakeFiles/cmTC_0d4cb.dir/build
 make[1]: Entering directory '/home/kaanh/Desktop/DoNotTouch/elliptical_trajectory_231021/build/CMakeFiles/CMakeTmp'
-Building CXX object CMakeFiles/cmTC_66981.dir/feature_tests.cxx.o
-/usr/bin/x86_64-linux-gnu-g++-8    -std=c++14 -o CMakeFiles/cmTC_66981.dir/feature_tests.cxx.o -c /home/kaanh/Desktop/DoNotTouch/elliptical_trajectory_231021/build/CMakeFiles/feature_tests.cxx
-Linking CXX executable cmTC_66981
-/usr/cmake-3.12.3-Linux-x86_64/bin/cmake -E cmake_link_script CMakeFiles/cmTC_66981.dir/link.txt --verbose=1
-/usr/bin/x86_64-linux-gnu-g++-8       CMakeFiles/cmTC_66981.dir/feature_tests.cxx.o  -o cmTC_66981 
+Building CXX object CMakeFiles/cmTC_0d4cb.dir/feature_tests.cxx.o
+/usr/bin/x86_64-linux-gnu-g++-8    -std=c++14 -o CMakeFiles/cmTC_0d4cb.dir/feature_tests.cxx.o -c /home/kaanh/Desktop/DoNotTouch/elliptical_trajectory_231021/build/CMakeFiles/feature_tests.cxx
+Linking CXX executable cmTC_0d4cb
+/usr/cmake-3.12.3-Linux-x86_64/bin/cmake -E cmake_link_script CMakeFiles/cmTC_0d4cb.dir/link.txt --verbose=1
+/usr/bin/x86_64-linux-gnu-g++-8       CMakeFiles/cmTC_0d4cb.dir/feature_tests.cxx.o  -o cmTC_0d4cb 
 make[1]: Leaving directory '/home/kaanh/Desktop/DoNotTouch/elliptical_trajectory_231021/build/CMakeFiles/CMakeTmp'
 
 
@@ -557,14 +557,14 @@ make[1]: Leaving directory '/home/kaanh/Desktop/DoNotTouch/elliptical_trajectory
 Detecting CXX [-std=c++11] compiler features compiled with the following output:
 Change Dir: /home/kaanh/Desktop/DoNotTouch/elliptical_trajectory_231021/build/CMakeFiles/CMakeTmp
 
-Run Build Command:"/usr/bin/make" "cmTC_2cbaf/fast"
-/usr/bin/make -f CMakeFiles/cmTC_2cbaf.dir/build.make CMakeFiles/cmTC_2cbaf.dir/build
+Run Build Command:"/usr/bin/make" "cmTC_97383/fast"
+/usr/bin/make -f CMakeFiles/cmTC_97383.dir/build.make CMakeFiles/cmTC_97383.dir/build
 make[1]: Entering directory '/home/kaanh/Desktop/DoNotTouch/elliptical_trajectory_231021/build/CMakeFiles/CMakeTmp'
-Building CXX object CMakeFiles/cmTC_2cbaf.dir/feature_tests.cxx.o
-/usr/bin/x86_64-linux-gnu-g++-8    -std=c++11 -o CMakeFiles/cmTC_2cbaf.dir/feature_tests.cxx.o -c /home/kaanh/Desktop/DoNotTouch/elliptical_trajectory_231021/build/CMakeFiles/feature_tests.cxx
-Linking CXX executable cmTC_2cbaf
-/usr/cmake-3.12.3-Linux-x86_64/bin/cmake -E cmake_link_script CMakeFiles/cmTC_2cbaf.dir/link.txt --verbose=1
-/usr/bin/x86_64-linux-gnu-g++-8       CMakeFiles/cmTC_2cbaf.dir/feature_tests.cxx.o  -o cmTC_2cbaf 
+Building CXX object CMakeFiles/cmTC_97383.dir/feature_tests.cxx.o
+/usr/bin/x86_64-linux-gnu-g++-8    -std=c++11 -o CMakeFiles/cmTC_97383.dir/feature_tests.cxx.o -c /home/kaanh/Desktop/DoNotTouch/elliptical_trajectory_231021/build/CMakeFiles/feature_tests.cxx
+Linking CXX executable cmTC_97383
+/usr/cmake-3.12.3-Linux-x86_64/bin/cmake -E cmake_link_script CMakeFiles/cmTC_97383.dir/link.txt --verbose=1
+/usr/bin/x86_64-linux-gnu-g++-8       CMakeFiles/cmTC_97383.dir/feature_tests.cxx.o  -o cmTC_97383 
 make[1]: Leaving directory '/home/kaanh/Desktop/DoNotTouch/elliptical_trajectory_231021/build/CMakeFiles/CMakeTmp'
 
 
@@ -630,14 +630,14 @@ make[1]: Leaving directory '/home/kaanh/Desktop/DoNotTouch/elliptical_trajectory
 Detecting CXX [-std=c++98] compiler features compiled with the following output:
 Change Dir: /home/kaanh/Desktop/DoNotTouch/elliptical_trajectory_231021/build/CMakeFiles/CMakeTmp
 
-Run Build Command:"/usr/bin/make" "cmTC_f5539/fast"
-/usr/bin/make -f CMakeFiles/cmTC_f5539.dir/build.make CMakeFiles/cmTC_f5539.dir/build
+Run Build Command:"/usr/bin/make" "cmTC_bdec8/fast"
+/usr/bin/make -f CMakeFiles/cmTC_bdec8.dir/build.make CMakeFiles/cmTC_bdec8.dir/build
 make[1]: Entering directory '/home/kaanh/Desktop/DoNotTouch/elliptical_trajectory_231021/build/CMakeFiles/CMakeTmp'
-Building CXX object CMakeFiles/cmTC_f5539.dir/feature_tests.cxx.o
-/usr/bin/x86_64-linux-gnu-g++-8    -std=c++98 -o CMakeFiles/cmTC_f5539.dir/feature_tests.cxx.o -c /home/kaanh/Desktop/DoNotTouch/elliptical_trajectory_231021/build/CMakeFiles/feature_tests.cxx
-Linking CXX executable cmTC_f5539
-/usr/cmake-3.12.3-Linux-x86_64/bin/cmake -E cmake_link_script CMakeFiles/cmTC_f5539.dir/link.txt --verbose=1
-/usr/bin/x86_64-linux-gnu-g++-8       CMakeFiles/cmTC_f5539.dir/feature_tests.cxx.o  -o cmTC_f5539 
+Building CXX object CMakeFiles/cmTC_bdec8.dir/feature_tests.cxx.o
+/usr/bin/x86_64-linux-gnu-g++-8    -std=c++98 -o CMakeFiles/cmTC_bdec8.dir/feature_tests.cxx.o -c /home/kaanh/Desktop/DoNotTouch/elliptical_trajectory_231021/build/CMakeFiles/feature_tests.cxx
+Linking CXX executable cmTC_bdec8
+/usr/cmake-3.12.3-Linux-x86_64/bin/cmake -E cmake_link_script CMakeFiles/cmTC_bdec8.dir/link.txt --verbose=1
+/usr/bin/x86_64-linux-gnu-g++-8       CMakeFiles/cmTC_bdec8.dir/feature_tests.cxx.o  -o cmTC_bdec8 
 make[1]: Leaving directory '/home/kaanh/Desktop/DoNotTouch/elliptical_trajectory_231021/build/CMakeFiles/CMakeTmp'
 
 

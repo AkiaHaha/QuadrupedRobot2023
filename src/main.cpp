@@ -18,9 +18,9 @@ int main(int argc, char *argv[])
 
     cs.resetPlanRoot(robot::createPlanROSMotorTest().release());
 
-    cs.resetModel(robot::createSingleLegModelPtr().release());
-
-
+    // cs.resetModel(robot::createSingleLegModelPtr().release());
+    cs.resetModel(robot::createQuadrupedRbtModelPtr().release());
+   
     cs.init();//初始化WebSocket/socket服务器//
     
     cs.open();//开启WebSocket/socket服务器//
