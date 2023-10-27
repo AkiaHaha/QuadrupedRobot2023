@@ -4,7 +4,7 @@
 #include <memory>
 #include <aris.hpp>
 
-// #define ARIS_USE_ETHERCAT_SIMULATION
+#define ARIS_USE_ETHERCAT_SIMULATION
 
 namespace robot
 {   
