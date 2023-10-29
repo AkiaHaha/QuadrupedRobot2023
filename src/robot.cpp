@@ -13,7 +13,7 @@ using namespace aris::plan;
 const double PI = aris::PI;
 namespace robot
 {
-///////////////////////////////////////////////////////< EE Ellipse Trajectory Plan Movement edition 3 >////////////////////////////////////
+///////////////////////////////////////////////////////< Ellipse-edition-3 >////////////////////////////////////
 auto ellipticalTrajectoryDrive3::prepareNrt()->void
 {
     Height = doubleParam("Height");
@@ -26,8 +26,6 @@ auto ellipticalTrajectoryDrive3::prepareNrt()->void
             aris::plan::Plan::NOT_CHECK_ENABLE |
             aris::plan::Plan::NOT_CHECK_POS_CONTINUOUS_SECOND_ORDER;
 }
-
-
 auto ellipticalTrajectoryDrive3::executeRT()->int
 {
     static ellipticalTrajectory3  ellipticalTrajectory;
@@ -171,7 +169,6 @@ auto ellipticalTrajectoryDrive3::executeRT()->int
     // return  ret ; 
 
 } 
-
 auto ellipticalTrajectoryDrive3::collectNrt()->void {}
 ellipticalTrajectoryDrive3::ellipticalTrajectoryDrive3(const std::string &name) 
 {
@@ -186,298 +183,6 @@ ellipticalTrajectoryDrive3::ellipticalTrajectoryDrive3(const std::string &name)
        "</Command>");
 }
 ellipticalTrajectoryDrive3::~ellipticalTrajectoryDrive3() = default; 
-
-
-///////////////////////////////////////////////////////< EE Ellipse Trajectory Plan Movement edition 2 >////////////////////////////////////
-auto ellipticalTrajectoryDrive2::prepareNrt()->void
-{
-    Height = doubleParam("Height");
-    Length = doubleParam("Length");
-    Direction = doubleParam("Direction");
-
-    for(auto &m:motorOptions()) m =
-            aris::plan::Plan::NOT_CHECK_POS_CONTINUOUS |        
-            aris::plan::Plan::NOT_CHECK_ENABLE |
-            aris::plan::Plan::NOT_CHECK_POS_CONTINUOUS_SECOND_ORDER;
-}
-
-
-auto ellipticalTrajectoryDrive2::executeRT()->int
-{
-    if (count() == 1)
-    {
-        static double angleOfInitial[3]{0};
-        angleOfInitial[0] = controller()->motorPool()[0].actualPos();
-        angleOfInitial[1] = controller()->motorPool()[1].actualPos();
-        angleOfInitial[2] = controller()->motorPool()[2].actualPos();  
-
-        std::cout <<std::endl<< "Initial Angle of Motors " << " < m0: " << angleOfInitial[0] <<"   m1: "<< angleOfInitial[1]<<"   m2: "<< angleOfInitial[2] <<" >"<<std::endl;     
-        // std::cout << "Step 3 Started! The Leg has prepared to move !"<< std::endl; 
-
-        // Forward Kinematics //
-        model()->setInputPos(angleOfInitial) ;    
-
-        if (model()->solverPool()[1].kinPos())
-        {
-            throw std::runtime_error("Leg Initialization Forward Kinematics Position Failed!");
-        }   
-
-        model()->getOutputPos(posOfInitialization);
-
-        std::cout <<std::endl << "startPoint:   < X: " << posOfInitialization[0] << "   Y: " << posOfInitialization[1] << "   Z: " << posOfInitialization[2] << " >" << std::endl;
-
-        for (int i = 0; i < 3; i++)
-        {
-            startPoint[i]=posOfInitialization[i]; 
-        } 
-
-        ellipticalTrajectory2  ellipticalTrajectory(startPoint, Length, Direction);
-        unitVector = ellipticalTrajectory.getUnitVector();
-        centerPoint = ellipticalTrajectory.getCenterPoint();    
-               
-        theta = aris::PI;
-        theta_d=0;
-        theta_dd=0;   
-
-        for (int i = 0; i < 3; i++)
-        {
-            endPoint[i] = startPoint[i] + Length * unitVector[i];
-        }
-        std::cout << "targetPoint:  < X: " << endPoint[0] << "   Y: " << endPoint[1] << "   Z: " << endPoint[2] << " >" << std::endl <<std::endl;       
-    }
-
-    double unitvectorY[3]={0,1,0};
-    aris::Size total_count;
-    auto ret = moveAbsolute2( theta, theta_d, theta_dd, 0, 0.1, 1, 0.1, 0.5, 0.5, 1e-3, 1e-10, theta, theta_d, theta_dd, total_count);
-
-    for (int i = 0; i < 3; i++)
-    {
-        eePoint[i] = centerPoint[i] + unitVector[i] * Width * cos(theta) + unitvectorY[i] * Height * sin( theta );
-    }
-      
-    std::cout << "count = " << count() << std::endl;
-    std::cout << "--> theta: " << theta << std::endl; 
-    std::cout << "--> eePoint-" << count() << " < X: " << eePoint[0] << "\t"<<"Y: " << eePoint[1] << "\t" << "Z: " << eePoint[2] << " >" << std::endl;   
-    model()->setOutputPos(eePoint);
-
-    if (model()->solverPool()[0].kinPos())
-    {
-        throw std::runtime_error("Move Status Inverse kinematic position failed");    
-    }    
-    //||-------------------------------try to solve discontinous problem due to the uncontrolable step------------------//
-    // double coordinate[3]{};
-    // double ret0=1;
-    // double ret1=1;
-    // double ret2=1;
-
-    // for (int i = 0; i < 3; i++)
-    // {
-    //     coordinate[i] = model()->motionPool()[i].mp();
-    // }
-    
-    // double X=controller()->motorPool()[0].actualPos();
-    // double Xd{};
-    // double Xdd{};
-    // double Y=controller()->motorPool()[1].actualPos();
-    // double Yd{};
-    // double Ydd{};
-    // double Z=controller()->motorPool()[2].actualPos();
-    // double Zd{};
-    // double Zdd{};
-    // while(ret0 == 1)
-    // {
-    //     ret0 = moveAbsolute2( X, Xd, Xdd, coordinate[0], 0.1, 1.0, 0.1, 0.5, 0.5, 1e-3, 1e-10, X, Xd, Xdd, total_count);
-    //     controller()->motorPool()[0].setTargetPos(X);
-    // }
-
-    // while(ret1 == 1)
-    // {
-    //     ret1 = moveAbsolute2( Y, Yd, Ydd, coordinate[1], 0.1, 1.0, 0.1, 0.5, 0.5, 1e-3, 1e-10, Y, Yd, Ydd, total_count);
-    //     controller()->motorPool()[1].setTargetPos(Y);
-    // }
-
-    // while(ret2 == 1)
-    // {
-    //     ret2 = moveAbsolute2( Z, Zd, Z, coordinate[2], 0.1, 1.0, 0.1, 0.5, 0.5, 1e-3, 1e-10, Z, Zd, Z, total_count);
-    //     controller()->motorPool()[2].setTargetPos(Z);
-    // }
-    //----------------------------------------------------------------------------------------------------------------------||//
-	std::cout << "--> currentMotorPos < Joint0: " << controller()->motorPool()[0].actualPos() << "\t" << "Joint1: " << controller()->motorPool()[1].actualPos() << "\t" << "Joint2: " << controller()->motorPool()[2].actualPos() << " >" << std::endl << std::endl;
-	std::cout << "--> targetMotorPos  < Joint0: " << model()->motionPool()[0].mp() << "\t" << "Joint1: " << model()->motionPool()[1].mp() << "\t" << "Joint2: " << model()->motionPool()[2].mp() << " >" << std::endl << std::endl;
-   
-    for(int i=0; i<3; ++i)
-    {
-    controller()->motorPool()[i].setTargetPos(model()->motionPool()[i].mp());
-    std::cout << "success moved of motor " << i << "~"  <<std::endl;
-    }
-	std::cout << "--> finalMotorPos < Joint0: " << controller()->motorPool()[0].actualPos() << "\t" << "Joint1: " << controller()->motorPool()[1].actualPos() << "\t" << "Joint2: " << controller()->motorPool()[2].actualPos() << " >" << std::endl << std::endl;
-    
-    if( ret == 0)
-    {   std::cout << "ret = " << ret <<std::endl;
-        std::cout << "startPoint:   < X: " << posOfInitialization[0] << "   Y: " << posOfInitialization[1] << "   Z: " << posOfInitialization[2] << " >" << std::endl;
-        std::cout << "targetPoint:  < X: " << endPoint[0] << "   Y: " << endPoint[1] << "   Z: " << endPoint[2] << " >" << std::endl;
-        std::cout << "currentPoint: < X: " << eePoint[0] << "   Y: " << eePoint[1] << "   Z: " << eePoint[2] << " >" << std::endl;
-    }
-
-    return  ret; 
-}
-
-auto ellipticalTrajectoryDrive2::collectNrt()->void {}
-ellipticalTrajectoryDrive2::ellipticalTrajectoryDrive2(const std::string &name) 
-{
-    aris::core::fromXmlString(command(),
-       "<Command name=\"e2\">"
-       "	<GroupParam>" //下面三个参数决定单腿末端的运动终点坐标,即单腿末端现在的位置坐标为->ee0(X0,Y0,Z0) , 单腿末端由本指令将通过椭圆轨迹移动至坐标->ee(x,y,z) ,下方三个参数即为可由用户在工作空间内自定义的末端位置坐标变量//
-       "	<Param name=\"Height\" default=\"0.1\" abbreviation=\"h\"/>"
-       "	<Param name=\"Length\" default=\"0.25\" abbreviation=\"l\"/>"
-       "	<Param name=\"Direction\" default=\"1.57\" abbreviation=\"d\"/>"
-       "	</GroupParam>"
-       "</Command>");
-}
-ellipticalTrajectoryDrive2::~ellipticalTrajectoryDrive2() = default; 
-
-///////////////////////////////////////////////////////< EE Ellipse Trajectory Plan Movement >////////////////////////////////////
-auto ellipticalTrajectoryDrive::prepareNrt()->void
-{
-    moveTargetX = doubleParam("moveTargetX");
-    moveTargetY = doubleParam("moveTargetY");
-    moveTargetZ = doubleParam("moveTargetZ");
-
-    for(auto &m:motorOptions()) m =
-            aris::plan::Plan::NOT_CHECK_ENABLE |
-            aris::plan::Plan::NOT_CHECK_POS_CONTINUOUS_SECOND_ORDER;
-}
-auto ellipticalTrajectoryDrive::executeRT()->int
-{
-    if (count() == 1)
-    {
-        endPoint[0] = moveTargetX;
-        endPoint[1] = moveTargetY;
-        endPoint[2] = moveTargetZ;
-
-        static double angleOfInitial[3]{0};
-        angleOfInitial[0] = controller()->motorPool()[0].actualPos();
-        angleOfInitial[1] = controller()->motorPool()[1].actualPos();
-        angleOfInitial[2] = controller()->motorPool()[2].actualPos();  
-
-        std::cout <<std::endl<< "Initial Angle of Motors " << " < m0: " << angleOfInitial[0] <<"   m1: "<< angleOfInitial[1]<<"   m2: "<< angleOfInitial[2] <<" >"<<std::endl;     
-        std::cout << "Step 3 Started! The Leg has prepared to move !"<< std::endl; 
-
-        // Forward Kinematics //
-        model()->setInputPos(angleOfInitial) ;    
-
-        if (model()->solverPool()[1].kinPos())
-        {
-            throw std::runtime_error("Leg Initialization Forward Kinematics Position Failed!");
-        }   
-
-        model()->getOutputPos(posOfInitialization);
-
-        std::cout <<std::endl << "startPoint:   < X: " << posOfInitialization[0] << "   Y: " << posOfInitialization[1] << "   Z: " << posOfInitialization[2] << " >" << std::endl;
-        std::cout << "targetPoint:  < X: " << endPoint[0] << "   Y: " << endPoint[1] << "   Z: " << endPoint[2] << " >" << std::endl;          
-
-        for (int i = 0; i < 3; i++)
-        {
-            startPoint[i]=posOfInitialization[i]; 
-        }
-
-        ellipticalTrajectory  ellipticalTrajectory(startPoint, endPoint);
-        unitVector = ellipticalTrajectory.getUnitVector();
-        centerPoint = ellipticalTrajectory.getCenterPoint();
-        
-        std::cout << "unitVector of ST: "<< unitVector[0] << "\t" << unitVector[1] << "\t" << unitVector[2] << std::endl;
-        std::cout << "centerPoint: "<< centerPoint[0] << "\t" << centerPoint[1] << "\t" << centerPoint[2] << std::endl;         
-               
-        phi = ellipticalTrajectory.getPhi();
-        Width = ellipticalTrajectory.getWidth();
-        Height = ellipticalTrajectory.getHeight();
-        initializationStatus = ellipticalTrajectory.getInitializationStatus();
-        initializationCount = ellipticalTrajectory.getInitializationCount();
-        std::cout << "phi: " << phi <<"\t" << "Width: " << Width << "\t"  << "Height" << Height << std::endl;
-        std::cout << "iStatus: " << initializationStatus << "\t" << "iCount: " << initializationCount << std::endl;
-        theta = aris::PI;
-        theta_d=0;
-        theta_dd=0;       
-    }
-
-    double unitvectorY[3]={0,1,0};
-    aris::Size total_count;
-    theta_target = aris::PI - phi;
-    auto ret = moveAbsolute2( theta, theta_d, theta_dd, theta_target, 0.1, 1.0, 0.1, 0.5, 0.5, 1e-3, 1e-10, theta, theta_d, theta_dd, total_count);
-
-    for (int i = 0; i < 3; i++)
-    {
-        eePoint[i] = centerPoint[i] + unitVector[i] * Width * cos(theta) + unitvectorY[i] * Height * sin( theta );
-    }
-      
-    std::cout << "count = " << count() << std::endl;
-    std::cout << "--> theta: " << theta << std::endl; 
-    std::cout << "--> eePoint < X: " << eePoint[0] << "\t"<<"Y: " << eePoint[1] << "\t" << "Z: " << eePoint[2] << " >" << std::endl;   
-    model()->setOutputPos(eePoint);
-
-    if (model()->solverPool()[0].kinPos())
-    {
-        throw std::runtime_error("Move Status Inverse kinematic position failed");    
-    }    
-
-    double moveMotionPos[3]{0};
-    double casualPos[3]{0};
-    double posVariation[3]{0};
-    for (int i = 0; i < 3; i++)
-    {
-        moveMotionPos[i] = model()->motionPool()[i].mp() ;
-        casualPos[i]=controller()->motorPool()[i].actualPos();
-        posVariation[i] =  moveMotionPos[i] - casualPos[i] ;
-    }      
-
-    for (int i = 0; i < 100; i++)
-    {                                                   
-        controller()->motorPool()[0].setTargetPos( casualPos[0] + 0.01 * (i+1) * posVariation[0] );
-        controller()->motorPool()[1].setTargetPos( casualPos[1] + 0.01 * (i+1) * posVariation[1] );
-        controller()->motorPool()[2].setTargetPos( casualPos[2] + 0.01 * (i+1) * posVariation[2] );
-    }
-
-    // for (int i = 0; i < 100; i++)
-    // {
-    //     controller()->motorPool()[0].setTargetPos( 0.01 * (i+1) * moveMotionPos[0] );
-    //     controller()->motorPool()[1].setTargetPos( 0.01 * (i+1) * moveMotionPos[1] );
-    //     controller()->motorPool()[2].setTargetPos( 0.01 * (i+1) * moveMotionPos[2] );
-    // }
-    
-    // controller()->motorPool()[0].setTargetPos(model()->motionPool()[0].mp());
-    // controller()->motorPool()[1].setTargetPos(model()->motionPool()[1].mp());
-    // controller()->motorPool()[2].setTargetPos(model()->motionPool()[2].mp());
-
-
-	std::cout << "--> motorPos < Joint0: " << model()->motionPool()[0].mp() << "\t" << "Joint1: " << model()->motionPool()[1].mp() << "\t" << "Joint2: " << model()->motionPool()[2].mp() << " >" << std::endl << std::endl;
-    
-    if( ret == 0)
-    {   std::cout << "ret = " << ret <<std::endl;
-        std::cout << "startPoint:   < X: " << posOfInitialization[0] << "   Y: " << posOfInitialization[1] << "   Z: " << posOfInitialization[2] << " >" << std::endl;
-        std::cout << "targetPoint:  < X: " << endPoint[0] << "   Y: " << endPoint[1] << "   Z: " << endPoint[2] << " >" << std::endl;
-        std::cout << "currentPoint: < X: " << eePoint[0] << "   Y: " << eePoint[1] << "   Z: " << eePoint[2] << " >" << std::endl;
-        std::cout << "unitVector of ST: "<< unitVector[0] << "\t" << unitVector[1] << "\t" << unitVector[2] << std::endl;
-        std::cout << "centerPoint: "<< centerPoint[0] << "\t" << centerPoint[1] << "\t" << centerPoint[2] << std::endl; 
-        std::cout << "phi: " << phi <<"\t" << "Width: " << Width << "\t"  << "Height: " << Height << std::endl;
-        std::cout << "iStatus: " << initializationStatus << "\t" << "iCount: " << initializationCount << std::endl;
-    }
-
-    return  ret; 
-}
-auto ellipticalTrajectoryDrive::collectNrt()->void {}
-ellipticalTrajectoryDrive::ellipticalTrajectoryDrive(const std::string &name) 
-{
-    aris::core::fromXmlString(command(),
-       "<Command name=\"e\">"
-       "	<GroupParam>" //下面三个参数决定单腿末端的运动终点坐标,即单腿末端现在的位置坐标为->ee0(X0,Y0,Z0) , 单腿末端由本指令将通过椭圆轨迹移动至坐标->ee(x,y,z) ,下方三个参数即为可由用户在工作空间内自定义的末端位置坐标变量//
-       "	<Param name=\"moveTargetX\" default=\"0\" abbreviation=\"x\"/>"
-       "	<Param name=\"moveTargetY\" default=\"-0.4\" abbreviation=\"y\"/>"
-       "	<Param name=\"moveTargetZ\" default=\"-0.2\" abbreviation=\"z\"/>"
-       "	</GroupParam>"
-       "</Command>");
-}
-ellipticalTrajectoryDrive::~ellipticalTrajectoryDrive() = default; 
-
 
 ///////////////////////////////////////////////////////< moveBeeLineEdition2 >//////////////////////////////////
 auto moveBeeLineE2::prepareNrt()->void
@@ -584,7 +289,7 @@ moveBeeLineE2::moveBeeLineE2(const std::string &name)
 }
 moveBeeLineE2::~moveBeeLineE2() = default; 
 
-///////////////////////////////////////////////////////legInitialization >/////////////////////////////////////
+///////////////////////////////////////////////////////singleLeg-Initialization >/////////////////////////////////////
 auto legInitialization::prepareNrt()->void
 {
 
@@ -695,7 +400,7 @@ legInitialization::legInitialization(const std::string &name)
 }
 legInitialization::~legInitialization() = default; 
 
-///////////////////////////////////////////////////////<  c3  > cosCurve余弦曲线-run together M3 >//////////////
+///////////////////////////////////////////////////////< cosCurve-singleLeg >///////////////////////////////////////
 auto cosCurveDriveTogetherM3::prepareNrt()->void
 {
    cef_1 = doubleParam("coefficient1");
@@ -763,75 +468,7 @@ cosCurveDriveTogetherM3::cosCurveDriveTogetherM3(const std::string &name)
 }
 cosCurveDriveTogetherM3::~cosCurveDriveTogetherM3() = default;   
 
-///////////////////////////////////////////////////< tCurve梯形曲线--run together >//////////////////////////////
-auto tCurveDriveTogetherM3::prepareNrt()->void
-{
-   cef_1 = doubleParam("coefficient1");
-   cef_2 = doubleParam("coefficient2");
-   cef_3 = doubleParam("coefficient3");
-   vel   = doubleParam("velocity");
-   acc   = doubleParam("acceleration");
-   intervals=doubleParam("intervals");
-
-   for(auto &m:motorOptions()) m =
-           aris::plan::Plan::NOT_CHECK_ENABLE |
-           aris::plan::Plan::NOT_CHECK_POS_CONTINUOUS_SECOND_ORDER;
-}
-auto tCurveDriveTogetherM3::executeRT()->int{
-   static double begin_angle[3];
-
-   if (count() == 1)
-   {
-       begin_angle[0] = controller()->motorPool()[0].targetPos();
-       begin_angle[1] = controller()->motorPool()[1].targetPos();
-       begin_angle[2] = controller()->motorPool()[2].targetPos();
-   }
-
-   tCurve s1(acc,vel);
-
-   s1.getCurveParam();
-
-
-       double angle0 = begin_angle[0] + cef_1  * s1.getCurve(count()) ;//设置变量angle0存储由梯形曲线和公式运算所得的目标位置//
-       controller()->motorPool()[0].setTargetPos(angle0);              //调用aris函数将当下电机位置更新为angle0所标定位置//
-       double angle1 = begin_angle[1] + cef_2  * s1.getCurve(count()) ;
-       controller()->motorPool()[1].setTargetPos(angle1);
-       double angle2 = begin_angle[2] + cef_3  * s1.getCurve(count()) ;
-       controller()->motorPool()[2].setTargetPos(angle2);
-
-
-   if (count() % 10 == 0)//mout::在屏幕上实时打印电机运行情况，每10ms打印一次//
-   {
-       mout() << "pos" << ":" << controller()->motorPool()[0].actualPos() << "\t";//电机实时位置//
-       mout() << "cur" << ":" << controller()->motorPool()[0].actualCur() << "\t";//电机实时电流//
-       mout() << "toq" << ":" << controller()->motorPool()[0].actualToq() << "\t";//电机实时力矩//
-       mout() << "vel" << ":" << controller()->motorPool()[0].actualVel() << std::endl;//电机实时速度//
-   }
-
-   //lout::向文件夹中实时写入电机运行情况，周期与实时线程相同，为1ms一次//
-   lout() << controller()->motorPool()[0].actualVel() <<"\t";
-   lout() << controller()->motorPool()[0].actualPos() <<std::endl;
-
-   return s1.getTc() * 1000-count(); //设置结束实时线程的时间，这里是梯形曲线的运行时间Tc//
-}
-auto tCurveDriveTogetherM3::collectNrt()->void {}
-tCurveDriveTogetherM3::tCurveDriveTogetherM3(const std::string &name) 
-{
-   aris::core::fromXmlString(command(),
-      "<Command name=\"t3\">"//运行本线程的指令tcurve_tgt_3//
-      "	<GroupParam>"
-      "	<Param name=\"coefficient1\" default=\"1\" abbreviation=\"f\"/>"//自定义参数的缩写//
-      "	<Param name=\"coefficient2\" default=\"1\" abbreviation=\"g\"/>"//自定义参数的缩写//
-      "	<Param name=\"coefficient3\" default=\"1\" abbreviation=\"h\"/>"//自定义参数的缩写//
-      "	<Param name=\"intervals\" default=\"0.88\" abbreviation=\"j\"/>"//自定义参数的缩写//
-      "	<Param name=\"acceleration\" default=\"5\" abbreviation=\"a\"/>"//自定义参数的缩写//
-      "	<Param name=\"velocity\" default=\"2\" abbreviation=\"v\"/>"//自定义参数的缩写//
-      "	</GroupParam>"
-      "</Command>");
-}
-tCurveDriveTogetherM3::~tCurveDriveTogetherM3() = default; 
-
-/////////////////////////////////////////////////< 速度模式 for motor number 2>///////////////////////////////////
+/////////////////////////////////////////////////< volecity mode >//////////////////////////////////////////////////
 auto VelDrive::prepareNrt()->void
 {
 
@@ -847,23 +484,23 @@ auto VelDrive::executeRT()->int{
 
     if (count()==1)
     {
-        begin_vel[1] = controller()->motorPool()[1].actualVel();
+        begin_vel[0] = controller()->motorPool()[0].actualVel();
         this->master()->logFileRawName("testVel");
     }
     
-    double vel1= begin_vel[1]+cef_*5.0*(1-std::cos(2*PI*count()/2000.0))/2;
+    double vel0= begin_vel[0]+cef_*5.0*(1-std::cos(2*PI*count()/2000.0))/2;
     
-    controller()->motorPool()[1].setTargetVel(vel1);
+    controller()->motorPool()[0].setTargetVel(vel0);
 
     //屏幕打印与文件夹数据记录//
     if (count() % 10 == 0)
     {
-        mout() << "pos" << ":" << controller()->motorPool()[1].actualPos() << "\t";
-        mout() << "vel" << ":" << controller()->motorPool()[1].actualVel() << std::endl;
+        mout() << "pos" << ":" << controller()->motorPool()[0].actualPos() << "\t";
+        mout() << "vel" << ":" << controller()->motorPool()[0].actualVel() << std::endl;
     }
     
-    lout() << controller()->motorPool()[1].actualPos() <<"\t";
-    lout() << controller()->motorPool()[1].actualVel() <<std::endl;
+    lout() << controller()->motorPool()[0].actualPos() <<"\t";
+    lout() << controller()->motorPool()[0].actualVel() <<std::endl;
     
     return 6000-count();//运行时间为6000毫秒即6秒//
 }
@@ -877,120 +514,7 @@ VelDrive::VelDrive(const std::string &name)
 }
 VelDrive::~VelDrive() = default;  
 
-////////////////////////////////////////////< 单关节正弦往复运动 for motor number 2>///////////////////////////////
-struct MoveJSParam//数据结构//
-{
-    double j1;
-    double time;
-    uint32_t timenum;
-};
-auto MoveJS::prepareNrt()->void
-{
-    MoveJSParam param;//定义数据结构param//
-
-    param.j1 = 0.0;
-    param.time = 0.0;
-    param.timenum = 0;
-
-    for (auto &p : cmdParams())
-    {
-        if (p.first == "j1")
-        {
-            if (p.second == "current_pos")
-            {
-                param.j1 = controller()->motorPool()[0].actualPos();
-            }
-            else
-            {
-                param.j1 = doubleParam(p.first);
-            }
-
-        }
-        else if (p.first == "time")
-        {
-            param.time = doubleParam(p.first);
-        }
-        else if (p.first == "timenum")
-        {
-            param.timenum = int32Param(p.first);
-        }
-    }
-    this->param() = param;
-
-    std::vector<std::pair<std::string, std::any>> ret_value;
-
-    for (auto &option : motorOptions())	option |= NOT_CHECK_POS_CONTINUOUS_SECOND_ORDER|NOT_CHECK_POS_CONTINUOUS;
-    
-    ret() = ret_value;
-}
-auto MoveJS::executeRT()->int{
-    // 访问主站 //
-    auto &param = std::any_cast<MoveJSParam&>(this->param());
-    auto time = static_cast<int32_t>(param.time * 1000);
-    auto totaltime = static_cast<int32_t>(param.timenum * time);
-    static double begin_pjs;
-    static double step_pjs;
-
-    if ((1 <= count()) && (count() <= time / 2))
-    {
-        if (count() == 1)// 获取当前起始点位置 //
-        {
-            begin_pjs = controller()->motorPool()[1].actualPos();
-            step_pjs = controller()->motorPool()[1].actualPos();
-            this->master()->logFileRawName("moveJS");//建立记录数据的文件夹
-        }
-        step_pjs = begin_pjs + param.j1 * (1 - std::cos(2 * PI*count() / time)) / 2;
-        controller()->motorPool().at(1).setTargetPos(step_pjs);
-    }
-
-    else if ((time / 2 < count()) && (count() <= totaltime - time / 2))
-    {
-        if (count() == time / 2 + 1) // 获取当前起始点位置 //
-        {
-            begin_pjs = controller()->motorPool()[1].actualPos();
-            step_pjs = controller()->motorPool()[1].actualPos();
-        }
-
-        step_pjs = begin_pjs - 2 * param.j1 * (1 - std::cos(2 * PI*(count() - time / 2) / time)) / 2;
-        controller()->motorPool().at(1).setTargetPos(step_pjs);
-    }
-
-    else if ((totaltime - time / 2 < count()) && (count() <= totaltime))
-    {       
-        if (count() == totaltime - time / 2 + 1)// 获取当前起始点位置 //
-        {
-            begin_pjs = controller()->motorPool()[1].actualPos();
-            step_pjs = controller()->motorPool()[1].actualPos();
-        }
-        step_pjs = begin_pjs - param.j1 * (1 - std::cos(2 * PI*(count() - totaltime + time / 2) / time)) / 2;
-        controller()->motorPool().at(1).setTargetPos(step_pjs);
-    }
-
-    //屏幕打印与文件夹数据记录//
-    if (count() % 10 == 0)
-    {
-        mout() << "pos" << ":" << controller()->motorPool()[0].actualPos() << "\t";
-        mout() << "vel" << ":" << controller()->motorPool()[0].actualVel() << std::endl;
-    }
-
-    lout() << controller()->motorPool()[1].actualPos() <<"\t";
-    lout() << controller()->motorPool()[1].actualVel() <<std::endl;
-
-    return totaltime - count();}
-auto MoveJS::collectNrt()->void {}
-MoveJS::MoveJS(const std::string &name)
-{
-    aris::core::fromXmlString(command(),
-        "<Command name=\"js\">"
-        "	<GroupParam>"
-        "		<Param name=\"j1\" default=\"current_pos\"/>"
-        "		<Param name=\"time\" default=\"1.0\" abbreviation=\"t\"/>"
-        "		<Param name=\"timenum\" default=\"2\" abbreviation=\"n\"/>"
-        "	</GroupParam>"
-        "</Command>");
-}
-
-///////////////////////////////////////////////////////< verificate the singleLeg forward Kin >/////////////
+///////////////////////////////////////////////////////< test-forward-Kin >//////////////////////////////////////////
 auto forwardKinLegTest::prepareNrt()->void
 {
     fwdAngle0 = doubleParam("fwdAngle0");
@@ -1043,7 +567,7 @@ forwardKinLegTest::forwardKinLegTest(const std::string &name)
 }
 forwardKinLegTest::~forwardKinLegTest() = default; 
 
-///////////////////////////////////////////////////////< verificate the singleLeg inverse Kin >/////////////s
+///////////////////////////////////////////////////////< tet-inverse-Kin >///////////////////////////////////////////
 auto inverseKinLegTest::prepareNrt()->void
 {
     invPos_x = doubleParam("invPos_x");
@@ -1095,470 +619,7 @@ inverseKinLegTest::inverseKinLegTest(const std::string &name)
 }
 inverseKinLegTest::~inverseKinLegTest() = default; 
 
-///////////////////////////////////////////////////<XXX tCurve梯形曲线 M1>//////////////////////////////////////////
-auto tCurveDrive::prepareNrt()->void
-{
-    cef_ = doubleParam("coefficient");
-    acc=doubleParam("acceleration");
-    vel=doubleParam("velocity");
-    totalTime=doubleParam("totalTime");
-    motorNumber=int32Param("motorNumber");
-
-    for(auto &m:motorOptions()) m =
-            aris::plan::Plan::CHECK_NONE;    
-    setAllMotorMaxTorque(ecMaster(), 100);
-}
-auto tCurveDrive::executeRT()->int 
-{
-    static double begin_angle[3];
-    static double angle[3]{0.0};
-    double judgeDirection[3]{0};
-
-    if (count() == 1)
-    {
-        begin_angle[motorNumber] = controller()->motorPool()[motorNumber].actualPos();//将运动的初始位置设定为当下电机的实时位置//
-    }
-
-    tCurve s1(acc,vel); 
-
-    s1.getCurveParam();
-
-    judgeDirection[motorNumber]=s1.getClassifyNumber(count());
-   
-    angle[motorNumber] =  begin_angle[motorNumber] + judgeDirection[motorNumber] * PI * cef_  *  s1.getCurve(count())  ;//设置变量angle0存储由梯形曲线和公式运算所得的目标位置//
-
-    controller()->motorPool()[motorNumber].setTargetPos(angle[motorNumber]);//调用aris函数将当下电机位置更新为angle0所标定位置//
-
-    if (count() % 10 == 0)
-    {   mout() << "the motor number is :" << motorNumber <<"\t";
-        mout() << "judgeDirection:"<<judgeDirection[0] << "\t";
-        mout() << "pos" << ":" << controller()->motorPool()[motorNumber].actualPos() << "\t";//电机实时位置//
-        mout() << "vel" << ":" << controller()->motorPool()[motorNumber].actualVel() << std::endl;//电机实时速度//
-        mout() << "cur" << ":" << controller()->motorPool()[motorNumber].actualCur() << "\t";//电机实时电流//
-        mout() << "toq" << ":" << controller()->motorPool()[motorNumber].actualToq() << "\t";//电机实时力矩//
-    }
-    return totalTime * 1000-count(); 
-}
-auto tCurveDrive::collectNrt()->void {}
-tCurveDrive::tCurveDrive(const std::string &name) 
-{
-    aris::core::fromXmlString(command(),
-       "<Command name=\"t\">"//运行本线程的指令//
-       "	<GroupParam>"
-       "	<Param name=\"coefficient\" default=\"1\" abbreviation=\"k\"/>"//自定义参数的缩写//
-       "	<Param name=\"acceleration\" default=\"5\" abbreviation=\"a\"/>"//自定义梯形曲线加速度参量的缩写//
-       "	<Param name=\"velocity\" default=\"2\" abbreviation=\"v\"/>"//自定义梯形曲线速度参量的缩写//
-       "	<Param name=\"totalTime\" default=\"0.89\" abbreviation=\"t\"/>"//自定义梯形曲线运动总时间参量的缩写//
-       "	<Param name=\"motorNumber\" default=\"0\" abbreviation=\"n\"/>"//自定义要运动的电机的序号0,1,2//
-       "	</GroupParam>"
-       "</Command>");
-}
-tCurveDrive::~tCurveDrive() = default;
-
-///////////////////////////////////////////////////////<XXX cosCurve余弦曲线-任意数量电机串联同步测试 >///////////////////
-auto cosCurveDriveMx::prepareNrt()->void
-{
-    cef_1 = doubleParam("coefficient1");
-    cef_2 = doubleParam("coefficient2");
-    cef_3 = doubleParam("coefficient3");
-    totalTime=doubleParam("totalTime");
-    motorNumber=int32Param("motorNumber");
-    a_  =doubleParam("amplititude");
-    w_  =doubleParam("frequency");
-    p_  =doubleParam("phase");
-    
-    velocityVariable[0]=cef_1;
-    velocityVariable[1]=cef_2;
-    velocityVariable[2]=cef_3;
-
-
-    for(auto &m:motorOptions()) m =
-            aris::plan::Plan::NOT_CHECK_ENABLE |
-            aris::plan::Plan::NOT_CHECK_POS_CONTINUOUS_SECOND_ORDER;
-}
-auto cosCurveDriveMx::executeRT()->int
-{
-    begin_angle.resize(motorNumber);
-    angle.resize(motorNumber);
-
-    if (count() == 1)//实时线程刚开始运行-> count=1 时的设置//
-    {
-        for(int i=0 ; i < motorNumber ; ++i )
-        {
-        begin_angle[i] = controller()->motorPool()[i].targetPos();//将运动的初始位置设定为当下电机的实时位置//
-        }
-    }
-
-    cosCurve cos1(a_,w_,p_); //创建对象，传入初始参数//
-
-    for(int i=0 ; i < motorNumber ; ++i)
-    {
-        angle[i] = begin_angle[i] + 20 * velocityVariable[i] * cos1.getCurve(count()) ;//设置变量angle[i]存储由梯形曲线和公式运算所得的目标位置//
-        controller()->motorPool()[0].setTargetPos(angle[i]);              //调用aris函数将当下电机位置更新为angle0所标定位置//
-    }
-
-    if (count() % 10 == 0)
-    {
-        std::cout<<"count = "<<count()<<" ; the motor <  pos:  "<< controller()->motorPool()[0].targetPos() << "   vel:  "<< controller()->motorPool()[0].targetVel()<< "  >"<<std::endl;
-    }
-
-    return  totalTime * 1000-count(); //设置结束实时线程的时间//
-}
-auto cosCurveDriveMx::collectNrt()->void {}
-cosCurveDriveMx::cosCurveDriveMx(const std::string &name) 
-{
-    aris::core::fromXmlString(command(),
-       "<Command name=\"cmx\">"//运行本线程的指令//
-       "	<GroupParam>"
-       "	<Param name=\"coefficient1\" default=\"1\" abbreviation=\"f\"/>"//control the motor 0's direction and displacement//
-       "	<Param name=\"coefficient2\" default=\"1\" abbreviation=\"g\"/>"//control the motor 1's direction and displacement//
-       "	<Param name=\"coefficient3\" default=\"1\" abbreviation=\"h\"/>"//control the motor 2's direction and displacement//
-       "	<Param name=\"totalTime\" default=\"3\" abbreviation=\"t\"/>"//define the total run time//
-       "	<Param name=\"motorNumber\" default=\"1\" abbreviation=\"n\"/>"//define the total run time//       
-       "	<Param name=\"amplititude\" default=\"1\" abbreviation=\"a\"/>"//自定义振幅参数a_的缩写//
-       "	<Param name=\"frequency\" default=\"1\" abbreviation=\"w\"/>"//自定义角频率参数w_的缩写//
-       "	<Param name=\"phase\" default=\"1.57\" abbreviation=\"p\"/>"//自定义时间参数p_的缩写//
-       "	</GroupParam>"
-       "</Command>");
-}
-cosCurveDriveMx::~cosCurveDriveMx() = default; 
-
-///////////////////////////////////////////////////////<xxx cosCurve余弦曲线--run in interval M3>///////////////////
-auto cosCurveDriveIntervalM3::prepareNrt()->void
-{
-    cef_1 = doubleParam("coefficient1");
-    cef_2 = doubleParam("coefficient2");
-    cef_3 = doubleParam("coefficient3");
-    intervals=doubleParam("intervals");
-    a_  =doubleParam("amplitude");
-    w_  =doubleParam("frequency");
-    p_  =doubleParam("phase");
-
-    for(auto &m:motorOptions()) m =
-            aris::plan::Plan::NOT_CHECK_ENABLE |
-            aris::plan::Plan::NOT_CHECK_POS_CONTINUOUS_SECOND_ORDER;
-}
-auto cosCurveDriveIntervalM3::executeRT()->int
-{
-    static double begin_angle[3];
-
-    if (count() == 1)//实时线程刚开始运行-> count=1 时的设置//
-    {
-        begin_angle[0] = controller()->motorPool()[0].targetPos();//将运动的初始位置设定为当下电机的实时位置//
-        begin_angle[1] = controller()->motorPool()[1].targetPos();
-        begin_angle[2] = controller()->motorPool()[2].targetPos();
-
-        this->master()->logFileRawName("testCosCurve");//建立记录数据的文件夹//
-    }
-
-    cosCurve cos1(a_,w_,p_); //创建对象，传入初始参数//
-
-    if ((1 <= count())&&( count()<=  (intervals * 1 * 1000) ))
-    {
-        double angle0 = begin_angle[0] + cef_1  * cos1.getCurve(count()) ;//设置变量angle0存储由梯形曲线和公式运算所得的目标位置//
-        controller()->motorPool()[0].setTargetPos(angle0);              //调用aris函数将当下电机位置更新为angle0所标定位置//
-    }
-    else if ((intervals * 1 * 1000 < count() )&& (count()<= intervals * 2 * 1000))
-    {
-        double angle1 = begin_angle[1] + cef_2  * cos1.getCurve(count()- intervals * 1 * 1000) ;
-        controller()->motorPool()[1].setTargetPos(angle1);
-    }
-    else
-    {
-        double angle2 = begin_angle[2] + cef_3  * cos1.getCurve(count() - intervals * 2 * 1000) ;
-        controller()->motorPool()[2].setTargetPos(angle2);
-    }
-
-
-    if (count() % 10 == 0)//mout::在屏幕上实时打印电机运行情况，每10ms打印一次//
-    {
-        mout() << "pos" << ":" << controller()->motorPool()[0].actualPos() << "\t";//电机实时位置//
-        mout() << "vel" << ":" << controller()->motorPool()[0].actualVel() << std::endl;//电机实时速度//
-    }
-
-    //lout::向文件夹中实时写入电机运行情况，周期与实时线程相同，为1ms一次//
-    lout() << controller()->motorPool()[0].actualPos() <<std::endl;
-    lout() << controller()->motorPool()[0].actualVel() <<std::endl;
-
-    return  intervals * 3 * 1000-count(); //设置结束实时线程的时间//
-}
-auto cosCurveDriveIntervalM3::collectNrt()->void {}
-cosCurveDriveIntervalM3::cosCurveDriveIntervalM3(const std::string &name) 
-{
-    aris::core::fromXmlString(command(),
-       "<Command name=\"ci3\">"//运行本线程的指令ccurve_interval_M3//
-       "	<GroupParam>"
-       "	<Param name=\"coefficient1\" default=\"1\" abbreviation=\"f\"/>"//control the motor 0's direction and displacement//
-       "	<Param name=\"coefficient2\" default=\"1\" abbreviation=\"g\"/>"//control the motor 1's direction and displacement//
-       "	<Param name=\"coefficient3\" default=\"1\" abbreviation=\"h\"/>"//control the motor 2's direction and displacement//
-       "	<Param name=\"intervals\" default=\"1\" abbreviation=\"j\"/>"//define the interval of two motions//
-       "	<Param name=\"amplitude\" default=\"1\" abbreviation=\"a\"/>"//自定义振幅参数a_的缩写//
-       "	<Param name=\"frequency\" default=\"1\" abbreviation=\"w\"/>"//自定义角频率参数w_的缩写//
-       "	<Param name=\"phase\" default=\"1.57\" abbreviation=\"p\"/>"//自定义时间参数p_的缩写//
-       "	</GroupParam>"
-       "</Command>");
-}
-cosCurveDriveIntervalM3::~cosCurveDriveIntervalM3() = default;  
-
-///////////////////////////////////////////////////////<XXX moveBeeLine >///////////////////////////////////////////
-auto moveBeeLine::prepareNrt()->void
-{
-    moveDir = doubleParam("moveDir");
-    moveTime = doubleParam("moveTime");
-    speedControlVariable = doubleParam("speedControlVariable");
-
-    for(auto &m:motorOptions()) m =
-            aris::plan::Plan::NOT_CHECK_ENABLE |
-            aris::plan::Plan::NOT_CHECK_POS_CONTINUOUS_SECOND_ORDER;
-}
-auto moveBeeLine::executeRT()->int
-{
-    if (count() == 1)
-    {
-        mout() << "pos of joint0" << ":" << controller()->motorPool()[0].targetPos() << std::endl;
-        mout() << "pos of joint1" << ":" << controller()->motorPool()[1].targetPos() << std::endl;
-        mout() << "pos of joint2" << ":" << controller()->motorPool()[2].targetPos() << std::endl;       
-        std::cout << "Step 2 Started! The Leg has prepared to move !"<< std::endl; 
-
-        double angleOfStatus1[3]{0};
-        angleOfStatus1[0] = controller()->motorPool()[0].targetPos();
-        angleOfStatus1[1] = controller()->motorPool()[1].targetPos();
-        angleOfStatus1[2] = controller()->motorPool()[2].targetPos();
-
-        //Solve the Forward Kinematics
-        model()->setInputPos(angleOfStatus1) ;    
-
-        if (model()->solverPool()[1].kinPos())
-        {
-            throw std::runtime_error("Leg Status1 Forward Kinematics Position Failed!");
-        }
-       
-        double posOfStatus1[3]{0};
-        model()->getOutputPos(posOfStatus1);
-        std::cout<<"EE Pos Coordinates of Status 1 : <"<<"X:"<<posOfStatus1[0]<<"\t"<<"Y:"<<posOfStatus1[1]<<"\t"<<"Z:"<<posOfStatus1[2]<<" >"<<std::endl <<std::endl;     
-        
-        for (int i = 0; i < 3; i++)
-        {
-            posOfMoveStatus[i]=posOfStatus1[i]; 
-        }
-    }
-
-    posOfMoveStatus[2] = posOfMoveStatus[2] + count() * 0.00000001 * speedControlVariable ;
-
-    std::cout<<"count = "<< count() <<" -->"<<"EE Pos Coordinates of Move Status to get invKin slove : <"<<"X:"<<posOfMoveStatus[0]<<"\t"<<"Y:"<<posOfMoveStatus[1]<<"\t"<<"Z:"<<posOfMoveStatus[2]<<" >"<<std::endl;     
-
-    model()->setOutputPos(posOfMoveStatus);
-
-    if (model()->solverPool()[0].kinPos())
-    {
-        throw std::runtime_error("Move Status Inverse kinematic position failed");    
-    }        
-
-    controller()->motorPool()[0].setTargetPos(model()->motionPool()[0].mp());
-    controller()->motorPool()[1].setTargetPos(model()->motionPool()[1].mp());
-    controller()->motorPool()[2].setTargetPos(model()->motionPool()[2].mp());
-    
-	std::cout << "Target Angle of Motor Joint  " <<"<--  Joint0 : "<<model()->motionPool()[0].mp() << "\t" <<"Joint 1 : "<< model()->motionPool()[1].mp() << "\t" <<"Joint 2 : "<< model()->motionPool()[2].mp() << std::endl << std::endl;
-    return  ( moveTime * 1000 ) -count(); 
-}
-auto moveBeeLine::collectNrt()->void {}
-moveBeeLine::moveBeeLine(const std::string &name) 
-{
-    aris::core::fromXmlString(command(),
-       "<Command name=\"m1\">"
-       "	<GroupParam>"                                    
-       "	<Param name=\"moveDir\" default=\"1\" abbreviation=\"d\"/>"//单腿的直线轨迹运行的方向，轨迹为平行于Z轴的直线，方向正负与Z轴正负相同//
-       "	<Param name=\"moveTime\" default=\"3\" abbreviation=\"t\"/>"//与计时count()有关的运动时间，单位s//
-       "	<Param name=\"speedControlVariable\" default=\"1.0\" abbreviation=\"j\"/>"//调节直线轨迹的变化速度//
-       "	</GroupParam>"
-       "</Command>");
-}
-moveBeeLine::~moveBeeLine() = default; 
-
-///////////////////////////////////////////////////<xxx anyExecuteTest >//////////////////////////////////////////
-auto anyExecuteTest::prepareNrt()->void
-{
-   cef_1 = doubleParam("coefficient1");
-   cef_2 = doubleParam("coefficient2");
-   cef_3 = doubleParam("coefficient3");
-   intervals=int32Param("intervals");
-   vel   = doubleParam("velocity");
-   acc   = doubleParam("acceleration");
-
-   for(auto &m:motorOptions()) m =
-           aris::plan::Plan::NOT_CHECK_ENABLE |
-           aris::plan::Plan::NOT_CHECK_POS_CONTINUOUS_SECOND_ORDER;
-}
-auto anyExecuteTest::executeRT()->int
-{
-   static double begin_angle[3];
-
-   if (count() == 1)
-   {
-       begin_angle[0] = controller()->motorPool()[0].targetPos();
-       begin_angle[1] = controller()->motorPool()[1].targetPos();
-       begin_angle[2] = controller()->motorPool()[2].targetPos();
-   }
-    double angle2 = begin_angle[2] + count() * 0.001 ;
-    controller()->motorPool()[2].setTargetPos(angle2);   
-   if (count() % 10 == 0)
-   {
-       mout() << "pos" << ":" << controller()->motorPool()[2].actualPos() << std::endl;//电机实时位置//
-   }
-   return intervals -count();
-}
-auto anyExecuteTest::collectNrt()->void {}
-anyExecuteTest::anyExecuteTest(const std::string &name)
-{
-   aris::core::fromXmlString(command(),
-      "<Command name=\"exe\">"//运行本线程的指令//
-      "	<GroupParam>"
-      "	<Param name=\"coefficient1\" default=\"1\" abbreviation=\"f\"/>"//自定义参数的缩写//
-      "	<Param name=\"coefficient2\" default=\"1\" abbreviation=\"g\"/>"//自定义参数的缩写//
-      "	<Param name=\"coefficient3\" default=\"1\" abbreviation=\"h\"/>"//自定义参数的缩写//
-      "	<Param name=\"intervals\" default=\"1571\" abbreviation=\"j\"/>"//自定义参数的缩写//
-      "	</GroupParam>"
-      "</Command>");
-}
-anyExecuteTest::~anyExecuteTest() = default; 
-
-///////////////////////////////////////////////////<xxx tCurve梯形曲线--run in interval M3 >///////////////////////////
-auto tCurveDriveIntervalM3::prepareNrt()->void
-{
-    cef_1 = doubleParam("coefficient1");
-    cef_2 = doubleParam("coefficient2");
-    cef_3 = doubleParam("coefficient3");
-    vel   = doubleParam("velocity");
-    acc   = doubleParam("acceleration");
-    intervals=doubleParam("intervals");
-
-    for(auto &m:motorOptions()) m =
-            aris::plan::Plan::NOT_CHECK_ENABLE |
-            aris::plan::Plan::NOT_CHECK_POS_CONTINUOUS_SECOND_ORDER;
-}
-auto tCurveDriveIntervalM3::executeRT()->int
-{
-    static double begin_angle[3];
-
-    if (count() == 1)//实时线程刚开始运行-> count=1 时的设置//
-    {
-        begin_angle[0] = controller()->motorPool()[0].targetPos();//将运动的初始位置设定为当下电机的实时位置//
-        begin_angle[1] = controller()->motorPool()[1].targetPos();
-        begin_angle[2] = controller()->motorPool()[2].targetPos();
-
-        this->master()->logFileRawName("testTCurve");//建立记录数据的文件夹//
-    }
-
-    tCurve s1(acc,vel); //梯形曲线构造函数，传入初始参数//
-
-    s1.getCurveParam();//调用函数，由初始的参数得到梯形曲线运行的所需参数//
-
-    if ((1 <=count())&& (count()<= intervals * 1 * 1000 ))
-    {
-        double angle0 = begin_angle[0] + cef_1  * s1.getCurve(count()) ;//设置变量angle0存储由梯形曲线和公式运算所得的目标位置//
-        controller()->motorPool()[0].setTargetPos(angle0);              //调用aris函数将当下电机位置更新为angle0所标定位置//
-    }
-    else if ((intervals * 1 * 1000 < count()) && (count()<= intervals * 2 * 1000))
-    {
-        double angle1 = begin_angle[1] + cef_2  * s1.getCurve(count()- intervals * 1 * 1000) ;
-        controller()->motorPool()[1].setTargetPos(angle1);
-    }
-    else
-    {
-        double angle2 = begin_angle[2] + cef_3  * s1.getCurve(count() - intervals * 2 * 1000) ;
-        controller()->motorPool()[2].setTargetPos(angle2);
-    }
-
-    if (count() % 10 == 0)//mout::在屏幕上实时打印电机运行情况，每10ms打印一次//
-    {
-        mout() << "pos" << ":" << controller()->motorPool()[0].actualPos() << "\t";//电机实时位置//
-        mout() << "cur" << ":" << controller()->motorPool()[0].actualCur() << "\t";//电机实时电流//
-        mout() << "toq" << ":" << controller()->motorPool()[0].actualToq() << "\t";//电机实时力矩//
-        mout() << "vel" << ":" << controller()->motorPool()[0].actualVel() << std::endl;//电机实时速度//
-    }
-
-    //lout::向文件夹中实时写入电机运行情况，周期与实时线程相同，为1ms一次//
-    lout() << controller()->motorPool()[0].actualVel() <<"\t";
-    lout() << controller()->motorPool()[0].actualPos() <<std::endl;
-
-    return intervals * 3 * 1000-count(); //设置结束实时线程的时间，这里是梯形曲线的运行时间Tc//
-}
-auto tCurveDriveIntervalM3::collectNrt()->void {}
-tCurveDriveIntervalM3::tCurveDriveIntervalM3(const std::string &name) 
-{
-    aris::core::fromXmlString(command(),
-       "<Command name=\"ti3\">"//运行本线程的指令tcurve_itv_3//
-       "	<GroupParam>"
-       "	<Param name=\"coefficient1\" default=\"1\" abbreviation=\"f\"/>"//the direction and displacement of motor 0//
-       "	<Param name=\"coefficient2\" default=\"1\" abbreviation=\"g\"/>"//the direction and displacement of motor 1//
-       "	<Param name=\"coefficient3\" default=\"1\" abbreviation=\"h\"/>"//the direction and displacement of motor 2//
-       "	<Param name=\"intervals\" default=\"0.88\" abbreviation=\"j\"/>"//the interval of 2 motors//
-       "	<Param name=\"acceleration\" default=\"5\" abbreviation=\"a\"/>"//the acceleration of tcurve//
-       "	<Param name=\"velocity\" default=\"2\" abbreviation=\"v\"/>"//the velocity of tcurve //
-       "	</GroupParam>"                                              //Tc=(a+v*v)/(a*v) ; [ only (v*v)/a<=1 ] => tcurve could be built; //
-       "</Command>");
-
-}
-tCurveDriveIntervalM3::~tCurveDriveIntervalM3() = default; 
-
-///////////////////////////////////////////////////////<xxx cosCurve余弦曲线-run together M2 >///////////////////////////
-auto cosCurveDriveTogetherM2::prepareNrt()->void
-{
-   cef_1 = doubleParam("coefficient1");
-   cef_2 = doubleParam("coefficient2");
-   totalTime=doubleParam("totalTime");
-   a_  =doubleParam("amplitude");
-   w_  =doubleParam("frequency");
-   p_  =doubleParam("phase");
-
-   for(auto &m:motorOptions()) m =
-           aris::plan::Plan::NOT_CHECK_ENABLE |
-           aris::plan::Plan::NOT_CHECK_POS_CONTINUOUS_SECOND_ORDER;
-}
-auto cosCurveDriveTogetherM2::executeRT()->int
-{
-   static double begin_angle[3];
-
-   if (count() == 1)//实时线程刚开始运行-> count=1 时的设置//
-   {
-       begin_angle[0] = controller()->motorPool()[0].targetPos();//将运动的初始位置设定为当下电机的实时位置//
-       begin_angle[1] = controller()->motorPool()[1].targetPos();
-   }
-
-   cosCurve cos1(a_,w_,p_); //创建对象，传入初始参数//
-
-   double angle0 = begin_angle[0] + cef_1  * cos1.getCurve(count()) ;//设置变量angle0存储由余弦曲线和公式运算所得的目标位置//
-   double angle1 = begin_angle[1] + cef_2  * cos1.getCurve(count()) ;
-
-   controller()->motorPool()[0].setTargetPos(angle0);//调用aris函数将当下电机位置更新为angle0所标定位置//
-   controller()->motorPool()[1].setTargetPos(angle1);
-
-   if (count() % 10 == 0)//mout::在屏幕上实时打印电机运行情况，每10ms打印一次//
-   {
-       mout() << "pos" << ":" << controller()->motorPool()[0].actualPos() << "\t";//电机实时位置//
-       mout() << "vel" << ":" << controller()->motorPool()[0].actualVel() << std::endl;//电机实时速度//
-   }
-
-   return  totalTime * 1000 - count(); //设置结束实时线程的时间//
-}
-auto cosCurveDriveTogetherM2::collectNrt()->void {}
-cosCurveDriveTogetherM2::cosCurveDriveTogetherM2(const std::string &name) 
-{
-   aris::core::fromXmlString(command(),
-      "<Command name=\"c2\">"//运行本线程的指令//
-      "	<GroupParam>"
-      "	<Param name=\"coefficient1\" default=\"1\" abbreviation=\"f\"/>"//自定义参数的缩写//
-      "	<Param name=\"coefficient2\" default=\"1\" abbreviation=\"g\"/>"//自定义参数的缩写//
-      "	<Param name=\"totalTime\" default=\"3\" abbreviation=\"t\"/>"//自定义参数的缩写//
-      "	<Param name=\"amplitude\" default=\"1\" abbreviation=\"a\"/>"//自定义振幅参数a_的缩写//
-      "	<Param name=\"frequency\" default=\"1\" abbreviation=\"w\"/>"//自定义角频率参数w_的缩写//
-      "	<Param name=\"phase\" default=\"1.57\" abbreviation=\"p\"/>"//自定义时间参数t_的缩写//
-      "	</GroupParam>"
-      "</Command>");
-}
-cosCurveDriveTogetherM2::~cosCurveDriveTogetherM2() = default; 
-
-///////////////////////////////////////////////最大力矩设置/////////////////////////////////////////////////////////
+///////////////////////////////////////////////< set-maxTorque >/////////////////////////////////////////////////////////
 auto SetMaxTorque::prepareNrt()->void{
     for(auto &m:motorOptions()){ 
         m =
@@ -1794,7 +855,6 @@ auto createControllerROSMotorTest()->std::unique_ptr<aris::control::Controller>
 auto createPlanROSMotorTest()->std::unique_ptr<aris::plan::PlanRoot>
 {
     std::unique_ptr<aris::plan::PlanRoot> plan_root(new aris::plan::PlanRoot);
-
     plan_root->planPool().add<aris::plan::Enable>();
     plan_root->planPool().add<aris::plan::Disable>();
     plan_root->planPool().add<aris::plan::Home>();
@@ -1816,25 +876,13 @@ auto createPlanROSMotorTest()->std::unique_ptr<aris::plan::PlanRoot>
 
     //-------------自己写的命令-----------------//
     plan_root->planPool().add<SetMaxTorque>();
-    plan_root->planPool().add<tCurveDrive>();
     plan_root->planPool().add<VelDrive>();
-    plan_root->planPool().add<MoveJS>(); 
-    plan_root->planPool().add<cosCurveDriveMx>();
-    plan_root->planPool().add<tCurveDriveTogetherM3>();
     plan_root->planPool().add<cosCurveDriveTogetherM3>();
-    plan_root->planPool().add<cosCurveDriveTogetherM2>();
-    plan_root->planPool().add<tCurveDriveIntervalM3>();
-    plan_root->planPool().add<cosCurveDriveIntervalM3>();    
     plan_root->planPool().add<inverseKinLegTest>();
     plan_root->planPool().add<forwardKinLegTest>();
-    plan_root->planPool().add<anyExecuteTest>();
     plan_root->planPool().add<legInitialization>();
-    plan_root->planPool().add<moveBeeLine>();
     plan_root->planPool().add<moveBeeLineE2>();
-    plan_root->planPool().add<ellipticalTrajectoryDrive>();
-    plan_root->planPool().add<ellipticalTrajectoryDrive2>();
     plan_root->planPool().add<ellipticalTrajectoryDrive3>();
-
     return plan_root;
 }
 auto setMaxTorque(aris::control::EthercatMaster* ecMaster, std::uint16_t value, size_t index)->bool
