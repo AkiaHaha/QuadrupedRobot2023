@@ -27,7 +27,6 @@ auto ellipticalTrajectoryDrive3::prepareNrt()->void
             aris::plan::Plan::NOT_CHECK_POS_CONTINUOUS_SECOND_ORDER;
 }
 
-
 auto ellipticalTrajectoryDrive3::executeRT()->int
 {
     static ellipticalTrajectory3  ellipticalTrajectory;
@@ -1015,7 +1014,7 @@ auto forwardKinLegTest::executeRT()->int
     }
     
     double initOtputPos[3]{0};
-    model()->getOutputPos(initOtputPos);
+    model()->getOutputPos(initOtputPos); 
     std::cout<<"Output Position test in CmdLine: <"<<initOtputPos[0]<<"\t"<<initOtputPos[1]<<"\t"<<initOtputPos[2]<<" >"<<std::endl;
 
     if (count() == 1)//实时线程刚开始运行-> count=1 时的设置//
