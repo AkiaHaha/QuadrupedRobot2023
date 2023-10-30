@@ -8,6 +8,35 @@
 
 namespace robot
 {   
+    class MotorTest12 : public aris::core::CloneObject<MotorTest12,aris::plan::Plan>
+    {
+    public:
+        auto virtual prepareNrt()->void;
+        auto virtual executeRT()->int;
+        auto virtual collectNrt()->void;
+
+        virtual ~MotorTest12();
+        explicit MotorTest12(const std::string &name = "MotorTest12");
+
+    private:
+        double motor0_{};
+        double motor1_{};
+        double motor2_{};
+        double motor3_{};
+        double motor4_{};
+        double motor5_{};
+        double motor6_{};
+        double motor7_{};
+        double motor8_{};
+        double motor9_{};
+        double motor10_{};
+        double motor11_{};
+
+        int iNumberMax{};
+        double angle[12]{};    
+        int dir[12]{};
+    };
+
     class ellipticalTrajectoryDrive3 : public aris::core::CloneObject<ellipticalTrajectoryDrive3,aris::plan::Plan>
     {
     public:
@@ -35,8 +64,6 @@ namespace robot
         double theta_d{};
         double theta_dd{};
     };
-
-
 
     class moveBeeLineE2 :public aris::core::CloneObject<moveBeeLineE2,aris::plan::Plan>
     {
@@ -153,7 +180,7 @@ namespace robot
         virtual ~SetMaxTorque();
         explicit SetMaxTorque(const std::string &name = "set_max_torque");
     };  
-    
+
     auto createMasterROSMotorTest()->std::unique_ptr<aris::control::Master>;
     auto createControllerROSMotorTest()->std::unique_ptr<aris::control::Controller>;
     auto createPlanROSMotorTest()->std::unique_ptr<aris::plan::PlanRoot>;

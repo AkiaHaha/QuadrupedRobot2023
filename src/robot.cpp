@@ -13,7 +13,133 @@ using namespace aris::plan;
 const double PI = aris::PI;
 namespace robot
 {
-///////////////////////////////////////////////////////< Ellipse-edition-3 >////////////////////////////////////
+///////////////////////////////////////////////////////< 12 motors test  >////////////////////////////////////////////////////
+                          ///---------test all the motor hardware by send a target pos variation---------------///
+auto MotorTest12::prepareNrt()->void
+{
+    motor0_ = doubleParam("motor0");
+    motor1_ = doubleParam("motor1");
+    motor2_ = doubleParam("motor2");
+    motor3_ = doubleParam("motor3");
+    motor4_ = doubleParam("motor4");
+    motor5_ = doubleParam("motor5");
+    motor6_ = doubleParam("motor6");
+    motor7_ = doubleParam("motor7");
+    motor8_ = doubleParam("motor8");
+    motor9_ = doubleParam("motor9");
+    motor10_ = doubleParam("motor10");
+    motor11_ = doubleParam("motor11");
+
+
+    for(auto &m:motorOptions()) m =
+            // aris::plan::Plan::NOT_CHECK_ENABLE |
+            // aris::plan::Plan::NOT_CHECK_POS_CONTINUOUS_SECOND_ORDER;
+            aris::plan::Plan::CHECK_NONE;
+}
+auto MotorTest12::executeRT()->int
+{
+    static double begin_angle[12];
+    double iNumber[12] = {motor0_, motor1_, motor2_, motor3_, motor4_, motor5_, motor6_, motor7_, motor8_, motor9_, motor10_, motor11_};
+
+
+    for(int i=0 ; i < 12; ++i)
+    {
+        dir[i] = int( std::abs(iNumber[i]) /  iNumber[i] );
+        iNumber[i] = int(std::abs(iNumber[i]) * 10000 );
+        // std::cout << " iNumber init sucess " << std::endl;
+    }
+
+    for(int i=0; i<12; ++i)
+    {
+        if(iNumberMax <= iNumber[i])
+        {
+            iNumberMax = iNumber[i];
+        }
+        // std::cout << " iNumberMax =  " << iNumberMax << std::endl;
+    }
+
+    if (count() == 1)
+    {
+        for(int i=0 ; i < 12; ++i)
+        {
+        begin_angle[i] = controller()->motorPool()[i].actualPos();
+        // std::cout << "begin_angle " << i << " approches~ " <<std::endl;
+        }
+    }
+
+
+    for(int j=0; j<12; ++j)
+    {
+        if (count() <= iNumber[j] )
+        {
+            if (count() % 100 == 0)
+            {
+                std::cout << "count= " << count() <<std::endl;
+                std::cout << "motor"<< j << "< Pos: " << controller()->motorPool()[0].actualPos() << "\t";
+                std::cout << "Vel:" << controller()->motorPool()[0].actualVel() <<" >"<< std::endl << std::endl;
+            }
+            angle[j] = begin_angle[j] + count() * 0.0001 * dir[j];
+            controller()->motorPool()[j].setTargetPos(angle[j]); 
+        }
+    }
+    
+    if ( count() == iNumberMax )
+    {
+        std::cout <<std::endl<< "motorPos: " << std::endl;
+        std::cout << "leg 1 --> " << controller()->motorPool()[0].actualPos() <<"\t"<< controller()->motorPool()[1].actualPos()<<"\t"<< controller()->motorPool()[2].actualPos() << std::endl;
+        std::cout << "leg 2 --> " << controller()->motorPool()[3].actualPos() <<"\t"<< controller()->motorPool()[4].actualPos()<<"\t"<< controller()->motorPool()[5].actualPos() << std::endl;
+        std::cout << "leg 3 --> " << controller()->motorPool()[6].actualPos() <<"\t"<< controller()->motorPool()[7].actualPos()<<"\t"<< controller()->motorPool()[8].actualPos() << std::endl;
+        std::cout << "leg 4 --> " << controller()->motorPool()[9].actualPos() <<"\t"<< controller()->motorPool()[10].actualPos()<<"\t"<< controller()->motorPool()[11].actualPos() << std::endl;
+    
+        double finalPos[12]{0};
+        for (int i = 0; i < 12; i++)
+        {
+            finalPos[i] = controller()->motorPool()[i].actualPos();
+        }
+
+        //Solve the Forward Kinematics
+        model()->setInputPos(finalPos) ;    
+
+        if (model()->solverPool()[1].kinPos())
+        {
+            throw std::runtime_error("Quadrupd Leg Forward Kinematics Failed!");
+        }
+       
+        double finalPE[28]{0};
+        model()->getOutputPos(finalPE);
+        std::cout <<"Final BodyPE & Leg Point:"<<std::endl;
+        std::cout << finalPE[0] << "\t" << finalPE[1] << "\t" << finalPE[2] << "\t" << finalPE[3] << "\t;\t" << finalPE[4] << "\t" << finalPE[5] << "\t" << finalPE[6] << std::endl;
+        std::cout << finalPE[7] << "\t" << finalPE[8] << "\t" << finalPE[9] << "\t" << finalPE[10] << "\t;\t" << finalPE[11] << "\t" << finalPE[12] << "\t" << finalPE[13]<< std::endl;
+        std::cout << finalPE[14] << "\t" << finalPE[15] << "\t" << finalPE[16] << "\t" << finalPE[17] << "\t;\t" << finalPE[18] << "\t" << finalPE[19] << "\t" << finalPE[20] << std::endl;
+        std::cout << finalPE[21] << "\t" << finalPE[22] << "\t" << finalPE[23] << "\t" << finalPE[24] << "\t;\t" << finalPE[25] << "\t" << finalPE[26] << "\t" << finalPos[27] << std::endl;
+    }
+
+    return  iNumberMax - count(); 
+}
+auto MotorTest12::collectNrt()->void {}
+MotorTest12::MotorTest12(const std::string &name) 
+{
+    aris::core::fromXmlString(command(),
+       "<Command name=\"test\">"
+       "	<GroupParam>"                                    
+       "	<Param name=\"motor0\" default=\"0.1\" abbreviation=\"q\"/>"  // Initialize the end pose of a single leg by giving the initial value of the motor. //
+       "	<Param name=\"motor1\" default=\"0.5\" abbreviation=\"a\"/>"  // The given value is in radians. The accuracy in this program is set to four decimal places.//
+       "	<Param name=\"motor2\" default=\"1\" abbreviation=\"z\"/>"   
+       "	<Param name=\"motor3\" default=\"0.64\" abbreviation=\"w\"/>"   
+       "	<Param name=\"motor4\" default=\"0.1254\" abbreviation=\"s\"/>"   
+       "	<Param name=\"motor5\" default=\"0.1324\" abbreviation=\"x\"/>"   
+       "	<Param name=\"motor6\" default=\"0.125\" abbreviation=\"e\"/>"   
+       "	<Param name=\"motor7\" default=\"0.114\" abbreviation=\"d\"/>"   
+       "	<Param name=\"motor8\" default=\"0.198\" abbreviation=\"c\"/>"   
+       "	<Param name=\"motor9\" default=\"0.1458\" abbreviation=\"r\"/>"   
+       "	<Param name=\"motor10\" default=\"0.4521\" abbreviation=\"f\"/>"   
+       "	<Param name=\"motor11\" default=\"0.1541\" abbreviation=\"v\"/>"   
+       "	</GroupParam>"
+       "</Command>");
+}
+MotorTest12::~MotorTest12() = default; 
+
+///////////////////////////////////////////////////////< Ellipse-Edition3 >////////////////////////////////////
 auto ellipticalTrajectoryDrive3::prepareNrt()->void
 {
     Height = doubleParam("Height");
@@ -184,7 +310,7 @@ ellipticalTrajectoryDrive3::ellipticalTrajectoryDrive3(const std::string &name)
 }
 ellipticalTrajectoryDrive3::~ellipticalTrajectoryDrive3() = default; 
 
-///////////////////////////////////////////////////////< moveBeeLineEdition2 >//////////////////////////////////
+///////////////////////////////////////////////////////< moveBeeLine-Edition2 >//////////////////////////////////
 auto moveBeeLineE2::prepareNrt()->void
 {
     moveTargetX = doubleParam("moveTargetX");
@@ -648,8 +774,8 @@ SetMaxTorque::~SetMaxTorque() = default;
 auto createMasterROSMotorTest()->std::unique_ptr<aris::control::Master>{
     std::unique_ptr<aris::control::Master> master(new aris::control::EthercatMaster);
 
-    for (aris::Size i = 0; i < 3 ; ++i){
-        int phy_id[3]={0,1,2};
+    for (aris::Size i = 0; i < 12 ; ++i){
+        int phy_id[12]={2,1,0,3,4,5,8,7,6,9,10,11};
 
 //--------------------------XML from Leo---------------------//
 //           " min_pos=\"" + std::to_string(min_pos[i]) + "\" max_pos=\"" + std::to_string(max_pos[i]) + "\" max_vel=\"" + std::to_string(max_vel[i]) + "\" min_vel=\"" + std::to_string(-max_vel[i]) + "\""
@@ -796,47 +922,68 @@ auto createControllerROSMotorTest()->std::unique_ptr<aris::control::Controller>
 {
     std::unique_ptr<aris::control::Controller> controller(new aris::control::Controller);
 
-    for (aris::Size i = 0; i < 3 ; ++i)
+    for (aris::Size i = 0; i < 12 ; ++i)
     {
 #ifdef ARIS_USE_ETHERCAT_SIMULATION
-        double pos_offset[3]
+        double pos_offset[12]
         {
-            0,0,0
+            0, 0, 0,
+            0, 0, 0,
+            0, 0, 0,
+            0, 0, 0,            
         };
 #else
-        double pos_offset[3]
+        double pos_offset[12]
         {
             // 0, 0, 0
-            -1.4974336956172, 0.128106570548551, 0.844257485597249
+            -1.4974336956172, 0.128106570548551, 0.844257485597249,
+            -1.4974336956172, 0.128106570548551, 0.844257485597249,
+            -1.4974336956172, 0.128106570548551, 0.844257485597249,
+            -1.4974336956172, 0.128106570548551, 0.844257485597249,
             // -0.894181369710104, 0.119132782939402, 0.844199961317703
         };
 #endif
-        double pos_factor[3] //偏置系数//
+        double pos_factor[12] //偏置系数//
         {
             // 2000/PI,2000/PI,2000/PI
-            131072*5/PI,131072*5/PI,131072*10/PI
+            131072*5/PI,131072*5/PI,131072*10/PI,
+            131072*5/PI,131072*5/PI,131072*10/PI,
+            131072*5/PI,131072*5/PI,131072*10/PI,
+            131072*5/PI,131072*5/PI,131072*10/PI,
+
         };
-        double max_pos[3] //最大位置//
+        double max_pos[12] //最大位置//
         {
             // 500*PI,500*PI,500*PI  
             // PI/6, PI/2, 2 * PI/3
-            1.6, 1.5, 2.2
-
+            1.6, 1.5, 2.2,
+            1.6, 1.5, 2.2,
+            1.6, 1.5, 2.2,
+            1.6, 1.5, 2.2,
         };
-        double min_pos[3] //最小位置//
+        double min_pos[12] //最小位置//
         {
             // -500*PI,-500*PI,-500*PI
-            -0.6, -0.4, -1.8
+            -0.6, -0.4, -1.8,
+            -0.6, -0.4, -1.8,
+            -0.6, -0.4, -1.8,
+            -0.6, -0.4, -1.8,
         };
-        double max_vel[3]  //最大速度//
+        double max_vel[12]  //最大速度//
         {
             // 330 / 60 * 2 * PI, 330 / 60 * 2 * PI,  330 / 60 * 2 * PI
-            1, 1, 1
+            1, 1, 1,
+            1, 1, 1,
+            1, 1, 1,
+            1, 1, 1,
         };
-        double max_acc[3]  //最大加速度//
+        double max_acc[12]  //最大加速度//
         {
             // 3000,  3000,  3000
-            10, 10, 10
+            10, 10, 10,
+            10, 10, 10,
+            10, 10, 10,
+            10, 10, 10,
         };
         //zero_err//
         std::string xml_str =
@@ -883,6 +1030,7 @@ auto createPlanROSMotorTest()->std::unique_ptr<aris::plan::PlanRoot>
     plan_root->planPool().add<legInitialization>();
     plan_root->planPool().add<moveBeeLineE2>();
     plan_root->planPool().add<ellipticalTrajectoryDrive3>();
+    plan_root->planPool().add<MotorTest12>();
     return plan_root;
 }
 auto setMaxTorque(aris::control::EthercatMaster* ecMaster, std::uint16_t value, size_t index)->bool
