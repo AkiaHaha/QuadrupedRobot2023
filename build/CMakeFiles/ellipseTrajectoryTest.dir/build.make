@@ -60,67 +60,67 @@ include CMakeFiles/ellipseTrajectoryTest.dir/flags.make
 CMakeFiles/ellipseTrajectoryTest.dir/src/main.cpp.o: CMakeFiles/ellipseTrajectoryTest.dir/flags.make
 CMakeFiles/ellipseTrajectoryTest.dir/src/main.cpp.o: ../src/main.cpp
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/kaanh/Desktop/singleLeg2023/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/ellipseTrajectoryTest.dir/src/main.cpp.o"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/ellipseTrajectoryTest.dir/src/main.cpp.o -c /home/kaanh/Desktop/singleLeg2023/src/main.cpp
+	/usr/bin/x86_64-linux-gnu-g++-8  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/ellipseTrajectoryTest.dir/src/main.cpp.o -c /home/kaanh/Desktop/singleLeg2023/src/main.cpp
 
 CMakeFiles/ellipseTrajectoryTest.dir/src/main.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/ellipseTrajectoryTest.dir/src/main.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/kaanh/Desktop/singleLeg2023/src/main.cpp > CMakeFiles/ellipseTrajectoryTest.dir/src/main.cpp.i
+	$(CMAKE_COMMAND) -E cmake_unimplemented_variable CMAKE_CXX_CREATE_PREPROCESSED_SOURCE
 
 CMakeFiles/ellipseTrajectoryTest.dir/src/main.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/ellipseTrajectoryTest.dir/src/main.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/kaanh/Desktop/singleLeg2023/src/main.cpp -o CMakeFiles/ellipseTrajectoryTest.dir/src/main.cpp.s
+	$(CMAKE_COMMAND) -E cmake_unimplemented_variable CMAKE_CXX_CREATE_ASSEMBLY_SOURCE
 
 CMakeFiles/ellipseTrajectoryTest.dir/src/model.cpp.o: CMakeFiles/ellipseTrajectoryTest.dir/flags.make
 CMakeFiles/ellipseTrajectoryTest.dir/src/model.cpp.o: ../src/model.cpp
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/kaanh/Desktop/singleLeg2023/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/ellipseTrajectoryTest.dir/src/model.cpp.o"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/ellipseTrajectoryTest.dir/src/model.cpp.o -c /home/kaanh/Desktop/singleLeg2023/src/model.cpp
+	/usr/bin/x86_64-linux-gnu-g++-8  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/ellipseTrajectoryTest.dir/src/model.cpp.o -c /home/kaanh/Desktop/singleLeg2023/src/model.cpp
 
 CMakeFiles/ellipseTrajectoryTest.dir/src/model.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/ellipseTrajectoryTest.dir/src/model.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/kaanh/Desktop/singleLeg2023/src/model.cpp > CMakeFiles/ellipseTrajectoryTest.dir/src/model.cpp.i
+	$(CMAKE_COMMAND) -E cmake_unimplemented_variable CMAKE_CXX_CREATE_PREPROCESSED_SOURCE
 
 CMakeFiles/ellipseTrajectoryTest.dir/src/model.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/ellipseTrajectoryTest.dir/src/model.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/kaanh/Desktop/singleLeg2023/src/model.cpp -o CMakeFiles/ellipseTrajectoryTest.dir/src/model.cpp.s
+	$(CMAKE_COMMAND) -E cmake_unimplemented_variable CMAKE_CXX_CREATE_ASSEMBLY_SOURCE
 
 CMakeFiles/ellipseTrajectoryTest.dir/src/robot.cpp.o: CMakeFiles/ellipseTrajectoryTest.dir/flags.make
 CMakeFiles/ellipseTrajectoryTest.dir/src/robot.cpp.o: ../src/robot.cpp
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/kaanh/Desktop/singleLeg2023/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/ellipseTrajectoryTest.dir/src/robot.cpp.o"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/ellipseTrajectoryTest.dir/src/robot.cpp.o -c /home/kaanh/Desktop/singleLeg2023/src/robot.cpp
+	/usr/bin/x86_64-linux-gnu-g++-8  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/ellipseTrajectoryTest.dir/src/robot.cpp.o -c /home/kaanh/Desktop/singleLeg2023/src/robot.cpp
 
 CMakeFiles/ellipseTrajectoryTest.dir/src/robot.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/ellipseTrajectoryTest.dir/src/robot.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/kaanh/Desktop/singleLeg2023/src/robot.cpp > CMakeFiles/ellipseTrajectoryTest.dir/src/robot.cpp.i
+	$(CMAKE_COMMAND) -E cmake_unimplemented_variable CMAKE_CXX_CREATE_PREPROCESSED_SOURCE
 
 CMakeFiles/ellipseTrajectoryTest.dir/src/robot.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/ellipseTrajectoryTest.dir/src/robot.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/kaanh/Desktop/singleLeg2023/src/robot.cpp -o CMakeFiles/ellipseTrajectoryTest.dir/src/robot.cpp.s
+	$(CMAKE_COMMAND) -E cmake_unimplemented_variable CMAKE_CXX_CREATE_ASSEMBLY_SOURCE
 
 CMakeFiles/ellipseTrajectoryTest.dir/src/tplan.cpp.o: CMakeFiles/ellipseTrajectoryTest.dir/flags.make
 CMakeFiles/ellipseTrajectoryTest.dir/src/tplan.cpp.o: ../src/tplan.cpp
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/kaanh/Desktop/singleLeg2023/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/ellipseTrajectoryTest.dir/src/tplan.cpp.o"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/ellipseTrajectoryTest.dir/src/tplan.cpp.o -c /home/kaanh/Desktop/singleLeg2023/src/tplan.cpp
+	/usr/bin/x86_64-linux-gnu-g++-8  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/ellipseTrajectoryTest.dir/src/tplan.cpp.o -c /home/kaanh/Desktop/singleLeg2023/src/tplan.cpp
 
 CMakeFiles/ellipseTrajectoryTest.dir/src/tplan.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/ellipseTrajectoryTest.dir/src/tplan.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/kaanh/Desktop/singleLeg2023/src/tplan.cpp > CMakeFiles/ellipseTrajectoryTest.dir/src/tplan.cpp.i
+	$(CMAKE_COMMAND) -E cmake_unimplemented_variable CMAKE_CXX_CREATE_PREPROCESSED_SOURCE
 
 CMakeFiles/ellipseTrajectoryTest.dir/src/tplan.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/ellipseTrajectoryTest.dir/src/tplan.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/kaanh/Desktop/singleLeg2023/src/tplan.cpp -o CMakeFiles/ellipseTrajectoryTest.dir/src/tplan.cpp.s
+	$(CMAKE_COMMAND) -E cmake_unimplemented_variable CMAKE_CXX_CREATE_ASSEMBLY_SOURCE
 
 CMakeFiles/ellipseTrajectoryTest.dir/src/cplan.cpp.o: CMakeFiles/ellipseTrajectoryTest.dir/flags.make
 CMakeFiles/ellipseTrajectoryTest.dir/src/cplan.cpp.o: ../src/cplan.cpp
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/kaanh/Desktop/singleLeg2023/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/ellipseTrajectoryTest.dir/src/cplan.cpp.o"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/ellipseTrajectoryTest.dir/src/cplan.cpp.o -c /home/kaanh/Desktop/singleLeg2023/src/cplan.cpp
+	/usr/bin/x86_64-linux-gnu-g++-8  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/ellipseTrajectoryTest.dir/src/cplan.cpp.o -c /home/kaanh/Desktop/singleLeg2023/src/cplan.cpp
 
 CMakeFiles/ellipseTrajectoryTest.dir/src/cplan.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/ellipseTrajectoryTest.dir/src/cplan.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/kaanh/Desktop/singleLeg2023/src/cplan.cpp > CMakeFiles/ellipseTrajectoryTest.dir/src/cplan.cpp.i
+	$(CMAKE_COMMAND) -E cmake_unimplemented_variable CMAKE_CXX_CREATE_PREPROCESSED_SOURCE
 
 CMakeFiles/ellipseTrajectoryTest.dir/src/cplan.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/ellipseTrajectoryTest.dir/src/cplan.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/kaanh/Desktop/singleLeg2023/src/cplan.cpp -o CMakeFiles/ellipseTrajectoryTest.dir/src/cplan.cpp.s
+	$(CMAKE_COMMAND) -E cmake_unimplemented_variable CMAKE_CXX_CREATE_ASSEMBLY_SOURCE
 
 # Object files for target ellipseTrajectoryTest
 ellipseTrajectoryTest_OBJECTS = \

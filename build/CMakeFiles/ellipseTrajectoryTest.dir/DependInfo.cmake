@@ -10,7 +10,6 @@ set(CMAKE_DEPENDS_CHECK_CXX
   "/home/kaanh/Desktop/singleLeg2023/src/robot.cpp" "/home/kaanh/Desktop/singleLeg2023/build/CMakeFiles/ellipseTrajectoryTest.dir/src/robot.cpp.o"
   "/home/kaanh/Desktop/singleLeg2023/src/tplan.cpp" "/home/kaanh/Desktop/singleLeg2023/build/CMakeFiles/ellipseTrajectoryTest.dir/src/tplan.cpp.o"
   )
-set(CMAKE_CXX_COMPILER_ID "GNU")
 
 # Preprocessor definitions for this target.
 set(CMAKE_TARGET_DEFINITIONS_CXX
