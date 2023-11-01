@@ -19,6 +19,7 @@ auto SingleMotorTest::prepareNrt()->void
     angle_ = doubleParam("angle");
     for(auto &m:motorOptions()) m =
             aris::plan::Plan::CHECK_NONE;
+            aris::plan::Plan::NOT_CHECK_POS_CONTINUOUS_SECOND_ORDER;
 }
 auto SingleMotorTest::executeRT()->int
 {
@@ -31,16 +32,17 @@ auto SingleMotorTest::executeRT()->int
         begin_angle = controller()->motorPool()[0].actualPos();
     }
 
+    double angle = begin_angle + count() * 0.0001 * dir;
 
     if (count() % 10 == 0)
     {
         std::cout << "count = " << count() <<std::endl;
-        std::cout << "< pos " << ":" << controller()->motorPool()[0].actualPos() << "\t";
-        std::cout << "vel" << ":" << controller()->motorPool()[0].actualVel() <<" >"<< std::endl << std::endl;
+        std::cout << "< targetPos " << ":" << controller()->motorPool()[0].targetPos() << "\t";
+        std::cout << "targetVel" << ":" << controller()->motorPool()[0].targetVel() <<" >"<< std::endl;
+        std::cout << "< actualPos " << ":" << controller()->motorPool()[0].actualPos() << "\t";
+        std::cout << "actualVel" << ":" << controller()->motorPool()[0].actualVel() <<" >"<< std::endl << std::endl;
     }
-    double angle = begin_angle + count() * 0.0001 * dir;
     controller()->motorPool()[0].setTargetPos(angle); 
-
     return  iNumber - count(); 
 }
 auto SingleMotorTest::collectNrt()->void {}
