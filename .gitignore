@@ -1,0 +1,9 @@
+# 忽略编译输出
+build/
+dist/
+
+# 忽略临时文件
+*.tmp
+
+# 忽略特定文件
+secret.txt
