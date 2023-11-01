@@ -64,11 +64,11 @@ CMakeFiles/ellipseTrajectoryTest.dir/src/main.cpp.o: ../src/main.cpp
 
 CMakeFiles/ellipseTrajectoryTest.dir/src/main.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/ellipseTrajectoryTest.dir/src/main.cpp.i"
-	$(CMAKE_COMMAND) -E cmake_unimplemented_variable CMAKE_CXX_CREATE_PREPROCESSED_SOURCE
+	/usr/bin/x86_64-linux-gnu-g++-8 $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/kaanh/Desktop/singleLeg2023/src/main.cpp > CMakeFiles/ellipseTrajectoryTest.dir/src/main.cpp.i
 
 CMakeFiles/ellipseTrajectoryTest.dir/src/main.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/ellipseTrajectoryTest.dir/src/main.cpp.s"
-	$(CMAKE_COMMAND) -E cmake_unimplemented_variable CMAKE_CXX_CREATE_ASSEMBLY_SOURCE
+	/usr/bin/x86_64-linux-gnu-g++-8 $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/kaanh/Desktop/singleLeg2023/src/main.cpp -o CMakeFiles/ellipseTrajectoryTest.dir/src/main.cpp.s
 
 CMakeFiles/ellipseTrajectoryTest.dir/src/model.cpp.o: CMakeFiles/ellipseTrajectoryTest.dir/flags.make
 CMakeFiles/ellipseTrajectoryTest.dir/src/model.cpp.o: ../src/model.cpp
@@ -77,11 +77,11 @@ CMakeFiles/ellipseTrajectoryTest.dir/src/model.cpp.o: ../src/model.cpp
 
 CMakeFiles/ellipseTrajectoryTest.dir/src/model.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/ellipseTrajectoryTest.dir/src/model.cpp.i"
-	$(CMAKE_COMMAND) -E cmake_unimplemented_variable CMAKE_CXX_CREATE_PREPROCESSED_SOURCE
+	/usr/bin/x86_64-linux-gnu-g++-8 $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/kaanh/Desktop/singleLeg2023/src/model.cpp > CMakeFiles/ellipseTrajectoryTest.dir/src/model.cpp.i
 
 CMakeFiles/ellipseTrajectoryTest.dir/src/model.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/ellipseTrajectoryTest.dir/src/model.cpp.s"
-	$(CMAKE_COMMAND) -E cmake_unimplemented_variable CMAKE_CXX_CREATE_ASSEMBLY_SOURCE
+	/usr/bin/x86_64-linux-gnu-g++-8 $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/kaanh/Desktop/singleLeg2023/src/model.cpp -o CMakeFiles/ellipseTrajectoryTest.dir/src/model.cpp.s
 
 CMakeFiles/ellipseTrajectoryTest.dir/src/robot.cpp.o: CMakeFiles/ellipseTrajectoryTest.dir/flags.make
 CMakeFiles/ellipseTrajectoryTest.dir/src/robot.cpp.o: ../src/robot.cpp
@@ -90,11 +90,11 @@ CMakeFiles/ellipseTrajectoryTest.dir/src/robot.cpp.o: ../src/robot.cpp
 
 CMakeFiles/ellipseTrajectoryTest.dir/src/robot.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/ellipseTrajectoryTest.dir/src/robot.cpp.i"
-	$(CMAKE_COMMAND) -E cmake_unimplemented_variable CMAKE_CXX_CREATE_PREPROCESSED_SOURCE
+	/usr/bin/x86_64-linux-gnu-g++-8 $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/kaanh/Desktop/singleLeg2023/src/robot.cpp > CMakeFiles/ellipseTrajectoryTest.dir/src/robot.cpp.i
 
 CMakeFiles/ellipseTrajectoryTest.dir/src/robot.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/ellipseTrajectoryTest.dir/src/robot.cpp.s"
-	$(CMAKE_COMMAND) -E cmake_unimplemented_variable CMAKE_CXX_CREATE_ASSEMBLY_SOURCE
+	/usr/bin/x86_64-linux-gnu-g++-8 $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/kaanh/Desktop/singleLeg2023/src/robot.cpp -o CMakeFiles/ellipseTrajectoryTest.dir/src/robot.cpp.s
 
 CMakeFiles/ellipseTrajectoryTest.dir/src/tplan.cpp.o: CMakeFiles/ellipseTrajectoryTest.dir/flags.make
 CMakeFiles/ellipseTrajectoryTest.dir/src/tplan.cpp.o: ../src/tplan.cpp
@@ -103,11 +103,11 @@ CMakeFiles/ellipseTrajectoryTest.dir/src/tplan.cpp.o: ../src/tplan.cpp
 
 CMakeFiles/ellipseTrajectoryTest.dir/src/tplan.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/ellipseTrajectoryTest.dir/src/tplan.cpp.i"
-	$(CMAKE_COMMAND) -E cmake_unimplemented_variable CMAKE_CXX_CREATE_PREPROCESSED_SOURCE
+	/usr/bin/x86_64-linux-gnu-g++-8 $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/kaanh/Desktop/singleLeg2023/src/tplan.cpp > CMakeFiles/ellipseTrajectoryTest.dir/src/tplan.cpp.i
 
 CMakeFiles/ellipseTrajectoryTest.dir/src/tplan.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/ellipseTrajectoryTest.dir/src/tplan.cpp.s"
-	$(CMAKE_COMMAND) -E cmake_unimplemented_variable CMAKE_CXX_CREATE_ASSEMBLY_SOURCE
+	/usr/bin/x86_64-linux-gnu-g++-8 $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/kaanh/Desktop/singleLeg2023/src/tplan.cpp -o CMakeFiles/ellipseTrajectoryTest.dir/src/tplan.cpp.s
 
 CMakeFiles/ellipseTrajectoryTest.dir/src/cplan.cpp.o: CMakeFiles/ellipseTrajectoryTest.dir/flags.make
 CMakeFiles/ellipseTrajectoryTest.dir/src/cplan.cpp.o: ../src/cplan.cpp
@@ -116,11 +116,11 @@ CMakeFiles/ellipseTrajectoryTest.dir/src/cplan.cpp.o: ../src/cplan.cpp
 
 CMakeFiles/ellipseTrajectoryTest.dir/src/cplan.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/ellipseTrajectoryTest.dir/src/cplan.cpp.i"
-	$(CMAKE_COMMAND) -E cmake_unimplemented_variable CMAKE_CXX_CREATE_PREPROCESSED_SOURCE
+	/usr/bin/x86_64-linux-gnu-g++-8 $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/kaanh/Desktop/singleLeg2023/src/cplan.cpp > CMakeFiles/ellipseTrajectoryTest.dir/src/cplan.cpp.i
 
 CMakeFiles/ellipseTrajectoryTest.dir/src/cplan.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/ellipseTrajectoryTest.dir/src/cplan.cpp.s"
-	$(CMAKE_COMMAND) -E cmake_unimplemented_variable CMAKE_CXX_CREATE_ASSEMBLY_SOURCE
+	/usr/bin/x86_64-linux-gnu-g++-8 $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/kaanh/Desktop/singleLeg2023/src/cplan.cpp -o CMakeFiles/ellipseTrajectoryTest.dir/src/cplan.cpp.s
 
 # Object files for target ellipseTrajectoryTest
 ellipseTrajectoryTest_OBJECTS = \
