@@ -9,3 +9,6 @@
 * Modify the function createControllerROSMotorTest() for adapting to the motor number ; and also other basic settings in the function ;
 * output the final Body PE & Leg Point using FwdKin of Matrix_28 ;
 * test them successfully with virtual motor ;![Alt text](image-1.png)
+
+## E5->11.7:
+* Add a function for ellipse trajectory move for 4 legs; without gait planning;

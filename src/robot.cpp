@@ -13,6 +13,201 @@ using namespace aris::plan;
 const double PI = aris::PI;
 namespace robot
 {
+///////////////////////////////////////////////////////< Ellipse-4-Legs Edition-1 >////////////////////////////////////
+auto Ellipse4LegDrive::prepareNrt()->void
+{
+    moveX_ = doubleParam("moveX");
+    moveY_ = doubleParam("moveY");
+    moveZ_ = doubleParam("moveZ");
+
+    for(auto &m:motorOptions()) m =
+            aris::plan::Plan::NOT_CHECK_POS_CONTINUOUS |        
+            aris::plan::Plan::NOT_CHECK_ENABLE |
+            aris::plan::Plan::NOT_CHECK_POS_CONTINUOUS_SECOND_ORDER;
+}
+auto Ellipse4LegDrive::executeRT()->int
+{
+    static ellipticalTrajectory4  ellipticalTrajectory;
+    if (count() == 1)
+    {
+        //----- read the start motorPos to get startPoint by fwdKin ------// <cout startMotorPos & startPoint > //
+        static double startMotorPos[12]{0};
+        for (int i = 0; i < 12; i++)
+        {
+            startMotorPos[i] = controller()->motorPool()[i].actualPos();
+        }
+
+        std::cout << std::endl<< "startMotorPos-ooo" << std::endl;
+        std::cout << "leg 1 --> " << controller()->motorPool()[0].actualPos() <<"\t"<< controller()->motorPool()[1].actualPos()<<"\t"<< controller()->motorPool()[2].actualPos() << std::endl;
+        std::cout << "leg 2 --> " << controller()->motorPool()[3].actualPos() <<"\t"<< controller()->motorPool()[4].actualPos()<<"\t"<< controller()->motorPool()[5].actualPos() << std::endl;
+        std::cout << "leg 3 --> " << controller()->motorPool()[6].actualPos() <<"\t"<< controller()->motorPool()[7].actualPos()<<"\t"<< controller()->motorPool()[8].actualPos() << std::endl;
+        std::cout << "leg 4 --> " << controller()->motorPool()[9].actualPos() <<"\t"<< controller()->motorPool()[10].actualPos()<<"\t"<< controller()->motorPool()[11].actualPos() << std::endl;
+
+        model()->setInputPos(startMotorPos) ;    
+
+        if (model()->solverPool()[1].kinPos())
+        {
+            throw std::runtime_error("Leg Initialization Forward Kinematics Position Failed!");
+        }   
+        model()->getOutputPos(startPoint_);
+        std::cout << std::endl << "startLegPoint-***" << std::endl;
+        std::cout << "leg 1 --> " << startPoint_[0] << "\t" << startPoint_[1] << "\t" << startPoint_[2] << std::endl;
+        std::cout << "leg 2 --> " << startPoint_[3] << "\t" << startPoint_[4] << "\t" << startPoint_[5] << std::endl;
+        std::cout << "leg 3 --> " << startPoint_[6] << "\t" << startPoint_[7] << "\t" << startPoint_[8] << std::endl;
+        std::cout << "leg 4 --> " << startPoint_[9] << "\t" << startPoint_[10] << "\t" << startPoint_[11] << std::endl;
+
+        //--- use user defined endPoint & Height to initialize elipse curve ---// < get unitVector of Major axis & centerPoint > //
+        endPoint_[0] = startPoint_[0] + moveX_;
+        endPoint_[1] = startPoint_[1]; 
+        endPoint_[2] = startPoint_[2] + moveZ_;
+        endPoint_[3] = startPoint_[3] + moveX_;
+        endPoint_[4] = startPoint_[4]; 
+        endPoint_[5] = startPoint_[5] + moveZ_;
+        endPoint_[6] = startPoint_[6] + moveX_;
+        endPoint_[7] = startPoint_[7]; 
+        endPoint_[8] = startPoint_[8] + moveZ_;
+        endPoint_[9] = startPoint_[9] + moveX_;
+        endPoint_[10] = startPoint_[10]; 
+        endPoint_[11] = startPoint_[11] + moveZ_;
+
+        std::cout << std::endl << "endLegPoint-***" << std::endl;
+        std::cout << "leg 1 --> " << endPoint_[0] << "\t" << endPoint_[1] << "\t" << endPoint_[2] << std::endl;
+        std::cout << "leg 2 --> " << endPoint_[3] << "\t" << endPoint_[4] << "\t" << endPoint_[5] << std::endl;
+        std::cout << "leg 3 --> " << endPoint_[6] << "\t" << endPoint_[7] << "\t" << endPoint_[8] << std::endl;
+        std::cout << "leg 4 --> " << endPoint_[9] << "\t" << endPoint_[10] << "\t" << endPoint_[11] << std::endl;
+
+        for (int i = 0; i < 3; i++)
+        {
+            startPoint[i] = startPoint_[i];
+        }
+        
+
+        ellipticalTrajectory.init(moveX_, moveY_, moveZ_, startPoint);
+        majorAxisUnitVector_ = ellipticalTrajectory.getMajorAxisUnitVector();
+        minorAxisUnitVector_ = ellipticalTrajectory.getMinorAxisUnitVector();
+        centerPoint_ = ellipticalTrajectory.getCenterPoint();    
+        Width_  = ellipticalTrajectory.getWidth();
+
+
+        // std::cout << "centerPoint: X: " << centerPoint[0] << "   Y: " << centerPoint[1] << "   Z: " << centerPoint[2] << " " << std::endl;
+        // std::cout << "majorAxisUnitVector:  X: " << majorAxisUnitVector[0] << "   Y: " << majorAxisUnitVector[1] << "   Z: " << majorAxisUnitVector[2] << " " << std::endl;
+        // std::cout << "minorAxisUnitVector:  X: " << minorAxisUnitVector[0] << "   Y: " << minorAxisUnitVector[1] << "   Z: " << minorAxisUnitVector[2] << " " << std::endl;
+        theta_ = aris::PI;
+        theta_d_=0;
+        theta_dd_=0;   
+        Height_ = moveY_;
+    }
+
+
+///////--- use the function moveAbsolute2 to get RT eePoint ---//--- variable by theta ---//---cout theta & eePoint with RT count() ---//////////////////
+    aris::Size total_count;
+    auto ret = moveAbsolute2( theta_, theta_d_, theta_dd_, 0, 0.1, 1, 0.1, 0.5, 0.5, 1e-3, 1e-10, theta_, theta_d_, theta_dd_, total_count);
+
+    for (int i = 0; i < 3; i++)
+    {
+        eePoint_[i] = centerPoint_[i] + majorAxisUnitVector_[i] * Width_ * std::cos( theta_ ) + minorAxisUnitVector_[i] * Height_ * std::sin( theta_ );
+    }    
+
+    for (int i = 3; i < 5; i++)
+    {
+        eePoint_[i] = centerPoint_[i-3] + majorAxisUnitVector_[i-3] * Width_ * std::cos( theta_ ) + minorAxisUnitVector_[i-3] * Height_ * std::sin( theta_ );
+    }   
+
+    for (int i = 5; i < 8; i++)
+    {
+        eePoint_[i] = centerPoint_[i-6] + majorAxisUnitVector_[i-6] * Width_ * std::cos( theta_ ) + minorAxisUnitVector_[i-6] * Height_ * std::sin( theta_ );
+    }  
+
+    for (int i = 8; i < 11; i++)
+    {
+        eePoint_[i] = centerPoint_[i-9] + majorAxisUnitVector_[i-9] * Width_ * std::cos( theta_ ) + minorAxisUnitVector_[i-9] * Height_ * std::sin( theta_ );
+    }  
+
+    
+    if (count() % 10 == 0)
+    {
+        std::cout << std::endl;     
+        std::cout << "count= " << count() << std::endl;
+        std::cout << "theta= " << theta_ << "  Height= " << Height_ << "  Width= " << Width_ << std::endl; 
+
+        std::cout << "eeLegPoint-###" << std::endl;
+        std::cout << "leg 1 --> " << eePoint_[0] << "\t" << eePoint_[1] << "\t" << eePoint_[2] << std::endl;
+        std::cout << "leg 2 --> " << eePoint_[3] << "\t" << eePoint_[4] << "\t" << eePoint_[5] << std::endl;
+        std::cout << "leg 3 --> " << eePoint_[6] << "\t" << eePoint_[7] << "\t" << eePoint_[8] << std::endl;
+        std::cout << "leg 4 --> " << eePoint_[9] << "\t" << eePoint_[10] << "\t" << eePoint_[11] << std::endl;
+    }
+      
+    //--- use eePoint to get RT motorPos by invKin ---//--- store the RT motorPos by eeMotorPos[12] ---//---cout eeMotorPos---//---drive the motor to eeMotorPos---//
+
+    model()->setOutputPos(eePoint_);
+    if (model()->solverPool()[0].kinPos())
+    {
+        throw std::runtime_error("Move Status Inverse kinematic position failed");    
+    }    
+    
+    double eeMotorPos[12]{};
+    for (int i = 0; i < 12; i++)
+    {
+        eeMotorPos[i] = model()->motionPool()[i].mp() ;
+    }
+    std::cout << "eeMotorPos-###" << std::endl;
+    std::cout << "leg 1 --> " << eeMotorPos[0] << "\t" << eeMotorPos[1] << "\t" << eeMotorPos[2] << std::endl;
+    std::cout << "leg 2 --> " << eeMotorPos[3] << "\t" << eeMotorPos[4] << "\t" << eeMotorPos[5] << std::endl;
+    std::cout << "leg 3 --> " << eeMotorPos[6] << "\t" << eeMotorPos[7] << "\t" << eeMotorPos[8] << std::endl;
+    std::cout << "leg 4 --> " << eeMotorPos[9] << "\t" << eeMotorPos[10] << "\t" << eeMotorPos[11] << std::endl;
+   
+    for(int i=0; i<12; ++i)
+    {
+    controller()->motorPool()[i].setTargetPos( eeMotorPos[i] );
+    }
+    std::cout << "Move Successed!" <<std::endl;
+
+    if( ret == 0 )
+    {   
+        model()->setInputPos(eeMotorPos) ;    
+
+        if (model()->solverPool()[1].kinPos())
+        {
+            throw std::runtime_error("Leg Final Forward Kinematics Position Failed!");
+        }   
+        model()->getOutputPos(finalPoint_);  
+
+        std::cout << std::endl;
+        std::cout << "ret = " << ret <<std::endl;
+
+        std::cout << std::endl<< "startMotorPos-ooo" << std::endl;
+        std::cout << "leg 1 --> " << controller()->motorPool()[0].actualPos() <<"\t"<< controller()->motorPool()[1].actualPos()<<"\t"<< controller()->motorPool()[2].actualPos() << std::endl;
+        std::cout << "leg 2 --> " << controller()->motorPool()[3].actualPos() <<"\t"<< controller()->motorPool()[4].actualPos()<<"\t"<< controller()->motorPool()[5].actualPos() << std::endl;
+        std::cout << "leg 3 --> " << controller()->motorPool()[6].actualPos() <<"\t"<< controller()->motorPool()[7].actualPos()<<"\t"<< controller()->motorPool()[8].actualPos() << std::endl;
+        std::cout << "leg 4 --> " << controller()->motorPool()[9].actualPos() <<"\t"<< controller()->motorPool()[10].actualPos()<<"\t"<< controller()->motorPool()[11].actualPos() << std::endl;
+
+        std::cout << std::endl << "finalLegPoint-***" << std::endl;
+        std::cout << "leg 1 --> " << finalPoint_[0] << "\t" << finalPoint_[1] << "\t" << finalPoint_[2] << std::endl;
+        std::cout << "leg 2 --> " << finalPoint_[3] << "\t" << finalPoint_[4] << "\t" << finalPoint_[5] << std::endl;
+        std::cout << "leg 3 --> " << finalPoint_[6] << "\t" << finalPoint_[7] << "\t" << finalPoint_[8] << std::endl;
+        std::cout << "leg 4 --> " << finalPoint_[9] << "\t" << finalPoint_[10] << "\t" << finalPoint_[11] << std::endl; 
+
+        std::cout << std::endl << "Congratulations!~"  << std::endl;
+    }
+
+    return  ret ; 
+
+} 
+auto Ellipse4LegDrive::collectNrt()->void {}
+Ellipse4LegDrive::Ellipse4LegDrive(const std::string &name) 
+{
+    aris::core::fromXmlString(command(),
+       "<Command name=\"e4\">"
+       "	<GroupParam>" //下面三个参数决定单腿末端的运动终点坐标,即单腿末端现在的位置坐标为->ee0(X0,Y0,Z0) , 单腿末端由本指令将通过椭圆轨迹移动至坐标->ee(x,y,z) ,下方三个参数即为可由用户在工作空间内自定义的末端位置坐标变量//
+       "	<Param name=\"moveX\" default=\"0.1\" abbreviation=\"x\"/>"
+       "	<Param name=\"moveY\" default=\"0.08\" abbreviation=\"y\"/>"
+       "	<Param name=\"moveZ\" default=\"0\" abbreviation=\"z\"/>"
+       "	</GroupParam>"
+       "</Command>");
+}
+Ellipse4LegDrive::~Ellipse4LegDrive() = default; 
+
+
 ///////////////////////////////////////////////////////< 12 motors test  >////////////////////////////////////////////////////
                           ///---------test all the motor hardware by send a target pos variation---------------///
 auto MotorTest12::prepareNrt()->void
@@ -775,7 +970,7 @@ auto createMasterROSMotorTest()->std::unique_ptr<aris::control::Master>{
     std::unique_ptr<aris::control::Master> master(new aris::control::EthercatMaster);
 
     for (aris::Size i = 0; i < 12 ; ++i){
-        int phy_id[12]={2,1,0,3,4,5,8,7,6,9,10,11};
+        int phy_id[12]={0,1,2,3,4,5,6,7,8,9,10,11};
 
 //--------------------------XML from Leo---------------------//
 //           " min_pos=\"" + std::to_string(min_pos[i]) + "\" max_pos=\"" + std::to_string(max_pos[i]) + "\" max_vel=\"" + std::to_string(max_vel[i]) + "\" min_vel=\"" + std::to_string(-max_vel[i]) + "\""
@@ -1031,6 +1226,7 @@ auto createPlanROSMotorTest()->std::unique_ptr<aris::plan::PlanRoot>
     plan_root->planPool().add<moveBeeLineE2>();
     plan_root->planPool().add<ellipticalTrajectoryDrive3>();
     plan_root->planPool().add<MotorTest12>();
+    plan_root->planPool().add<Ellipse4LegDrive>();
     return plan_root;
 }
 auto setMaxTorque(aris::control::EthercatMaster* ecMaster, std::uint16_t value, size_t index)->bool

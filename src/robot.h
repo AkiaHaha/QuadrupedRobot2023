@@ -4,10 +4,40 @@
 #include <memory>
 #include <aris.hpp>
 
-// #define ARIS_USE_ETHERCAT_SIMULATION
+#define ARIS_USE_ETHERCAT_SIMULATION
 
 namespace robot
 {   
+    class Ellipse4LegDrive : public aris::core::CloneObject<Ellipse4LegDrive,aris::plan::Plan>
+    {
+    public:
+        auto virtual prepareNrt()->void;
+        auto virtual executeRT()->int;
+        auto virtual collectNrt()->void;
+
+        virtual ~Ellipse4LegDrive();
+        explicit Ellipse4LegDrive(const std::string &name = "Ellipse4LegDrive");
+
+    private:
+        double moveX_{};
+        double moveY_{};
+        double moveZ_{};
+        double Height_{};
+        double Width_{};
+        double Length_{};
+        double eePoint_[12]{};
+        double endPoint_[12]{};
+        double finalPoint_[12]{};
+        double startPoint_[12]{};
+        double startPoint[3]{};
+        double* majorAxisUnitVector_;
+        double* minorAxisUnitVector_;    
+        double* centerPoint_;
+        double theta_{};
+        double theta_d_{};
+        double theta_dd_{};
+    };
+
     class MotorTest12 : public aris::core::CloneObject<MotorTest12,aris::plan::Plan>
     {
     public:
