@@ -120,20 +120,20 @@ auto MotorTest12::collectNrt()->void {}
 MotorTest12::MotorTest12(const std::string &name) 
 {
     aris::core::fromXmlString(command(),
-       "<Command name=\"test\">"
+       "<Command name=\"t\">"
        "	<GroupParam>"                                    
-       "	<Param name=\"motor0\" default=\"0.1\" abbreviation=\"q\"/>"  // Initialize the end pose of a single leg by giving the initial value of the motor. //
-       "	<Param name=\"motor1\" default=\"0.5\" abbreviation=\"a\"/>"  // The given value is in radians. The accuracy in this program is set to four decimal places.//
-       "	<Param name=\"motor2\" default=\"1\" abbreviation=\"z\"/>"   
-       "	<Param name=\"motor3\" default=\"0.64\" abbreviation=\"w\"/>"   
-       "	<Param name=\"motor4\" default=\"0.1254\" abbreviation=\"s\"/>"   
-       "	<Param name=\"motor5\" default=\"0.1324\" abbreviation=\"x\"/>"   
-       "	<Param name=\"motor6\" default=\"0.125\" abbreviation=\"e\"/>"   
-       "	<Param name=\"motor7\" default=\"0.114\" abbreviation=\"d\"/>"   
-       "	<Param name=\"motor8\" default=\"0.198\" abbreviation=\"c\"/>"   
-       "	<Param name=\"motor9\" default=\"0.1458\" abbreviation=\"r\"/>"   
-       "	<Param name=\"motor10\" default=\"0.4521\" abbreviation=\"f\"/>"   
-       "	<Param name=\"motor11\" default=\"0.1541\" abbreviation=\"v\"/>"   
+       "	<Param name=\"motor0\" default=\"0.0\" abbreviation=\"q\"/>"  // Initialize the end pose of a single leg by giving the initial value of the motor. //
+       "	<Param name=\"motor1\" default=\"0.0\" abbreviation=\"a\"/>"  // The given value is in radians. The accuracy in this program is set to four decimal places.//
+       "	<Param name=\"motor2\" default=\"0.0\" abbreviation=\"z\"/>"   
+       "	<Param name=\"motor3\" default=\"0.0\" abbreviation=\"w\"/>"   
+       "	<Param name=\"motor4\" default=\"0.0\" abbreviation=\"s\"/>"   
+       "	<Param name=\"motor5\" default=\"0.0\" abbreviation=\"x\"/>"   
+       "	<Param name=\"motor6\" default=\"0.0\" abbreviation=\"e\"/>"   
+       "	<Param name=\"motor7\" default=\"0.0\" abbreviation=\"d\"/>"   
+       "	<Param name=\"motor8\" default=\"0.0\" abbreviation=\"c\"/>"   
+       "	<Param name=\"motor9\" default=\"0.0\" abbreviation=\"r\"/>"   
+       "	<Param name=\"motor10\" default=\"0.0\" abbreviation=\"f\"/>"   
+       "	<Param name=\"motor11\" default=\"0.0\" abbreviation=\"v\"/>"   
        "	</GroupParam>"
        "</Command>");
 }
