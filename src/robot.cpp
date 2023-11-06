@@ -27,7 +27,7 @@ auto Ellipse4LegDrive::prepareNrt()->void
 }
 auto Ellipse4LegDrive::executeRT()->int
 {
-    static ellipticalTrajectory4  ellipticalTrajectory;
+    static ellipticalTrajectory4  e4;
     if (count() == 1)
     {
         //----- read the start motorPos to get startPoint by fwdKin ------// <cout startMotorPos & startPoint > //
@@ -82,11 +82,11 @@ auto Ellipse4LegDrive::executeRT()->int
         }
         
 
-        ellipticalTrajectory.init(moveX_, moveY_, moveZ_, startPoint);
-        majorAxisUnitVector_ = ellipticalTrajectory.getMajorAxisUnitVector();
-        minorAxisUnitVector_ = ellipticalTrajectory.getMinorAxisUnitVector();
-        centerPoint_ = ellipticalTrajectory.getCenterPoint();    
-        Width_  = ellipticalTrajectory.getWidth();
+        e4.init(moveX_, moveY_, moveZ_, startPoint);
+        majorAxisUnitVector_ = e4.getMajorAxisUnitVector();
+        minorAxisUnitVector_ = e4.getMinorAxisUnitVector();
+        centerPoint_ = e4.getCenterPoint();    
+        Width_  = e4.getWidth();
 
 
         // std::cout << "centerPoint: X: " << centerPoint[0] << "   Y: " << centerPoint[1] << "   Z: " << centerPoint[2] << " " << std::endl;
