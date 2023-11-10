@@ -14,6 +14,12 @@ aris.hpp
 iostream
 -
 
+/home/kaanh/Desktop/singleLeg2023/src/operator.h
+iostream
+-
+vector
+-
+
 /home/kaanh/Desktop/singleLeg2023/src/robot.cpp
 algorithm
 -
@@ -42,9 +48,27 @@ memory
 aris.hpp
 -
 
+/home/kaanh/Desktop/singleLeg2023/src/tplan.cpp
+tplan.h
+/home/kaanh/Desktop/singleLeg2023/src/tplan.h
+operator.h
+/home/kaanh/Desktop/singleLeg2023/src/operator.h
+cmath
+-
+cstdlib
+-
+vector
+-
+iostream
+-
+operator.h
+/home/kaanh/Desktop/singleLeg2023/src/operator.h
+
 /home/kaanh/Desktop/singleLeg2023/src/tplan.h
 vector
 -
+operator.h
+/home/kaanh/Desktop/singleLeg2023/src/operator.h
 
 /usr/aris/aris-2.3.9.230818/include/aris.hpp
 aris/core/core.hpp

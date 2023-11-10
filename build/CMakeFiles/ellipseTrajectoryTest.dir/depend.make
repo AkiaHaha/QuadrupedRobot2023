@@ -167,6 +167,7 @@ CMakeFiles/ellipseTrajectoryTest.dir/src/model.cpp.o: /usr/aris/aris-2.3.9.23081
 
 CMakeFiles/ellipseTrajectoryTest.dir/src/robot.cpp.o: ../src/cplan.h
 CMakeFiles/ellipseTrajectoryTest.dir/src/robot.cpp.o: ../src/model.h
+CMakeFiles/ellipseTrajectoryTest.dir/src/robot.cpp.o: ../src/operator.h
 CMakeFiles/ellipseTrajectoryTest.dir/src/robot.cpp.o: ../src/robot.cpp
 CMakeFiles/ellipseTrajectoryTest.dir/src/robot.cpp.o: ../src/robot.h
 CMakeFiles/ellipseTrajectoryTest.dir/src/robot.cpp.o: ../src/tplan.h
@@ -248,6 +249,7 @@ CMakeFiles/ellipseTrajectoryTest.dir/src/robot.cpp.o: /usr/aris/aris-2.3.9.23081
 CMakeFiles/ellipseTrajectoryTest.dir/src/robot.cpp.o: /usr/aris/aris-2.3.9.230818/include/aris/server/server.hpp
 CMakeFiles/ellipseTrajectoryTest.dir/src/robot.cpp.o: /usr/aris/aris-2.3.9.230818/include/aris_lib_export.h
 
+CMakeFiles/ellipseTrajectoryTest.dir/src/tplan.cpp.o: ../src/operator.h
 CMakeFiles/ellipseTrajectoryTest.dir/src/tplan.cpp.o: ../src/tplan.cpp
 CMakeFiles/ellipseTrajectoryTest.dir/src/tplan.cpp.o: ../src/tplan.h
 
