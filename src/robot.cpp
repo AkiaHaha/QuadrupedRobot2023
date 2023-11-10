@@ -31,7 +31,6 @@ auto Ellipse4LegDrive::executeRT()->int
     if (count() == 1)
     {
         //----- read the start motorPos to get startPoint by fwdKin ------// <cout startMotorPos & startPoint > //
-        static double startMotorPos[12]{0};
         for (int i = 0; i < 12; i++)
         {
             startMotorPos[i] = controller()->motorPool()[i].actualPos();
@@ -49,45 +48,65 @@ auto Ellipse4LegDrive::executeRT()->int
         {
             throw std::runtime_error("Leg Initialization Forward Kinematics Position Failed!");
         }   
-        model()->getOutputPos(startPoint_);
+        model()->getOutputPos(startPE_);
         std::cout << std::endl << "startLegPoint-***" << std::endl;
-        std::cout << "leg 1 --> " << startPoint_[0] << "\t" << startPoint_[1] << "\t" << startPoint_[2] << std::endl;
-        std::cout << "leg 2 --> " << startPoint_[3] << "\t" << startPoint_[4] << "\t" << startPoint_[5] << std::endl;
-        std::cout << "leg 3 --> " << startPoint_[6] << "\t" << startPoint_[7] << "\t" << startPoint_[8] << std::endl;
-        std::cout << "leg 4 --> " << startPoint_[9] << "\t" << startPoint_[10] << "\t" << startPoint_[11] << std::endl;
+        std::cout << "leg 1 --> " << startPE_[4] << "\t" << startPE_[5] << "\t" << startPE_[6] << std::endl;
+        std::cout << "leg 2 --> " << startPE_[11] << "\t" << startPE_[12] << "\t" << startPE_[13] << std::endl;
+        std::cout << "leg 3 --> " << startPE_[18] << "\t" << startPE_[19] << "\t" << startPE_[20] << std::endl;
+        std::cout << "leg 4 --> " << startPE_[25] << "\t" << startPE_[26] << "\t" << startPE_[27] << std::endl;
 
         //--- use user defined endPoint & Height to initialize elipse curve ---// < get unitVector of Major axis & centerPoint > //
-        endPoint_[0] = startPoint_[0] + moveX_;
-        endPoint_[1] = startPoint_[1]; 
-        endPoint_[2] = startPoint_[2] + moveZ_;
-        endPoint_[3] = startPoint_[3] + moveX_;
-        endPoint_[4] = startPoint_[4]; 
-        endPoint_[5] = startPoint_[5] + moveZ_;
-        endPoint_[6] = startPoint_[6] + moveX_;
-        endPoint_[7] = startPoint_[7]; 
-        endPoint_[8] = startPoint_[8] + moveZ_;
-        endPoint_[9] = startPoint_[9] + moveX_;
-        endPoint_[10] = startPoint_[10]; 
-        endPoint_[11] = startPoint_[11] + moveZ_;
+        finalPoint_[0] = startPE_[4] + moveX_;
+        finalPoint_[1] = startPE_[5]; 
+        finalPoint_[2] = startPE_[6] + moveZ_;
+        finalPoint_[3] = startPE_[11] + moveX_;
+        finalPoint_[4] = startPE_[12]; 
+        finalPoint_[5] = startPE_[13] + moveZ_;
+        finalPoint_[6] = startPE_[18] + moveX_;
+        finalPoint_[7] = startPE_[19]; 
+        finalPoint_[8] = startPE_[20] + moveZ_;
+        finalPoint_[9] = startPE_[25] + moveX_;
+        finalPoint_[10] = startPE_[26]; 
+        finalPoint_[11] = startPE_[27] + moveZ_;
 
         std::cout << std::endl << "endLegPoint-***" << std::endl;
-        std::cout << "leg 1 --> " << endPoint_[0] << "\t" << endPoint_[1] << "\t" << endPoint_[2] << std::endl;
-        std::cout << "leg 2 --> " << endPoint_[3] << "\t" << endPoint_[4] << "\t" << endPoint_[5] << std::endl;
-        std::cout << "leg 3 --> " << endPoint_[6] << "\t" << endPoint_[7] << "\t" << endPoint_[8] << std::endl;
-        std::cout << "leg 4 --> " << endPoint_[9] << "\t" << endPoint_[10] << "\t" << endPoint_[11] << std::endl;
+        std::cout << "leg 1 --> " << finalPoint_[0] << "\t" << finalPoint_[1] << "\t" << finalPoint_[2] << std::endl;
+        std::cout << "leg 2 --> " << finalPoint_[3] << "\t" << finalPoint_[4] << "\t" << finalPoint_[5] << std::endl;
+        std::cout << "leg 3 --> " << finalPoint_[6] << "\t" << finalPoint_[7] << "\t" << finalPoint_[8] << std::endl;
+        std::cout << "leg 4 --> " << finalPoint_[9] << "\t" << finalPoint_[10] << "\t" << finalPoint_[11] << std::endl;
 
         for (int i = 0; i < 3; i++)
         {
-            startPoint[i] = startPoint_[i];
+            startPoint1[i] = startPE_[ i + 4 ];
+            startPoint2[i] = startPE_[ i + 11 ];
+            startPoint3[i] = startPE_[ i + 18 ];
+            startPoint4[i] = startPE_[ i + 25 ];
         }
         
 
-        e4.init(moveX_, moveY_, moveZ_, startPoint);
-        majorAxisUnitVector_ = e4.getMajorAxisUnitVector();
-        minorAxisUnitVector_ = e4.getMinorAxisUnitVector();
-        centerPoint_ = e4.getCenterPoint();    
-        Width_  = e4.getWidth();
+        e4.init(moveX_, moveY_, moveZ_, startPoint1);
+        majorAxisUnitVector_1 = e4.getMajorAxisUnitVector();
+        minorAxisUnitVector_1 = e4.getMinorAxisUnitVector();
+        centerPoint_1 = e4.getCenterPoint();    
+        Width_1  = e4.getWidth();
 
+        e4.init(moveX_, moveY_, moveZ_, startPoint2);
+        majorAxisUnitVector_2 = e4.getMajorAxisUnitVector();
+        minorAxisUnitVector_2 = e4.getMinorAxisUnitVector();
+        centerPoint_2 = e4.getCenterPoint();    
+        Width_2  = e4.getWidth();        
+        
+        e4.init(moveX_, moveY_, moveZ_, startPoint3);
+        majorAxisUnitVector_3 = e4.getMajorAxisUnitVector();
+        minorAxisUnitVector_3 = e4.getMinorAxisUnitVector();
+        centerPoint_3 = e4.getCenterPoint();    
+        Width_3  = e4.getWidth();
+
+        e4.init(moveX_, moveY_, moveZ_, startPoint4);
+        majorAxisUnitVector_4 = e4.getMajorAxisUnitVector();
+        minorAxisUnitVector_4 = e4.getMinorAxisUnitVector();
+        centerPoint_4 = e4.getCenterPoint();    
+        Width_4  = e4.getWidth();
 
         // std::cout << "centerPoint: X: " << centerPoint[0] << "   Y: " << centerPoint[1] << "   Z: " << centerPoint[2] << " " << std::endl;
         // std::cout << "majorAxisUnitVector:  X: " << majorAxisUnitVector[0] << "   Y: " << majorAxisUnitVector[1] << "   Z: " << majorAxisUnitVector[2] << " " << std::endl;
@@ -105,22 +124,22 @@ auto Ellipse4LegDrive::executeRT()->int
 
     for (int i = 0; i < 3; i++)
     {
-        eePoint_[i] = centerPoint_[i] + majorAxisUnitVector_[i] * Width_ * std::cos( theta_ ) + minorAxisUnitVector_[i] * Height_ * std::sin( theta_ );
+        eePoint_[i] = centerPoint_1[i] + majorAxisUnitVector_1[i] * Width_1 * std::cos( theta_ ) + minorAxisUnitVector_1[i] * Height_ * std::sin( theta_ );
     }    
 
-    for (int i = 3; i < 5; i++)
+    for (int i = 3; i < 6; i++)
     {
-        eePoint_[i] = centerPoint_[i-3] + majorAxisUnitVector_[i-3] * Width_ * std::cos( theta_ ) + minorAxisUnitVector_[i-3] * Height_ * std::sin( theta_ );
+        eePoint_[i] = centerPoint_2[i-3] + majorAxisUnitVector_2[i-3] * Width_2 * std::cos( theta_ ) + minorAxisUnitVector_2[i-3] * Height_ * std::sin( theta_ );
     }   
 
-    for (int i = 5; i < 8; i++)
+    for (int i = 6; i < 9; i++)
     {
-        eePoint_[i] = centerPoint_[i-6] + majorAxisUnitVector_[i-6] * Width_ * std::cos( theta_ ) + minorAxisUnitVector_[i-6] * Height_ * std::sin( theta_ );
+        eePoint_[i] = centerPoint_3[i-6] + majorAxisUnitVector_3[i-6] * Width_3 * std::cos( theta_ ) + minorAxisUnitVector_3[i-6] * Height_ * std::sin( theta_ );
     }  
 
-    for (int i = 8; i < 11; i++)
+    for (int i = 9; i < 12; i++)
     {
-        eePoint_[i] = centerPoint_[i-9] + majorAxisUnitVector_[i-9] * Width_ * std::cos( theta_ ) + minorAxisUnitVector_[i-9] * Height_ * std::sin( theta_ );
+        eePoint_[i] = centerPoint_4[i-9] + majorAxisUnitVector_4[i-9] * Width_4 * std::cos( theta_ ) + minorAxisUnitVector_4[i-9] * Height_ * std::sin( theta_ );
     }  
 
     
@@ -128,7 +147,7 @@ auto Ellipse4LegDrive::executeRT()->int
     {
         std::cout << std::endl;     
         std::cout << "count= " << count() << std::endl;
-        std::cout << "theta= " << theta_ << "  Height= " << Height_ << "  Width= " << Width_ << std::endl; 
+        std::cout << "theta= " << theta_ << "  Height= " << Height_ << "  Width= " << Width_1 << std::endl; 
 
         std::cout << "eeLegPoint-###" << std::endl;
         std::cout << "leg 1 --> " << eePoint_[0] << "\t" << eePoint_[1] << "\t" << eePoint_[2] << std::endl;
@@ -138,8 +157,24 @@ auto Ellipse4LegDrive::executeRT()->int
     }
       
     //--- use eePoint to get RT motorPos by invKin ---//--- store the RT motorPos by eeMotorPos[12] ---//---cout eeMotorPos---//---drive the motor to eeMotorPos---//
+    for (int i = 0; i < 4; i++)
+    {
+        movePE_[i] = startPE_[i];
+        movePE_[i+7] = startPE_[i+7];
+        movePE_[i+14] = startPE_[i+14];
+        movePE_[i+21] = startPE_[i+21];
+    }
+    
+    for (int i = 0; i < 3; i++)
+    {
+        movePE_[i+4] = eePoint_[i];
+        movePE_[i+11] = eePoint_[i+3];
+        movePE_[i+18] = eePoint_[i+6];
+        movePE_[i+25] = eePoint_[i+9];
+    }
+    
 
-    model()->setOutputPos(eePoint_);
+    model()->setOutputPos(movePE_);
     if (model()->solverPool()[0].kinPos())
     {
         throw std::runtime_error("Move Status Inverse kinematic position failed");    
@@ -170,16 +205,16 @@ auto Ellipse4LegDrive::executeRT()->int
         {
             throw std::runtime_error("Leg Final Forward Kinematics Position Failed!");
         }   
-        model()->getOutputPos(finalPoint_);  
+        model()->getOutputPos(finalPE_);  
 
         std::cout << std::endl;
         std::cout << "ret = " << ret <<std::endl;
 
         std::cout << std::endl<< "startMotorPos-ooo" << std::endl;
-        std::cout << "leg 1 --> " << controller()->motorPool()[0].actualPos() <<"\t"<< controller()->motorPool()[1].actualPos()<<"\t"<< controller()->motorPool()[2].actualPos() << std::endl;
-        std::cout << "leg 2 --> " << controller()->motorPool()[3].actualPos() <<"\t"<< controller()->motorPool()[4].actualPos()<<"\t"<< controller()->motorPool()[5].actualPos() << std::endl;
-        std::cout << "leg 3 --> " << controller()->motorPool()[6].actualPos() <<"\t"<< controller()->motorPool()[7].actualPos()<<"\t"<< controller()->motorPool()[8].actualPos() << std::endl;
-        std::cout << "leg 4 --> " << controller()->motorPool()[9].actualPos() <<"\t"<< controller()->motorPool()[10].actualPos()<<"\t"<< controller()->motorPool()[11].actualPos() << std::endl;
+        std::cout << "leg 1 --> " << startMotorPos[0] <<"\t"<< startMotorPos[1] <<"\t"<< startMotorPos[2] << std::endl;
+        std::cout << "leg 2 --> " << startMotorPos[3] <<"\t"<< startMotorPos[4] <<"\t"<< startMotorPos[5] << std::endl;
+        std::cout << "leg 3 --> " << startMotorPos[6] <<"\t"<< startMotorPos[7] <<"\t"<< startMotorPos[8] << std::endl;
+        std::cout << "leg 4 --> " << startMotorPos[9] <<"\t"<< startMotorPos[10] <<"\t"<< startMotorPos[11] << std::endl;
 
         std::cout << std::endl << "finalLegPoint-***" << std::endl;
         std::cout << "leg 1 --> " << finalPoint_[0] << "\t" << finalPoint_[1] << "\t" << finalPoint_[2] << std::endl;
@@ -230,6 +265,8 @@ auto MotorTest12::prepareNrt()->void
             // aris::plan::Plan::NOT_CHECK_ENABLE |
             // aris::plan::Plan::NOT_CHECK_POS_CONTINUOUS_SECOND_ORDER;
             aris::plan::Plan::CHECK_NONE;
+
+    this->controlServer()->idleMotionCheckOption()[0];
 }
 auto MotorTest12::executeRT()->int
 {

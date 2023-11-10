@@ -169,18 +169,19 @@ public:
 	auto getMinorAxisUnitVector() -> double* {return minorAxisUnitVector;}
 	auto getWidth()-> double { return Width; }
 
-  auto init( double x, double y, double z, double start[3] )->void
-  {
-	for (int i = 0; i < 3; i++) 
-    {
-		startPoint[i] = start[i];
-    }
-    moveX = x;
-    moveY = y;
-    moveZ = z;
-    trajectoryInitialization();
-  }
-  ~ellipticalTrajectory4() {} 
+	auto init( double x, double y, double z, double start[3] )->void
+	{
+   		for (int i = 0; i < 3; i++) 
+		{
+       	 	startPoint[i] = start[i];
+		}
+		moveX = x;
+		moveY = y;
+		moveZ = z;
+		trajectoryInitialization();
+	}
+	~ellipticalTrajectory4() {} 
 };
+
 
 #endif

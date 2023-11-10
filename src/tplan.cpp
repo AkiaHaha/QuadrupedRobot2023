@@ -232,31 +232,35 @@ auto ellipticalTrajectory3::crossProduct(const double vector1[3], const double v
 	result[2] = vector1[0] * vector2[1] - vector1[1] * vector2[0];
 }
 
+
 //================================ calculate ellipse parameters E4 =================================//
 auto ellipticalTrajectory4::trajectoryInitialization() -> void
 {
-  double SE[3]{};
-  SE[0] = moveX;
-  SE[1] = startPoint[1];
-  SE[2] = moveZ;
-  Height = moveY;
-  
+	double SE[3]{};
+	SE[0] = moveX;
+	SE[1] = startPoint[1];
+	SE[2] = moveZ;
+	Height = moveY;
+	
+	Length = std::sqrt( std::pow( SE[0] , 2 ) + std::pow( SE[1] , 2 ) + std::pow( SE[2] , 2 ) );
+	Width = Length * 0.5;  
 
-  Length = std::sqrt( std::pow( SE[0] , 2 ) + std::pow( SE[1] , 2 ) + std::pow( SE[2] , 2 ) );
-  Width = Length * 0.5;  
+	for (int i = 0; i < 3; i++)
+	{
+		majorAxisUnitVector[i] = SE[i] / Length ;
+	}
 
-  for (int i = 0; i < 3; i++)
-  {
-    majorAxisUnitVector[i] = SE[i] / Length ;
-  }
+	for (int i = 0; i < 3; i++)
+	{
+		centerPoint[i] = startPoint[i] + Width * majorAxisUnitVector[i] ;
+	}
 
-  for (int i = 0; i < 3; i++)
-  {
-    centerPoint[i] = startPoint[i] + Width * majorAxisUnitVector[i] ;
-  }
-
-  minorAxisUnitVector[0]=0;
-  minorAxisUnitVector[1]=1;
-  minorAxisUnitVector[2]=0;
+	minorAxisUnitVector[0]=0;
+	minorAxisUnitVector[1]=1;
+	minorAxisUnitVector[2]=0;
 
 }
+
+
+
+

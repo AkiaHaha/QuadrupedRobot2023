@@ -23,16 +23,43 @@ namespace robot
         double moveY_{};
         double moveZ_{};
         double Height_{};
-        double Width_{};
-        double Length_{};
-        double eePoint_[12]{};
-        double endPoint_[12]{};
+
+        double startMotorPos[12]{};
         double finalPoint_[12]{};
-        double startPoint_[12]{};
-        double startPoint[3]{};
-        double* majorAxisUnitVector_;
-        double* minorAxisUnitVector_;    
-        double* centerPoint_;
+
+        double eePoint_[12]{};
+
+        double startPE_[28]{};
+        double finalPE_[28]{};
+        double movePE_[28]{};
+
+        double* majorAxisUnitVector_1;
+        double* minorAxisUnitVector_1;    
+        double* centerPoint_1;
+        double Width_1{};
+
+        double* majorAxisUnitVector_2;
+        double* minorAxisUnitVector_2;    
+        double* centerPoint_2;
+        double Width_2{};
+
+
+        double* majorAxisUnitVector_3;
+        double* minorAxisUnitVector_3;    
+        double* centerPoint_3;
+        double Width_3{};
+
+        
+        double* majorAxisUnitVector_4;
+        double* minorAxisUnitVector_4;    
+        double* centerPoint_4;
+        double Width_4{}; 
+
+        double startPoint1[3]{};
+        double startPoint2[3]{};
+        double startPoint3[3]{};
+        double startPoint4[3]{};    
+
         double theta_{};
         double theta_d_{};
         double theta_dd_{};
