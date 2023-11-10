@@ -6,5 +6,5 @@ CXX_FLAGS = -O3 -DNDEBUG   -std=gnu++17
 
 CXX_DEFINES = -DUNIX
 
-CXX_INCLUDES = -isystem /usr/aris/aris-2.3.6.230423/include 
+CXX_INCLUDES = -isystem /usr/aris/aris-2.3.9.230818/include 
 

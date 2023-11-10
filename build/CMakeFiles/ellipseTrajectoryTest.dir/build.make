@@ -139,7 +139,7 @@ ellipseTrajectoryTest: CMakeFiles/ellipseTrajectoryTest.dir/src/robot.cpp.o
 ellipseTrajectoryTest: CMakeFiles/ellipseTrajectoryTest.dir/src/tplan.cpp.o
 ellipseTrajectoryTest: CMakeFiles/ellipseTrajectoryTest.dir/src/cplan.cpp.o
 ellipseTrajectoryTest: CMakeFiles/ellipseTrajectoryTest.dir/build.make
-ellipseTrajectoryTest: /usr/aris/aris-2.3.6.230423/lib/release/libaris_lib.so
+ellipseTrajectoryTest: /usr/aris/aris-2.3.9.230818/lib/release/libaris_lib.so
 ellipseTrajectoryTest: CMakeFiles/ellipseTrajectoryTest.dir/link.txt
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/kaanh/Desktop/singleLeg2023/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Linking CXX executable ellipseTrajectoryTest"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/ellipseTrajectoryTest.dir/link.txt --verbose=$(VERBOSE)

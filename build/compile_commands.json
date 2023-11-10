@@ -1,27 +1,27 @@
 [
 {
   "directory": "/home/kaanh/Desktop/singleLeg2023/build",
-  "command": "/usr/bin/x86_64-linux-gnu-g++-8  -DUNIX -isystem /usr/aris/aris-2.3.6.230423/include  -O3 -DNDEBUG   -std=gnu++17 -o CMakeFiles/ellipseTrajectoryTest.dir/src/main.cpp.o -c /home/kaanh/Desktop/singleLeg2023/src/main.cpp",
+  "command": "/usr/bin/x86_64-linux-gnu-g++-8  -DUNIX -isystem /usr/aris/aris-2.3.9.230818/include  -O3 -DNDEBUG   -std=gnu++17 -o CMakeFiles/ellipseTrajectoryTest.dir/src/main.cpp.o -c /home/kaanh/Desktop/singleLeg2023/src/main.cpp",
   "file": "/home/kaanh/Desktop/singleLeg2023/src/main.cpp"
 },
 {
   "directory": "/home/kaanh/Desktop/singleLeg2023/build",
-  "command": "/usr/bin/x86_64-linux-gnu-g++-8  -DUNIX -isystem /usr/aris/aris-2.3.6.230423/include  -O3 -DNDEBUG   -std=gnu++17 -o CMakeFiles/ellipseTrajectoryTest.dir/src/model.cpp.o -c /home/kaanh/Desktop/singleLeg2023/src/model.cpp",
+  "command": "/usr/bin/x86_64-linux-gnu-g++-8  -DUNIX -isystem /usr/aris/aris-2.3.9.230818/include  -O3 -DNDEBUG   -std=gnu++17 -o CMakeFiles/ellipseTrajectoryTest.dir/src/model.cpp.o -c /home/kaanh/Desktop/singleLeg2023/src/model.cpp",
   "file": "/home/kaanh/Desktop/singleLeg2023/src/model.cpp"
 },
 {
   "directory": "/home/kaanh/Desktop/singleLeg2023/build",
-  "command": "/usr/bin/x86_64-linux-gnu-g++-8  -DUNIX -isystem /usr/aris/aris-2.3.6.230423/include  -O3 -DNDEBUG   -std=gnu++17 -o CMakeFiles/ellipseTrajectoryTest.dir/src/robot.cpp.o -c /home/kaanh/Desktop/singleLeg2023/src/robot.cpp",
+  "command": "/usr/bin/x86_64-linux-gnu-g++-8  -DUNIX -isystem /usr/aris/aris-2.3.9.230818/include  -O3 -DNDEBUG   -std=gnu++17 -o CMakeFiles/ellipseTrajectoryTest.dir/src/robot.cpp.o -c /home/kaanh/Desktop/singleLeg2023/src/robot.cpp",
   "file": "/home/kaanh/Desktop/singleLeg2023/src/robot.cpp"
 },
 {
   "directory": "/home/kaanh/Desktop/singleLeg2023/build",
-  "command": "/usr/bin/x86_64-linux-gnu-g++-8  -DUNIX -isystem /usr/aris/aris-2.3.6.230423/include  -O3 -DNDEBUG   -std=gnu++17 -o CMakeFiles/ellipseTrajectoryTest.dir/src/tplan.cpp.o -c /home/kaanh/Desktop/singleLeg2023/src/tplan.cpp",
+  "command": "/usr/bin/x86_64-linux-gnu-g++-8  -DUNIX -isystem /usr/aris/aris-2.3.9.230818/include  -O3 -DNDEBUG   -std=gnu++17 -o CMakeFiles/ellipseTrajectoryTest.dir/src/tplan.cpp.o -c /home/kaanh/Desktop/singleLeg2023/src/tplan.cpp",
   "file": "/home/kaanh/Desktop/singleLeg2023/src/tplan.cpp"
 },
 {
   "directory": "/home/kaanh/Desktop/singleLeg2023/build",
-  "command": "/usr/bin/x86_64-linux-gnu-g++-8  -DUNIX -isystem /usr/aris/aris-2.3.6.230423/include  -O3 -DNDEBUG   -std=gnu++17 -o CMakeFiles/ellipseTrajectoryTest.dir/src/cplan.cpp.o -c /home/kaanh/Desktop/singleLeg2023/src/cplan.cpp",
+  "command": "/usr/bin/x86_64-linux-gnu-g++-8  -DUNIX -isystem /usr/aris/aris-2.3.9.230818/include  -O3 -DNDEBUG   -std=gnu++17 -o CMakeFiles/ellipseTrajectoryTest.dir/src/cplan.cpp.o -c /home/kaanh/Desktop/singleLeg2023/src/cplan.cpp",
   "file": "/home/kaanh/Desktop/singleLeg2023/src/cplan.cpp"
 }
 ]

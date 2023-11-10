@@ -19,7 +19,7 @@ set(CMAKE_TARGET_DEFINITIONS_CXX
 
 # The include file search paths:
 set(CMAKE_CXX_TARGET_INCLUDE_PATH
-  "/usr/aris/aris-2.3.6.230423/include"
+  "/usr/aris/aris-2.3.9.230818/include"
   )
 
 # Targets to which this target links.
