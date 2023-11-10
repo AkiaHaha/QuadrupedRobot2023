@@ -12,3 +12,6 @@
 
 ## E5->11.7:
 * Add a function for ellipse trajectory move for 4 legs; without gait planning;
+
+## E6 ->11.10
+* Use modified aris of function "Show" to show motor pos successfuly.![](https://secure2.wostatic.cn/static/kAaB3ZTpR8dXto3nabKnSR/image.png?auth_key=1699584100-ctqYQZrx8RP5oTxMSMSUDa-0-1a23ad489a492a72c78eff2b81ce3edd)
