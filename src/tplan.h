@@ -1,6 +1,7 @@
 #ifndef TPLAN_H_
 #define TPLAN_H_
 #include <vector>
+#include "operator.h"
 
 ///功能：生成0->1的梯形曲线。可根据输入的加速度和速度判断曲线为梯形还是三角形
 //
@@ -183,5 +184,44 @@ public:
 	~ellipticalTrajectory4() {} 
 };
 
+
+class EllipseTrajectory5
+{
+private:
+	double moveX_{};
+	double moveY_{};
+	double moveZ_{};
+	double Height_{};
+	double theta_{};
+	double majorLength_{};
+
+	Matrix<double> startModelPE_;
+	Matrix<double> moveModelPE_;
+
+	Matrix<double> centerPoint_;
+	Matrix<double> majorUnitAxis_;
+	Matrix<double> minorUnitAxis_;
+
+public:
+	auto trajectoryInitialize() -> void;
+	auto getMoveModelPE(double theta) -> Matrix<double>;
+	EllipseTrajectory5(Matrix<double> startModelPE, double x, double y, double z, double h)
+		: startModelPE_(Matrix<double>(4, 7)),
+		  moveModelPE_(Matrix<double>(4, 7)),
+		  centerPoint_(Matrix<double>(4, 3)),
+		  majorUnitAxis_(Matrix<double>(1, 3)),
+		  minorUnitAxis_(Matrix<double>(1, 3)),
+
+		  moveX_(x),
+		  moveY_(y),
+		  moveZ_(z),
+		  Height_(h)
+	{
+		startModelPE_ = std::move(startModelPE);
+		trajectoryInitialize();
+	}
+
+	~EllipseTrajectory5() {}
+};
 
 #endif

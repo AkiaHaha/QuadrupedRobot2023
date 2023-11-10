@@ -1,8 +1,10 @@
 #include"tplan.h"
+#include"operator.h"
 #include<cmath>
 #include<cstdlib>
 #include<vector>
 #include<iostream>
+#include "operator.h"
 using namespace std;
 
 
@@ -261,6 +263,50 @@ auto ellipticalTrajectory4::trajectoryInitialization() -> void
 
 }
 
+//============================= calculate ellipse parameter E5 ========================================//
+auto EllipseTrajectory5::trajectoryInitialize() ->void
+{
+	for (int i = 0; i < 3; i++)
+	{
+		for (int j = 0; j < 4; j++)
+		{
+			centerPoint_(j, i) = startModelPE_(j, i + 4);
+		}
+	}
+	
+	majorLength_ = 0.5 * sqrt(moveX_ * moveX_ + moveY_ * moveY_ + moveZ_ * moveZ_);
+
+	for (int i = 0; i < 3; i++)
+	{
+		majorUnitAxis_(0, i) = (centerPoint_(0, i) - startModelPE_(0, i + 4)) / majorLength_;
+	}
+
+	Matrix<double> unitVectorY(1,3);
+	Matrix<double> verticalVector(1,3);
+	unitVectorY(1,1) = 1;
+
+	verticalVector(0, 0) = majorUnitAxis_(0, 1) * unitVectorY(0, 2) - majorUnitAxis_(0, 2) * unitVectorY(0, 1);
+	verticalVector(0, 1) = majorUnitAxis_(0, 2) * unitVectorY(0, 0) - majorUnitAxis_(0, 0) * unitVectorY(0, 2);
+	verticalVector(0, 2) = majorUnitAxis_(0, 0) * unitVectorY(0, 1) - majorUnitAxis_(0, 1) * unitVectorY(0, 0);
+
+	minorUnitAxis_(0, 0) = verticalVector(0, 1) * majorUnitAxis_(0, 2) - verticalVector(0, 2) * majorUnitAxis_(0, 1);
+	minorUnitAxis_(0, 1) = verticalVector(0, 2) * majorUnitAxis_(0, 0) - verticalVector(0, 0) * majorUnitAxis_(0, 2);
+	minorUnitAxis_(0, 2) = verticalVector(0, 0) * majorUnitAxis_(0, 1) - verticalVector(0, 1) * majorUnitAxis_(0, 0);
 
 
 
+}
+
+auto EllipseTrajectory5::getMoveModelPE(double theta) -> Matrix<double>
+{
+	theta_ = theta;
+	for (int i = 0; i < 3; i++)
+	{
+	for (int j = 0; j < 4; j++)
+		{
+			moveModelPE_(j, i+4) = centerPoint_(j, i) + majorLength_ * majorUnitAxis_(1,i) * std::cos( theta_ ) + Height_ * minorUnitAxis_(1, i) * std::sin( theta_ );
+		}
+	}
+
+	return moveModelPE_;
+}
