@@ -29,3 +29,16 @@
 ## E8 ->11.10
 * A  new class to run  4-leg ellipse curve -> Ellipse4LegDrive2();
 * Build successfully at 1:20 AM;
+
+## E9 ->11.12
+* A new function ReadInfoemation to play a part of Show(sh) in aris;
+* But it has a much more easy to read format;
+* Tested many times they have the same fun in REAL motor; in virtual motor, Mmodel Pos has a little problem;
+
+
+## E10 ->11.13
+* A new class to run  4-leg ellipse curve -> Ellipse4LegDrive3();
+* And its corresponding Ellipse plan EllipseTrajectory7;
+* Use std::vector<>  to arrange all the matrixs; index by cols * i + j;
+* Correct a big mistaken: Ellipse plan, theta_ should start from pi; not 0;
+* Built successfully at 23:40;
