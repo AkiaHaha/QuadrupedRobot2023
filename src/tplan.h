@@ -2,6 +2,9 @@
 #define TPLAN_H_
 #include <vector>
 #include "operator.h"
+#include <aris.hpp>
+#include <iostream>
+using namespace aris::dynamic;
 
 ///功能：生成0->1的梯形曲线。可根据输入的加速度和速度判断曲线为梯形还是三角形
 //
@@ -206,22 +209,98 @@ public:
 	auto trajectoryInitialize() -> void;
 	auto getMoveModelPE(double theta) -> Matrix<double>;
 	EllipseTrajectory5(Matrix<double> startModelPE, double x, double y, double z, double h)
-		: startModelPE_(Matrix<double>(4, 7)),
-		  moveModelPE_(Matrix<double>(4, 7)),
-		  centerPoint_(Matrix<double>(4, 3)),
-		  majorUnitAxis_(Matrix<double>(1, 3)),
-		  minorUnitAxis_(Matrix<double>(1, 3)),
-
-		  moveX_(x),
-		  moveY_(y),
-		  moveZ_(z),
-		  Height_(h)
-	{
-		startModelPE_ = std::move(startModelPE);
-		trajectoryInitialize();
-	}
-
+    : startModelPE_(std::move(startModelPE)),  // Ensure startModelPE_ is properly initialized
+      moveModelPE_(Matrix<double>(4, 7)),
+      centerPoint_(Matrix<double>(4, 3)),
+      majorUnitAxis_(Matrix<double>(1, 3)),
+      minorUnitAxis_(Matrix<double>(1, 3)),
+      moveX_(x),
+      moveY_(y),
+      moveZ_(z),
+      Height_(h)
+{
+    trajectoryInitialize();
+}
 	~EllipseTrajectory5() {}
+};
+
+class EllipseTrajectory6
+{
+private:
+	double moveX_{};
+	double moveY_{};
+	double moveZ_{};
+	double Height_{};
+	double theta_{};
+	double majorLength_{};
+
+	double startModelPE_[4 * 7]{};
+	double moveModelPE_[4 * 7]{};
+
+	double centerPoint_[4 * 3]{};
+	double majorUnitAxis_[4 * 3]{};
+	double minorUnitAxis_[4 * 3]{};
+	
+
+public:
+	auto trajectoryInitialize() -> void;
+	auto getMoveModelPE(double theta) -> double*;
+	EllipseTrajectory6(double startModelPE[4 * 7], double x, double y, double z, double h)
+	: moveX_(x),
+      moveY_(y),
+      moveZ_(z),
+      Height_(h)
+{
+    trajectoryInitialize();
+	for ( int i = 0; i < 4; i++)
+	{
+		for ( int j = 0; j < 7; j++ )
+		{
+			startModelPE_[at(i, j)] = startModelPE[at(i, j)];
+		}
+	}
+}
+	~EllipseTrajectory6() {}
+};
+
+class EllipseTrajectory7
+{
+private:
+    double moveX_{};
+    double moveY_{};
+    double moveZ_{};
+    double Height_{};
+    double theta_{};
+    double majorLength_{};
+
+    std::vector<double> startModelPE_;
+    std::vector<double> moveModelPE_;
+
+    std::vector<double> centerPoint_;
+    std::vector<double> majorUnitAxis_;
+    std::vector<double> minorUnitAxis_;
+
+
+public:
+    auto trajectoryInitialize() -> void;
+    auto getMoveModelPE(double theta) -> std::vector<double>;
+	auto crossProduct(const std::vector<double>& vector1, const std::vector<double>& vector2, std::vector<double>& result) -> void;
+
+    EllipseTrajectory7(const std::vector<double>& startModelPE, double x, double y, double z, double h)
+        : moveX_(x),
+          moveY_(y),
+          moveZ_(z),
+          Height_(h),
+          startModelPE_(startModelPE),
+		  moveModelPE_(28),
+		  centerPoint_(12),
+		  majorUnitAxis_(3),
+		  minorUnitAxis_(3)
+    {
+        trajectoryInitialize();
+    }
+
+    ~EllipseTrajectory7() {}
 };
 
 #endif

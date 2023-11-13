@@ -19,9 +19,13 @@
 * Modified e4 and build success.
 
 ## E7 ->11.10
-* USe std::vector to rebuild the whole ellipse plan function; 
+* USe std::vector to rebuild the whole ellipse plan function named EllipseTrajectory5; 
 * Set a class use template named Matrix to directly modify 28D matrix startModelPE(4, 7) and centerPoint(4, 3);
 * Use parameter list to transfer value in constructor function which improves efficiency;
 * Plan it with mindmap first and finally  built successfully  with long time debug~
 ![](https://secure2.wostatic.cn/static/mhSyuebyMyhB4rkN2Hx2zA/image.png?auth_key=1699626773-2cetRpKWe1XwiMTYFcRK7p-0-e57fdd5c996658fca55f861569145811)
 ![](https://secure2.wostatic.cn/static/nbVyL5yhcf9hgDEct3dYHq/image.png?auth_key=1699626802-fTQU8VauJ7Vb4CoFHqgmLA-0-db5b7cf5bf358be88c588b291a652b29)
+
+## E8 ->11.10
+* A  new class to run  4-leg ellipse curve -> Ellipse4LegDrive2();
+* Build successfully at 1:20 AM;

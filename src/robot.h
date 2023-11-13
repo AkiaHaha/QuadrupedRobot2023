@@ -3,11 +3,92 @@
 
 #include <memory>
 #include <aris.hpp>
+#include "operator.h"
 
 #define ARIS_USE_ETHERCAT_SIMULATION
 
 namespace robot
 {   
+    class Ellipse4LegDrive3 : public aris::core::CloneObject<Ellipse4LegDrive3,aris::plan::Plan>
+    {
+    public:
+        auto virtual prepareNrt()->void;
+        auto virtual executeRT()->int;
+        auto virtual collectNrt()->void;
+
+        virtual ~Ellipse4LegDrive3();
+        explicit Ellipse4LegDrive3(const std::string &name = "Ellipse4LegDrive3");
+
+    private:
+        double moveX_{};
+        double moveY_{};
+        double moveZ_{};
+        double Height_{};
+
+        double theta_{};
+        double theta_d_{};
+        double theta_dd_{};
+
+        std::vector<double> startMotorPos{12, 0.0};
+        std::vector<double> finalMotorPos{12, 0.0};
+        std::vector<double> moveMotorPos{12, 0.0};
+
+        std::vector<double> startModelPE{28, 0.0};
+        std::vector<double> finalModelPE{28, 0.0};
+        std::vector<double> moveModelPE{28, 0.0};
+
+    };
+
+    class ReadInformation : public aris::core::CloneObject<ReadInformation,aris::plan::Plan>
+    {
+    public:
+        auto virtual prepareNrt()->void;
+        auto virtual executeRT()->int;
+        auto virtual collectNrt()->void;
+
+        virtual ~ReadInformation();
+        explicit ReadInformation(const std::string &name = "ReadInformation");
+
+    private:
+        double motorPos[4 * 3]{};
+        double modelPose[4 * 7]{};
+        std::vector<double> modelPoseVec;
+
+    };
+
+    class Ellipse4LegDrive2 : public aris::core::CloneObject<Ellipse4LegDrive2,aris::plan::Plan>
+    {
+    public:
+        auto virtual prepareNrt()->void;
+        auto virtual executeRT()->int;
+        auto virtual collectNrt()->void;
+
+        virtual ~Ellipse4LegDrive2();
+        explicit Ellipse4LegDrive2(const std::string &name = "Ellipse4LegDrive2");
+
+    private:
+        double moveX_{};
+        double moveY_{};
+        double moveZ_{};
+        double Height_{};
+
+        double theta_{};
+        double theta_d_{};
+        double theta_dd_{};
+
+        Matrix<double> startMotorPos = Matrix<double>(4 ,3);
+        Matrix<double> finalMotorPos = Matrix<double>(4 ,3);
+        Matrix<double> moveMotorPos = Matrix<double>(4 ,3);
+
+        Matrix<double> finalModelPE = Matrix<double>(4, 7);
+        Matrix<double> moveModelPE = Matrix<double>(4, 7);
+        Matrix<double> startModelPE = Matrix<double>(4, 7);
+
+        double transfer_1[12];
+        double transfer_2[28];
+        double transfer_3[28];
+    };
+
     class Ellipse4LegDrive : public aris::core::CloneObject<Ellipse4LegDrive,aris::plan::Plan>
     {
     public:
