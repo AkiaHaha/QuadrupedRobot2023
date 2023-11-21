@@ -42,3 +42,10 @@
 * Use std::vector<>  to arrange all the matrixs; index by cols * i + j;
 * Correct a big mistaken: Ellipse plan, theta_ should start from pi; not 0;
 * Built successfully at 23:40;
+
+## E11 ->11.18
+* Run quadruped ellipse curve success;
+* command "zero" to set the motors to the position of initial model;
+* command "t" to run single motors seperately;
+* command "tt" to drive all  motors together that the robot's 4-Leg bent at the same time;
+* all the command runs success but a little wired;

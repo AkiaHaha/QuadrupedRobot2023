@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <vector>
+#include <aris.hpp>
 
 template<typename T>
 class Matrix {

@@ -27,152 +27,127 @@ auto Ellipse4LegDrive3::prepareNrt()->void
             aris::plan::Plan::NOT_CHECK_ENABLE |
             aris::plan::Plan::NOT_CHECK_POS_CONTINUOUS_SECOND_ORDER;
 }
+
 auto Ellipse4LegDrive3::executeRT()->int
 {
     if (count() == 1)
     {
-        //---read init motor pos and stored in vector startMotorPos---//
-        std::cout << "startMotorPos = : " << std::endl;
-        for (int i = 0; i < 4; i++)
-        {
-            std::cout << "Leg" << i + 1 << "\t";
-            for(int j = 0; j < 3; j++)
-            {
-                startMotorPos[3 * i + j] = controller()-> motorPool()[3 * i + j].actualPos();
-                std::cout << "M" << 3 * i + j << ": " << startMotorPos[3 * i + j] << "\t";
-            }
-            std::cout << std::endl;
+        //---initializa theta_---//
+        theta_ = PI;
+
+        //---read init motor pos and stored in  startMotorPos---//
+        for (int i = 0; i< 12; i++){
+            startMotorPos[i] = controller()-> motorPool()[i].targetPos();
         }
+        std::cout << "start motor pos ===>>>" << std::endl;
+        aris::dynamic::dsp(4, 3, startMotorPos);
+
         //---use fwdKin with startMotorPos to get startModelPE---//
-        model()->setInputPos(startMotorPos.data());
+        mout() << "|||Test flag ===>>> 3" << std::endl;
+
+        model()->setInputPos(startMotorPos);
         if (model()->solverPool()[1].kinPos())
         {
             throw std::runtime_error("Leg Initialization Forward Kinematics Position Failed!");
         }   
-        model()->getOutputPos(startModelPE.data());   
+        model()->getOutputPos(startModelPE);   
 
-        //---initializa theta_---//
-        theta_ = PI;
-    }
-
-//---display startModelPE ---//
-    std::cout << std::endl << "Start body pose = " << std::endl;
-    for (int i = 0; i < 4; i++ )
-    {
-        for (int j =  0; j < 4; ++j)
-        {
-            std::cout << startModelPE[4 * i + j] << "\t";
+        //---display startModelPE ---//
+        for (int i = 0; i < 16; i ++){
+            startBodyPose[i] = startModelPE[i];
+        }         
+        for (int i = 0; i < 12; i ++){
+            startLegPoint[i] = startModelPE[i + 16];
         }
-        std::cout << std::endl;
+
+        std::cout << std::endl << "Start body pose ===>>> " << std::endl;       
+        aris::dynamic::dsp(4, 4, startBodyPose);
+
+        std::cout << std::endl << "Start 4-legPoint = " << std::endl;
+        aris::dynamic::dsp(4, 3, startLegPoint);
     }
-
-
-    std::cout << std::endl << "Start 4-legPos = " << std::endl;
-    for (int i = 0; i < 4; i++ )
-    {
-        std::cout << "Leg" << i + 1 << " = ";
-        for (int j =  0; j < 3; ++j)
-        {
-            std::cout << startModelPE[16 + 3 * i + j] << "\t";
-        }
-        std::cout << std::endl;
-    }  
-
-//---init Ellipse plan function---//
+    //---init Ellipse plan function---//
     std::cout << std::endl;
-    std::cout << "Prepare to init EllipseTrajectory5~" << std::endl;
-    static EllipseTrajectory7  e7(startModelPE, moveX_, moveY_, moveZ_, Height_);  
+    std::cout << "Prepare to init EllipseTrajectory7~" << std::endl;
+    static EllipseTrajectory7  e7(startModelPE, moveX_, moveY_, moveZ_, Height_); 
 
-
-//---use moveAbsolute2 to plan theta---//
-std::cout << "Prepare to init theta ~" << std::endl;
+    //---use moveAbsolute2 to plan theta---//
+    // std::cout << "Prepare to init theta ~" << std::endl;
     aris::Size total_count;
-    auto ret = moveAbsolute2( theta_, theta_d_, theta_dd_, 0, 0.1, 1, 0.1, 0.5, 0.5, 1e-3, 1e-10, theta_, theta_d_, theta_dd_, total_count);
+    auto ret = moveAbsolute2( theta_, theta_d_, theta_dd_, 0, 5, 10, 5, 10, 5, 1e-3, 1e-10, theta_, theta_d_, theta_dd_, total_count);
 
-std::cout << "To get moveModelPE ~" << std::endl;
-//---use Ellipse plan function to get trajectory point list---//
-    moveModelPE = e7.getMoveModelPE(theta_);
+    // std::cout << "To get moveModelPE ~" << std::endl;
+    //---use Ellipse plan function to get trajectory point list---//
+    PE = e7.getMoveModelPE(theta_);
+    for (int i = 0; i < 28; i++){
+        moveModelPE[i] = PE[i];
+    }
 
-//---display moveModelPE with corresponding count and theta---//
+    //---display moveModelPE with corresponding count and theta---//
     std::cout << "count = " << count() << "\t" << "theta = " << theta_ << "\t moveModelPE ===>>>  "  <<std::endl;
 
-    std::cout << std::endl << "Move body pose = " << std::endl;
-    for (int i = 0; i < 4; i++ )
-    {
-        for (int j =  0; j < 4; ++j)
-        {
-            std::cout << moveModelPE[4 * i + j] << "\t";
-        }
-        std::cout << std::endl;
+
+    //---display moveModelPE ---//
+    for (int i = 0; i < 16; i ++){
+        moveBodyPose[i] = moveModelPE[i];
+    }         
+    for (int i = 0; i < 12; i ++){
+        moveLegPoint[i] = moveModelPE[i + 16];
     }
 
+    std::cout << std::endl << "Move body pose ===>>> " << std::endl;       
+    aris::dynamic::dsp(4, 4, moveBodyPose);
 
-    std::cout << std::endl << "Move 4-legPos = " << std::endl;
-    for (int i = 0; i < 4; i++ )
-    {
-        std::cout << "Leg" << i + 1 << " = ";
-        for (int j =  0; j < 3; ++j)
-        {
-            std::cout << moveModelPE[16 + 3 * i + j] << "\t";
-        }
-        std::cout << std::endl;
-    }  
+    std::cout << std::endl << "Move 4-legPoint = " << std::endl;
+    aris::dynamic::dsp(4, 3, moveLegPoint);
 
-
-// //---test model invKin---//
-//     model()->setOutputPos(startModelPE.data());
-//     if (model()->solverPool()[0].kinPos())
-//     {
-//         throw std::runtime_error("startModelPE invKin test failed wawa555waw");    
-//     }
-
-//     std::cout << std::endl;
-//     std::cout << "Test for invKin with startModelPE ===>>>" <<std::endl;
-//     for (int i = 0; i < 4; i++)
-//     {
-//         std::cout << "Leg" << i + 1 << " = ";
-//         for (int j = 0; j < 3; j++)
-//         {
-//             std::cout << "M" << 4 * i + j << ": " << model()->motionPool()[4 * i + j].mp() << "\t";
-//         }
-//         std::cout << std::endl;
-//     } 
-//     std::cout << "<<<=== Test for invKin with startModelPE" <<std::endl;
-//     std::cout << std::endl;
-
-
-
-
-
-
-
-//---use planned target moveModelPose to get target moveMotorPos---//
-    model()->setOutputPos(moveModelPE.data());
+    //---use planned target moveModelPose to get target moveMotorPos---//
+    model()->setOutputPos(moveModelPE);
     if (model()->solverPool()[0].kinPos())
     {
         throw std::runtime_error("Move Status Inverse kinematic position failed wawawaw");    
     }
 
-//---copy motorPos inverse solved from modelPE to moveMotorPos(12)
-    for (int i = 0; i < 4; i++)
-    {
-        for (int j = 0; j < 3; j++)
-        {
-            moveMotorPos[4 * i + j] = model()->motionPool()[4 * i + j].mp();
-        }
+    std::cout << std::endl << "move status invKin at count = " << count() << " successed ~" << std::endl;
+
+    //---copy motorPos inverse solved from modelPE to moveMotorPos(12)
+    for (int i = 0; i < 12; i++){
+        moveMotorPos[i] = model()->motionPool()[i].mp();
+        controller()->motorPool()[i].setTargetPos(moveMotorPos[i]);
     }
+
+    if ( ret == 0 )
+    {
+        //--Output motor pos--//
+        std::cout << "The Ellipse Curve has Run Successfully~" << std::endl << std::endl;
+        std::cout <<std::endl<< "motorPos===>>> " << std::endl;
+        aris::dynamic::dsp(4, 3, moveMotorPos);
+
+
+        //--Solve the Forward Kinematics--//
+        model()->setInputPos(moveMotorPos) ;    
+
+        if (model()->solverPool()[1].kinPos())
+        {
+            throw std::runtime_error("Quadrupd Leg Forward Kinematics Failed!");
+        }
+        model()->getOutputPos(finalModelPE);
     
-//---drive motor to target pos---//
-    for (int i = 0; i < 4; i++)
-    {
-    for (int j = 0; j < 3; j++)
-        {
-            controller()->motorPool()[4 * i + j].setTargetPos(moveMotorPos[4 * i + j]);
+        //--Output body pose and leg point--//        
+        for (int i = 0; i < 16; i ++){
+            finalBodyPose[i] = finalModelPE[i];
+        }         
+        for (int i = 0; i < 12; i ++){
+            finalLegPoint[i] = finalModelPE[i + 16];
         }
+
+        std::cout << std::endl << "Start body pose ===>>> " << std::endl;       
+        aris::dynamic::dsp(4, 4, finalBodyPose);
+
+        std::cout << std::endl << "Start 4-legPoint = " << std::endl;
+        aris::dynamic::dsp(4, 3, finalLegPoint);      
     }
-
     return ret;
-
 } 
 auto Ellipse4LegDrive3::collectNrt()->void {}
 Ellipse4LegDrive3::Ellipse4LegDrive3(const std::string &name) 
@@ -190,7 +165,7 @@ Ellipse4LegDrive3::Ellipse4LegDrive3(const std::string &name)
 Ellipse4LegDrive3::~Ellipse4LegDrive3() = default; 
 
 
-///////////////////////////////////////////////////////< read joint pos >////////////////////////////////////////////////////
+///////////////////////////////////////////////////////< ReadInformation1  >////////////////////////////////////////////////////
 auto ReadInformation::prepareNrt()->void
 {
     for(auto &m:motorOptions()) m =
@@ -201,29 +176,32 @@ auto ReadInformation::prepareNrt()->void
 auto ReadInformation::executeRT()->int
 {
     //---read all motor's current pos aris-Matrix---//
-    std::cout << "Current MotorPos => " << std::endl;
-    for (int i = 0; i < 4; i++)
-    {
-        std::cout << "Leg" << i + 1 << "\t";
-        for (int j = 0; j < 3; j++)
-        {
-            motorPos[at(i, j)] = controller()->motorPool()[3 * i + j].actualPos();
-            std::cout << "M" << 3 * i + j << ": " << motorPos[at(i, j)] << "\t";
-        }
-        std::cout << std::endl;
-    }
+    // std::cout << "Motor Pos ===>>> " << std::endl;
 
-    //---read all motor's Model pos---//
-    std::cout << std::endl << "Current Model's MotorPos => " << std::endl;
-    for (int i = 0; i < 4; i++)
-    {
-        std::cout << "Leg" << i + 1 << "\t";
-        for (int j = 0; j < 3; j++)
-        {
-            std::cout << "M" << 3 * i + j << ": " << model()->inputPosAt(3 * i + j) << "\t";
-        }
-        std::cout << std::endl;
+    for (int i = 0; i < 12; i++){
+        motorPos[i] = controller()->motorPool()[i].actualPos();
     }
+    // aris::dynamic::dsp(4, 3, motorPos);
+
+
+    model()->setInputPos(motorPos);
+    model()->getInputPos(modelPosArray);
+    std::cout << std::endl << "Model Pos ===>>> " << std::endl;
+    aris::dynamic::dsp(4, 3, modelPosArray);
+
+
+    // std::cout << std::endl << "Current Model's MotorPos with getInputPos> " << std::endl;
+    // std::vector<double> modelPosTest(12, 0.0);
+    // model()->getInputPos(modelPosTest.data());
+    // for (int i = 0; i < 4; i++)
+    // {
+    //     std::cout << "Leg" << i + 1 << "\t";
+    //     for (int j = 0; j < 3; j++)
+    //     {
+    //         std::cout << "M" << 3 * i + j << ": " << modelPosTest[3 * i + j] << "\t";
+    //     }
+    //     std::cout << std::endl;
+    // }
 
 // //---use aris matrix to storage data---//
 //     //---use fwdKin to get ModelPose；storage container uses aris-matrix---//
@@ -258,41 +236,37 @@ auto ReadInformation::executeRT()->int
 
     //---use fwdKin to get ModelPose; storage container uses std::vector---//
     modelPoseVec.resize(28);
-
-    model()->setInputPos(motorPos) ;    
     if (model()->solverPool()[1].kinPos())
     {
         throw std::runtime_error("Quadrupd Leg Forward Kinematics Failed!");
     }
     model()->getOutputPos(modelPoseVec.data());
 
-    std::cout << std::endl << "Current BodyPose VEC => " <<std::endl;
-    for (int i = 0; i < 4; i++)
+    double body_pose[16]{};
+    double leg_point[12]{};
+
+    for (int i = 0; i < 16; i++)
     {
-        for (int j = 0; j < 4; j++)
-        {
-            std::cout << modelPoseVec[4 * i + j] << "\t";
-        }
-        std::cout << std::endl;
+        body_pose[i] = modelPoseVec[i];
     }
 
-    std::cout << std::endl << "Current 4-legPoint VEC =>" << std::endl;
-    for (int i = 0; i < 4; i++)
+    for (int i = 0; i < 12; i++)
     {
-        for (int j = 0; j < 3; j++)
-        {
-            std::cout << modelPoseVec[16 + 3 * i + j] << "\t\t";
-        }
-        std::cout << std::endl;
+        leg_point[i] = modelPoseVec[i + 16];
     }   
 
+    std::cout << std::endl << "Body Pose ===>>> " <<std::endl;
+    aris::dynamic::dsp(4, 4, body_pose);
+    std::cout << std::endl << "Leg Point ===>>>" << std::endl;
+    aris::dynamic::dsp(4, 3, leg_point);
+    
     return 0;
 }
 auto ReadInformation::collectNrt()->void {}
 ReadInformation::ReadInformation(const std::string &name) 
 {
     aris::core::fromXmlString(command(),
-       "<Command name=\"read\">"
+       "<Command name=\"rr\">"
        "	<GroupParam>"                                    
        "	</GroupParam>"
        "</Command>");
@@ -687,7 +661,440 @@ Ellipse4LegDrive::Ellipse4LegDrive(const std::string &name)
 Ellipse4LegDrive::~Ellipse4LegDrive() = default; 
 
 
-///////////////////////////////////////////////////////< 12 motors test  >////////////////////////////////////////////////////
+///////////////////////////////////////////////////////< Control 12 motors seperatelt >////////////////////////////////////////////////////
+auto MotorTest12E3::prepareNrt()->void
+{
+    motor0_ = doubleParam("motor0");
+    motor1_ = doubleParam("motor1");
+    motor2_ = doubleParam("motor2");
+    motor3_ = doubleParam("motor3");
+    motor4_ = doubleParam("motor4");
+    motor5_ = doubleParam("motor5");
+    motor6_ = doubleParam("motor6");
+    motor7_ = doubleParam("motor7");
+    motor8_ = doubleParam("motor8");
+    motor9_ = doubleParam("motor9");
+    motor10_ = doubleParam("motor10");
+    motor11_ = doubleParam("motor11");
+
+
+    for(auto &m:motorOptions()) m =
+            aris::plan::Plan::CHECK_NONE;
+
+    this->controlServer()->idleMotionCheckOption()[0];
+}
+auto MotorTest12E3::executeRT()->int
+{
+    if (count() == 1){
+        //--get init motor pos and target motor pos--//
+        double pos_commad_[12] = { motor0_, motor1_, motor2_, motor3_, motor4_, motor5_, motor6_, motor7_, motor8_, motor9_, motor10_, motor11_ };
+
+        std::cout << "pos command ===>>>" << std::endl;
+        aris::dynamic::dsp(4, 3, pos_commad_);
+    
+        for (int i = 0; i < 12; i++){
+            pos_[i] = controller()->motorPool()[i].targetPos();
+            target_pos_[i] = pos_[i] + pos_commad_[i];
+        }
+
+        std::cout << "init pos ===>>>" << std::endl;
+        aris::dynamic::dsp(4, 3, pos_);
+
+        std::cout << "target pos ===>>>" << std::endl;
+        aris::dynamic::dsp(4, 3, target_pos_);
+
+    }
+   
+    //--use fun to plan pos--//
+    aris::Size total_count[12]{};
+
+    for (int i =0; i < 12; i++){
+        ret[i] = moveAbsolute2( pos_[i], pos_d_[i], pos_dd_[i], target_pos_[i], 0.1, 1, 1, 0.5, 0.5, 1e-3, 1e-10, pos_[i], pos_d_[i], pos_dd_[i], total_count[i]);        
+    }
+
+    //--use ret_all to check ret[12]; if exist 1, it comes 1; if no 1 exist, it keeps 0;--//
+    ret_all = 0;
+    for (int i = 0; i < 12; i++) {
+        if (ret[i] != 0) {
+            ret_all = 1; // 只要数组中存在值不为0的元素，就将 ret_all 设置为1
+            break;       // 找到一个就可以跳出循环了
+        }
+    }
+
+    //--set motor pos to planned pos--//
+    for (int j=0; j<12; j++)
+    {
+        controller()->motorPool()[j].setTargetPos(pos_[j]); 
+    }
+
+    //--output motor pos with interval count = 500 --//
+    if (count() % 500 == 0)
+    {
+        for (int i = 0; i < 12; i++){
+        motorPos_[i] = controller()->motorPool()[i].targetPos();
+        } 
+        std::cout << "count= " << count() << "; 12 Motor Pos ===>>>"  <<std::endl;
+        aris::dynamic::dsp(4, 3, motorPos_);
+    }
+
+    if ( ret_all == 0 )
+    {
+        std::cout <<std::endl<< "motorPos: " << std::endl;
+        std::cout << "leg 1 --> " << controller()->motorPool()[0].actualPos() <<"\t"<< controller()->motorPool()[1].actualPos()<<"\t"<< controller()->motorPool()[2].actualPos() << std::endl;
+        std::cout << "leg 2 --> " << controller()->motorPool()[3].actualPos() <<"\t"<< controller()->motorPool()[4].actualPos()<<"\t"<< controller()->motorPool()[5].actualPos() << std::endl;
+        std::cout << "leg 3 --> " << controller()->motorPool()[6].actualPos() <<"\t"<< controller()->motorPool()[7].actualPos()<<"\t"<< controller()->motorPool()[8].actualPos() << std::endl;
+        std::cout << "leg 4 --> " << controller()->motorPool()[9].actualPos() <<"\t"<< controller()->motorPool()[10].actualPos()<<"\t"<< controller()->motorPool()[11].actualPos() << std::endl;
+    
+        double finalPos[12]{0};
+        for (int i = 0; i < 12; i++)
+        {
+            finalPos[i] = controller()->motorPool()[i].actualPos();
+        }
+
+        //Solve the Forward Kinematics
+        model()->setInputPos(finalPos) ;    
+
+        if (model()->solverPool()[1].kinPos())
+        {
+            throw std::runtime_error("Quadrupd Leg Forward Kinematics Failed!");
+        }
+       
+        double finalPE[28]{0};
+        model()->getOutputPos(finalPE);
+    
+        std::cout << std::endl << "Final body pose = " << std::endl;
+        for (int i = 0; i < 4; i++ )
+        {
+            for (int j =  0; j < 4; ++j)
+            {
+                std::cout << finalPE[4 * i + j] << "\t";
+            }
+            std::cout << std::endl;
+        }
+
+    
+        std::cout << std::endl << "Final 4-legPos = " << std::endl;
+        for (int i = 0; i < 4; i++ )
+        {
+            std::cout << "Leg" << i + 1 << " = ";
+            for (int j =  0; j < 3; ++j)
+            {
+                std::cout << finalPE[16 + 3 * i + j] << "\t";
+            }
+            std::cout << std::endl;
+        }        
+    
+    }
+
+    return ret_all;
+}
+auto MotorTest12E3::collectNrt()->void {}
+MotorTest12E3::MotorTest12E3(const std::string &name) 
+{
+    aris::core::fromXmlString(command(),
+       "<Command name=\"t\">"
+       "	<GroupParam>"                                    
+       "	<Param name=\"motor0\" default=\"0.0\" abbreviation=\"q\"/>"  // Initialize the end pose of a single leg by giving the initial value of the motor. //
+       "	<Param name=\"motor1\" default=\"0.0\" abbreviation=\"a\"/>"  // The given value is in radians. The accuracy in this program is set to four decimal places.//
+       "	<Param name=\"motor2\" default=\"0.0\" abbreviation=\"z\"/>"   
+       "	<Param name=\"motor3\" default=\"0.0\" abbreviation=\"w\"/>"   
+       "	<Param name=\"motor4\" default=\"0.0\" abbreviation=\"s\"/>"   
+       "	<Param name=\"motor5\" default=\"0.0\" abbreviation=\"x\"/>"   
+       "	<Param name=\"motor6\" default=\"0.0\" abbreviation=\"e\"/>"   
+       "	<Param name=\"motor7\" default=\"0.0\" abbreviation=\"d\"/>"   
+       "	<Param name=\"motor8\" default=\"0.0\" abbreviation=\"c\"/>"   
+       "	<Param name=\"motor9\" default=\"0.0\" abbreviation=\"r\"/>"   
+       "	<Param name=\"motor10\" default=\"0.0\" abbreviation=\"f\"/>"   
+       "	<Param name=\"motor11\" default=\"0.0\" abbreviation=\"v\"/>"   
+       "	</GroupParam>"
+       "</Command>");
+}
+MotorTest12E3::~MotorTest12E3() = default; 
+
+///////////////////////////////////////////////////////< Set 12 motors to all 0 >////////////////////////////////////////////////////
+auto SetZeroPose::prepareNrt()->void
+{
+    for(auto &m:motorOptions()) m =
+            aris::plan::Plan::CHECK_NONE;
+
+    this->controlServer()->idleMotionCheckOption()[0];
+}
+auto SetZeroPose::executeRT()->int
+{
+    if (count() == 1){
+        //--get current motor pos--//
+        for (int i = 0; i < 12; i++)
+        {
+            pos_[i] = controller()->motorPool()[i].targetPos();
+        }
+        std::cout << "current pos ===>>>" << std::endl;
+        aris::dynamic::dsp(4, 3, pos_);
+    }
+   
+    //--use fun to plan pos--//
+    aris::Size total_count[12]{};
+
+    for (int i =0; i < 12; i++){
+        ret[i] = moveAbsolute2( pos_[i], pos_d_[i], pos_dd_[i], 0, 1, 0.1, 1, 0.5, 0.5, 1e-3, 1e-10, pos_[i], pos_d_[i], pos_dd_[i], total_count[i]);        
+    }
+
+    //--use ret_all to check ret[12]; if exist 1, it comes 1; if no 1 exist, it keeps 0;--//
+    ret_all = 0;
+    for (int i = 0; i < 12; i++) {
+        if (ret[i] != 0) {
+            ret_all = 1; // 只要数组中存在值不为0的元素，就将 ret_all 设置为1
+            break;       // 找到一个就可以跳出循环了
+        }
+    }
+
+    //--set motor pos to planned pos--//
+    for (int j=0; j<12; j++)
+    {
+        controller()->motorPool()[j].setTargetPos(pos_[j]); 
+    }
+
+    //--output motor pos with interval count = 500 --//
+    if (count() % 500 == 0)
+    {
+        for (int i = 0; i < 12; i++){
+        motorPos_[i] = controller()->motorPool()[i].targetPos();
+        } 
+        std::cout << "count= " << count() << "; 12 Motor Pos ===>>>"  <<std::endl;
+        aris::dynamic::dsp(4, 3, motorPos_);
+    }
+
+    if ( ret_all == 0 )
+    {
+        std::cout <<std::endl<< "motorPos: " << std::endl;
+        std::cout << "leg 1 --> " << controller()->motorPool()[0].actualPos() <<"\t"<< controller()->motorPool()[1].actualPos()<<"\t"<< controller()->motorPool()[2].actualPos() << std::endl;
+        std::cout << "leg 2 --> " << controller()->motorPool()[3].actualPos() <<"\t"<< controller()->motorPool()[4].actualPos()<<"\t"<< controller()->motorPool()[5].actualPos() << std::endl;
+        std::cout << "leg 3 --> " << controller()->motorPool()[6].actualPos() <<"\t"<< controller()->motorPool()[7].actualPos()<<"\t"<< controller()->motorPool()[8].actualPos() << std::endl;
+        std::cout << "leg 4 --> " << controller()->motorPool()[9].actualPos() <<"\t"<< controller()->motorPool()[10].actualPos()<<"\t"<< controller()->motorPool()[11].actualPos() << std::endl;
+    
+        double finalPos[12]{0};
+        for (int i = 0; i < 12; i++)
+        {
+            finalPos[i] = controller()->motorPool()[i].actualPos();
+        }
+
+        //Solve the Forward Kinematics//
+        model()->setInputPos(finalPos);    
+
+        if (model()->solverPool()[1].kinPos())
+        {
+            throw std::runtime_error("Quadrupd Leg Forward Kinematics Failed!");
+        }
+       
+        double finalPE[28]{0};
+        model()->getOutputPos(finalPE);
+    
+        std::cout << std::endl << "Final body pose = " << std::endl;
+        for (int i = 0; i < 4; i++ )
+        {
+            for (int j =  0; j < 4; ++j)
+            {
+                std::cout << finalPE[4 * i + j] << "\t";
+            }
+            std::cout << std::endl;
+        }
+
+    
+        std::cout << std::endl << "Final 4-legPos = " << std::endl;
+        for (int i = 0; i < 4; i++ )
+        {
+            std::cout << "Leg" << i + 1 << " = ";
+            for (int j =  0; j < 3; ++j)
+            {
+                std::cout << finalPE[16 + 3 * i + j] << "\t";
+            }
+            std::cout << std::endl;
+        }        
+    
+    }
+
+    return ret_all;
+}
+auto SetZeroPose::collectNrt()->void {}
+SetZeroPose::SetZeroPose(const std::string &name) 
+{
+    aris::core::fromXmlString(command(),
+       "<Command name=\"zero\">"
+       "	<GroupParam>"                                    
+       "	</GroupParam>"
+       "</Command>");
+}
+SetZeroPose::~SetZeroPose() = default; 
+
+///////////////////////////////////////////////////////< Set motors from Zero pos => Ellipse initial pos  >////////////////////////////////////////////////////
+auto MotorTest12E2::prepareNrt()->void
+{
+    motor0_ = doubleParam("motor0");
+    motor1_ = doubleParam("motor1");
+    motor2_ = doubleParam("motor2");
+    motor3_ = doubleParam("motor3");
+    motor4_ = doubleParam("motor4");
+    motor5_ = doubleParam("motor5");
+    motor6_ = doubleParam("motor6");
+    motor7_ = doubleParam("motor7");
+    motor8_ = doubleParam("motor8");
+    motor9_ = doubleParam("motor9");
+    motor10_ = doubleParam("motor10");
+    motor11_ = doubleParam("motor11");
+
+
+    for(auto &m:motorOptions()) m =
+            aris::plan::Plan::CHECK_NONE;
+
+    this->controlServer()->idleMotionCheckOption()[0];
+}
+auto MotorTest12E2::executeRT()->int
+{
+    if (count() == 1){
+        //--get init motor pos and target motor pos--//
+        double pos_commad_[12] = { motor0_, motor1_, motor2_, motor3_, motor4_, motor5_, motor6_, motor7_, motor8_, motor9_, motor10_, motor11_ };
+
+        std::cout << "pos command ===>>>" << std::endl;
+        aris::dynamic::dsp(4, 3, pos_commad_);
+    
+        for (int i = 0; i < 12; i++){
+            pos_[i] = controller()->motorPool()[i].targetPos();
+            target_pos_[i] = pos_[i] + pos_commad_[i];
+        }
+
+        std::cout << "init pos ===>>>" << std::endl;
+        aris::dynamic::dsp(4, 3, pos_);
+
+        std::cout << "target pos ===>>>" << std::endl;
+        aris::dynamic::dsp(4, 3, target_pos_);
+
+    }
+   
+    //--use fun to plan pos--//
+    aris::Size total_count[12]{};
+
+    for (int i =0; i < 12; i++){
+        ret[i] = moveAbsolute2( pos_[i], pos_d_[i], pos_dd_[i], target_pos_[i], 0.1, 1, 1, 0.5, 0.5, 1e-3, 1e-10, pos_[i], pos_d_[i], pos_dd_[i], total_count[i]);        
+    }
+
+    //--use ret_all to check ret[12]; if exist 1, it comes 1; if no 1 exist, it keeps 0;--//
+    ret_all = 0;
+    for (int i = 0; i < 12; i++) {
+        if (ret[i] != 0) {
+            ret_all = 1; // 只要数组中存在值不为0的元素，就将 ret_all 设置为1
+            break;       // 找到一个就可以跳出循环了
+        }
+    }
+
+    //--set motor pos to planned pos--//
+    for (int j=0; j<12; j++)
+    {
+        controller()->motorPool()[j].setTargetPos(pos_[j]); 
+    }
+
+    //--output motor pos with interval count = 500 --//
+    if (count() % 500 == 0)
+    {
+        for (int i = 0; i < 12; i++){
+        motorPos_[i] = controller()->motorPool()[i].targetPos();
+        } 
+        std::cout << "count= " << count() << "; 12 Motor Pos ===>>>"  <<std::endl;
+        aris::dynamic::dsp(4, 3, motorPos_);
+    }
+
+    if ( ret_all == 0 )
+    {
+        std::cout <<std::endl<< "motorPos: " << std::endl;
+        std::cout << "leg 1 --> " << controller()->motorPool()[0].actualPos() <<"\t"<< controller()->motorPool()[1].actualPos()<<"\t"<< controller()->motorPool()[2].actualPos() << std::endl;
+        std::cout << "leg 2 --> " << controller()->motorPool()[3].actualPos() <<"\t"<< controller()->motorPool()[4].actualPos()<<"\t"<< controller()->motorPool()[5].actualPos() << std::endl;
+        std::cout << "leg 3 --> " << controller()->motorPool()[6].actualPos() <<"\t"<< controller()->motorPool()[7].actualPos()<<"\t"<< controller()->motorPool()[8].actualPos() << std::endl;
+        std::cout << "leg 4 --> " << controller()->motorPool()[9].actualPos() <<"\t"<< controller()->motorPool()[10].actualPos()<<"\t"<< controller()->motorPool()[11].actualPos() << std::endl;
+    
+        double finalPos[12]{0};
+        for (int i = 0; i < 12; i++)
+        {
+            finalPos[i] = controller()->motorPool()[i].actualPos();
+        }
+
+        //Solve the Forward Kinematics
+        model()->setInputPos(finalPos) ;    
+
+        if (model()->solverPool()[1].kinPos())
+        {
+            throw std::runtime_error("Quadrupd Leg Forward Kinematics Failed!");
+        }
+       
+        double finalPE[28]{0};
+        model()->getOutputPos(finalPE);
+    
+        std::cout << std::endl << "Final body pose = " << std::endl;
+        for (int i = 0; i < 4; i++ )
+        {
+            for (int j =  0; j < 4; ++j)
+            {
+                std::cout << finalPE[4 * i + j] << "\t";
+            }
+            std::cout << std::endl;
+        }
+
+    
+        std::cout << std::endl << "Final 4-legPos = " << std::endl;
+        for (int i = 0; i < 4; i++ )
+        {
+            std::cout << "Leg" << i + 1 << " = ";
+            for (int j =  0; j < 3; ++j)
+            {
+                std::cout << finalPE[16 + 3 * i + j] << "\t";
+            }
+            std::cout << std::endl;
+        }        
+    
+    }
+
+    return ret_all;
+}
+auto MotorTest12E2::collectNrt()->void {}
+MotorTest12E2::MotorTest12E2(const std::string &name) 
+{
+    aris::core::fromXmlString(command(),
+       "<Command name=\"tt\">"
+       "	<GroupParam>"                                    
+       "	<Param name=\"motor0\" default=\"0.0\" abbreviation=\"q\"/>"  // Initialize the end pose of a single leg by giving the initial value of the motor. //
+       "	<Param name=\"motor1\" default=\"0.78\" abbreviation=\"a\"/>"  // The given value is in radians. The accuracy in this program is set to four decimal places.//
+       "	<Param name=\"motor2\" default=\"-1.57\" abbreviation=\"z\"/>"   
+       "	<Param name=\"motor3\" default=\"0.0\" abbreviation=\"w\"/>"   
+       "	<Param name=\"motor4\" default=\"-0.78\" abbreviation=\"s\"/>"   
+       "	<Param name=\"motor5\" default=\"1.57\" abbreviation=\"x\"/>"   
+       "	<Param name=\"motor6\" default=\"0.0\" abbreviation=\"e\"/>"   
+       "	<Param name=\"motor7\" default=\"0.78\" abbreviation=\"d\"/>"   
+       "	<Param name=\"motor8\" default=\"-1.57\" abbreviation=\"c\"/>"   
+       "	<Param name=\"motor9\" default=\"0.0\" abbreviation=\"r\"/>"   
+       "	<Param name=\"motor10\" default=\"-0.78\" abbreviation=\"f\"/>"   
+       "	<Param name=\"motor11\" default=\"1.57\" abbreviation=\"v\"/>"   
+       "	</GroupParam>"
+       "</Command>");
+
+    // aris::core::fromXmlString(command(),
+    //    "<Command name=\"t\">"
+    //    "	<GroupParam>"                                    
+    //    "	<Param name=\"motor0\" default=\"0.0\" abbreviation=\"q\"/>"  // Initialize the end pose of a single leg by giving the initial value of the motor. //
+    //    "	<Param name=\"motor1\" default=\"0.0\" abbreviation=\"a\"/>"  // The given value is in radians. The accuracy in this program is set to four decimal places.//
+    //    "	<Param name=\"motor2\" default=\"0.0\" abbreviation=\"z\"/>"   
+    //    "	<Param name=\"motor3\" default=\"0.0\" abbreviation=\"w\"/>"   
+    //    "	<Param name=\"motor4\" default=\"0.0\" abbreviation=\"s\"/>"   
+    //    "	<Param name=\"motor5\" default=\"0.0\" abbreviation=\"x\"/>"   
+    //    "	<Param name=\"motor6\" default=\"0.0\" abbreviation=\"e\"/>"   
+    //    "	<Param name=\"motor7\" default=\"0.0\" abbreviation=\"d\"/>"   
+    //    "	<Param name=\"motor8\" default=\"0.0\" abbreviation=\"c\"/>"   
+    //    "	<Param name=\"motor9\" default=\"0.0\" abbreviation=\"r\"/>"   
+    //    "	<Param name=\"motor10\" default=\"0.0\" abbreviation=\"f\"/>"   
+    //    "	<Param name=\"motor11\" default=\"0.0\" abbreviation=\"v\"/>"   
+    //    "	</GroupParam>"
+    //    "</Command>");
+}
+MotorTest12E2::~MotorTest12E2() = default; 
+
+
+///////////////////////////////////////////////////////< 12 motors test that discontinous >////////////////////////////////////////////////////
                           ///---------test all the motor hardware by send a target pos variation---------------///
 auto MotorTest12::prepareNrt()->void
 {
@@ -820,7 +1227,7 @@ auto MotorTest12::collectNrt()->void {}
 MotorTest12::MotorTest12(const std::string &name) 
 {
     aris::core::fromXmlString(command(),
-       "<Command name=\"t\">"
+       "<Command name=\"t0000\">"
        "	<GroupParam>"                                    
        "	<Param name=\"motor0\" default=\"0.0\" abbreviation=\"q\"/>"  // Initialize the end pose of a single leg by giving the initial value of the motor. //
        "	<Param name=\"motor1\" default=\"0.78\" abbreviation=\"a\"/>"  // The given value is in radians. The accuracy in this program is set to four decimal places.//
@@ -1619,7 +2026,6 @@ auto createMasterROSMotorTest()->std::unique_ptr<aris::control::Master>{
            "  </SyncManagerPoolObject>"
            "</EthercatSlave>";
 
-
     auto& s = master->slavePool().add<aris::control::EthercatSlave>();
     aris::core::fromXmlString(s, xml_str);
    
@@ -1664,10 +2070,19 @@ auto createControllerROSMotorTest()->std::unique_ptr<aris::control::Controller>
             // -1.4974336956172, 0.128106570548551, 0.844257485597249, // 度： 85， 7.4, 48.35
             // -0.894181369710104, 0.119132782939402, 0.844199961317703
 
-            -PI/2, -PI/4, -PI/2,
-            -PI/2, -PI/4, -PI/2,
-             PI/2, -PI/4, -PI/2,
-             PI/2, -PI/4, -PI/2,
+            // -PI/2, -PI/4, -PI/2,
+            // -PI/2, -PI/4, -PI/2,
+            //  PI/2, -PI/4, -PI/2,
+            //  PI/2, -PI/4, -PI/2,
+            0, 0, 0,
+            0, 0, 0,
+            0, 0, 0,
+            0, 0, 0,
+
+            // 0, PI/4, -PI/2,
+            // 0, PI/4, -PI/2,
+            // 0, PI/4, -PI/2,
+            // 0, PI/4, -PI/2,             
         };
 #endif
         double pos_factor[12] //偏置系数//
@@ -1683,18 +2098,26 @@ auto createControllerROSMotorTest()->std::unique_ptr<aris::control::Controller>
         {
             // 500*PI,500*PI,500*PI  
             // PI/6, PI/2, 2 * PI/3
-            1.6, 1.5, 2.2,
-            1.6, 1.5, 2.2,
-            1.6, 1.5, 2.2,
-            1.6, 1.5, 2.2,
+            // 1.6, 1.5, 2.2,
+            // 1.6, 1.5, 2.2,
+            // 1.6, 1.5, 2.2,
+            // 1.6, 1.5, 2.2,
+            500*PI,500*PI,500*PI,  
+            500*PI,500*PI,500*PI,  
+            500*PI,500*PI,500*PI,  
+            500*PI,500*PI,500*PI,  
+
         };
         double min_pos[12] //最小位置//
         {
-            // -500*PI,-500*PI,-500*PI
-            -0.6, -0.4, -1.8,
-            -0.6, -0.4, -1.8,
-            -0.6, -0.4, -1.8,
-            -0.6, -0.4, -1.8,
+            -500*PI,-500*PI,-500*PI,
+            -500*PI,-500*PI,-500*PI,
+            -500*PI,-500*PI,-500*PI,
+            -500*PI,-500*PI,-500*PI,
+            // -0.6, -0.4, -1.8,
+            // -0.6, -0.4, -1.8,
+            // -0.6, -0.4, -1.8,
+            // -0.6, -0.4, -1.8,
         };
         double max_vel[12]  //最大速度//
         {
@@ -1762,6 +2185,10 @@ auto createPlanROSMotorTest()->std::unique_ptr<aris::plan::PlanRoot>
     plan_root->planPool().add<Ellipse4LegDrive2>();
     plan_root->planPool().add<Ellipse4LegDrive3>();
     plan_root->planPool().add<ReadInformation>();
+    plan_root->planPool().add<MotorTest12E2>();
+    plan_root->planPool().add<MotorTest12E3>();
+    plan_root->planPool().add<SetZeroPose>();
+
     return plan_root;
 }
 auto setMaxTorque(aris::control::EthercatMaster* ecMaster, std::uint16_t value, size_t index)->bool

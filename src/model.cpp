@@ -409,7 +409,7 @@ auto robot::createQuadrupedRbtModelPtr() -> std::unique_ptr<aris::dynamic::Model
 
 // 	// initialization  the model and output to verify it //
 // 	this->init();
-// 	std::cout << "Successful modeling Haha !" << std::endl;
+// 	mout() << "Successful modeling Haha !" << std::endl;
 
 // //===============test function usage of aris/dynamics/math_matrix================//
 //     const int rows = 2;
