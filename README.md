@@ -49,3 +49,6 @@
 * command "t" to run single motors seperately;
 * command "tt" to drive all  motors together that the robot's 4-Leg bent at the same time;
 * all the command runs success but a little wired;
+
+## E12 ->11.20
+* Rewrite functions of Ellipse plan by simple array instead of std::vector

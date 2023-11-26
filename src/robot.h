@@ -43,9 +43,6 @@ namespace robot
         double startLegPoint[12]{};
         double finalLegPoint[12]{};
         double moveLegPoint[12]{};
-
-        std::vector<double> PE{28, 0.0};
-
         
     };
 

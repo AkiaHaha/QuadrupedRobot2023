@@ -78,10 +78,7 @@ auto Ellipse4LegDrive3::executeRT()->int
 
     // std::cout << "To get moveModelPE ~" << std::endl;
     //---use Ellipse plan function to get trajectory point list---//
-    PE = e7.getMoveModelPE(theta_);
-    for (int i = 0; i < 28; i++){
-        moveModelPE[i] = PE[i];
-    }
+    e7.getMoveModelPE(theta_, moveModelPE);
 
     //---display moveModelPE with corresponding count and theta---//
     std::cout << "count = " << count() << "\t" << "theta = " << theta_ << "\t moveModelPE ===>>>  "  <<std::endl;

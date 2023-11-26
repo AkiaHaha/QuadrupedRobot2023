@@ -273,34 +273,28 @@ private:
     double theta_{};
     double majorLength_{};
 
-    std::vector<double> startModelPE_;
-    std::vector<double> moveModelPE_;
+    double startModelPE_[28]{};
 
-    std::vector<double> centerPoint_;
-    std::vector<double> majorUnitAxis_;
-    std::vector<double> minorUnitAxis_;
+    double centerPoint_[12]{};
+    double majorUnitAxis_[3]{};
+    double minorUnitAxis_[3]{};
 
 
 public:
     auto trajectoryInitialize() -> void;
-    auto getMoveModelPE(double theta) -> std::vector<double>;
-	auto getCenterPoint()->std::vector<double>{return centerPoint_;}
-	auto getMajorUnitAxis()->std::vector<double>{return majorUnitAxis_;}
-	auto getMinorUnitAxis()->std::vector<double>{return minorUnitAxis_;}
-	auto getStartModelPE()->std::vector<double>{return startModelPE_;}
-	auto getMajorLength()->double{return majorLength_;} 
-	auto crossProduct(const std::vector<double>& vector1, const std::vector<double>& vector2, std::vector<double>& result) -> void;
+    auto getMoveModelPE(double theta, double moveModelPE[28]) -> void;
+	auto getCenterPoint()->double* {return centerPoint_;}
+	auto getMajorUnitAxis()->double* {return majorUnitAxis_;}
+	auto getMinorUnitAxis()->double* {return minorUnitAxis_;}
+	auto getStartModelPE()->double* {return startModelPE_;}
+	auto getMajorLength()->double {return majorLength_;} 
+	auto crossProduct(const double vector1[3], const double vector2[3], double result[3]) -> void;
 
     EllipseTrajectory7(double* startModelPE, double x, double y, double z, double h)
         : moveX_(x),
           moveY_(y),
           moveZ_(z),
-          Height_(h),
-          startModelPE_(28),
-		  moveModelPE_(28),
-		  centerPoint_(12),
-		  majorUnitAxis_(3),
-		  minorUnitAxis_(3)
+          Height_(h)
     {
 		for (std::size_t i = 0; i < 28; ++i) 
 		{
@@ -312,6 +306,4 @@ public:
 
     ~EllipseTrajectory7() {}
 };
-
 #endif
-

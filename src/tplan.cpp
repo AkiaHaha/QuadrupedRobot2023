@@ -366,7 +366,7 @@ auto EllipseTrajectory6::getMoveModelPE(double theta) -> double*
 //============================= calculate ellipse parameter E7 ========================================//
 auto EllipseTrajectory7::trajectoryInitialize() ->void
 {
-	std::vector<double> moveParam_ = {moveX_, moveY_, moveZ_};
+	double moveParam_[] = {moveX_, moveY_, moveZ_};
 
 	for (int i = 0; i < 4; i++)
 	{
@@ -388,35 +388,36 @@ auto EllipseTrajectory7::trajectoryInitialize() ->void
 		majorUnitAxis_[i] = ( centerPoint_[i] - startModelPE_[16 + i] ) / majorLength_;
 	}
 
-	std::vector<double> unitVectorY = {0, 1, 0};
-	std::vector<double> verticalVector(3, 0.0);
+	double unitVectorY[] = {0, 1, 0};
+	double verticalVector[3]{};
 
 	crossProduct(majorUnitAxis_, unitVectorY, verticalVector);
 	crossProduct(verticalVector, majorUnitAxis_, minorUnitAxis_);
 }
 
-auto EllipseTrajectory7::getMoveModelPE(double theta) -> std::vector<double>
+auto EllipseTrajectory7::getMoveModelPE(double theta, double moveModelPE[28]) -> void
 {
 	theta_ = theta;
 
-	for (std::size_t i = 0; i < 28; ++i) 
+	for (int i = 0; i < 28; ++i) 
 	{
-		moveModelPE_[i] = startModelPE_[i];
+		moveModelPE[i] = startModelPE_[i];
 	}
 
 	for (int i = 0; i < 4; i++)
 	{
 		for (int j = 0; j < 3; j++)
 		{
-			moveModelPE_[16 + 3 * i + j] = centerPoint_[3 * i + j] + majorLength_ * majorUnitAxis_[j] * std::cos( theta_ ) + Height_ * minorUnitAxis_[j] * std::sin( theta_ );
+			moveModelPE[16 + 3 * i + j] = centerPoint_[3 * i + j] + majorLength_ * majorUnitAxis_[j] * std::cos( theta_ ) + Height_ * minorUnitAxis_[j] * std::sin( theta_ );
 		}
 	}
-	return moveModelPE_;
+
 }
 
-auto EllipseTrajectory7::crossProduct(const std::vector<double>& vector1, const std::vector<double>& vector2, std::vector<double>& result) -> void
+auto EllipseTrajectory7::crossProduct(const double vector1[3], const double vector2[3], double result[3]) -> void
 {
 	result[0] = vector1[1] * vector2[2] - vector1[2] * vector2[1];
 	result[1] = vector1[2] * vector2[0] - vector1[0] * vector2[2];
 	result[2] = vector1[0] * vector2[1] - vector1[1] * vector2[0];
 }
+
