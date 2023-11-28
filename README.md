@@ -52,3 +52,5 @@
 
 ## E12 ->11.20
 * Rewrite functions of Ellipse plan by simple array instead of std::vector
+
+## E3 ->11.28

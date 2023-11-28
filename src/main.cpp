@@ -30,7 +30,7 @@ int main(int argc, char *argv[])
     
     try {
     cs.start();
-    cs.executeCmd("set_max_trq");
+    // cs.executeCmd("set_max_trq");
     // cs.executeCmd("ds -a");
     // cs.executeCmd("md -a");
     // cs.executeCmd("en -a");

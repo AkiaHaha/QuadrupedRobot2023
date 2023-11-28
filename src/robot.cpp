@@ -1897,7 +1897,7 @@ auto createMasterROSMotorTest()->std::unique_ptr<aris::control::Master>{
     std::unique_ptr<aris::control::Master> master(new aris::control::EthercatMaster);
 
     for (aris::Size i = 0; i < 12 ; ++i){
-        int phy_id[12]={0,1,2,3,4,5,6,7,8,9,10,11};
+        int phy_id[12]={8,9,10,5,3,4,6,7,11,0,1,2};
 
 //--------------------------XML from Leo---------------------//
 //           " min_pos=\"" + std::to_string(min_pos[i]) + "\" max_pos=\"" + std::to_string(max_pos[i]) + "\" max_vel=\"" + std::to_string(max_vel[i]) + "\" min_vel=\"" + std::to_string(-max_vel[i]) + "\""
@@ -1994,6 +1994,37 @@ auto createMasterROSMotorTest()->std::unique_ptr<aris::control::Master>{
         //    "</EthercatSlave>";
 
 //----------------------------------Daniel for Single_leg Servo Motor Success in 2023.10.14--------------------------------------//
+        // std::string xml_str =
+        //    "<EthercatSlave phy_id=\"" + std::to_string(phy_id[i]) + "\" product_code=\"0x00\""
+        //    " vendor_id=\"0x00\" revision_num=\"0x00\" dc_assign_activate=\"0x0300\""
+        //    ">"
+        //    "  <SyncManagerPoolObject>"
+        //    "		<SyncManager is_tx=\"false\"/>"
+        //    "		<SyncManager is_tx=\"true\"/>"
+        //    "		<SyncManager is_tx=\"false\">"
+        //    "			<Pdo index=\"0x1605\" is_tx=\"false\">"
+        //    "				<PdoEntry name=\"target_pos\" index=\"0x607A\" subindex=\"0x00\" size=\"32\"/>"
+        //    "				<PdoEntry name=\"target_vel\" index=\"0x60FF\" subindex=\"0x00\" size=\"32\"/>"
+        //    "				<PdoEntry name=\"targer_toq\" index=\"0x6071\" subindex=\"0x00\" size=\"16\"/>"
+        //    "				<PdoEntry name=\"max_toq\" index=\"0x6072\" subindex=\"0x00\" size=\"16\"/>"
+        //    "				<PdoEntry name=\"control_word\" index=\"0x6040\" subindex=\"0x00\" size=\"16\"/>"
+        //    "				<PdoEntry name=\"mode_of_operation\" index=\"0x6060\" subindex=\"0x00\" size=\"8\"/>"
+        //    "			</Pdo>"
+        //    "		</SyncManager>"
+        //    "		<SyncManager is_tx=\"true\">"
+        //    "			<Pdo index=\"0x1A07\" is_tx=\"true\">"
+        //    "				<PdoEntry name=\"status_word\" index=\"0x6041\" subindex=\"0x00\" size=\"16\"/>"
+        //    "				<PdoEntry name=\"mode_of_display\" index=\"0x6061\" subindex=\"0x00\" size=\"8\"/>"
+        //    "				<PdoEntry name=\"pos_actual_value\" index=\"0x6064\" subindex=\"0x00\" size=\"32\"/>"
+        //    "				<PdoEntry name=\"vel_actual_value\" index=\"0x606c\" subindex=\"0x00\" size=\"32\"/>"
+        //    "				<PdoEntry name=\"toq_actual_value\" index=\"0x6077\" subindex=\"0x00\" size=\"16\"/>"
+        //    "			</Pdo>"
+        //    "		</SyncManager>"
+        //    "  </SyncManagerPoolObject>"
+        //    "</EthercatSlave>";
+
+
+//---------------------------------------XML for New Quadruped Robot of Kaanh 11.28------------------------------------------//
         std::string xml_str =
            "<EthercatSlave phy_id=\"" + std::to_string(phy_id[i]) + "\" product_code=\"0x00\""
            " vendor_id=\"0x00\" revision_num=\"0x00\" dc_assign_activate=\"0x0300\""
@@ -2002,27 +2033,34 @@ auto createMasterROSMotorTest()->std::unique_ptr<aris::control::Master>{
            "		<SyncManager is_tx=\"false\"/>"
            "		<SyncManager is_tx=\"true\"/>"
            "		<SyncManager is_tx=\"false\">"
-           "			<Pdo index=\"0x1605\" is_tx=\"false\">"
-           "				<PdoEntry name=\"target_pos\" index=\"0x607A\" subindex=\"0x00\" size=\"32\"/>"
-           "				<PdoEntry name=\"target_vel\" index=\"0x60FF\" subindex=\"0x00\" size=\"32\"/>"
-           "				<PdoEntry name=\"targer_toq\" index=\"0x6071\" subindex=\"0x00\" size=\"16\"/>"
-           "				<PdoEntry name=\"max_toq\" index=\"0x6072\" subindex=\"0x00\" size=\"16\"/>"
+           "			<Pdo index=\"0x1600\" is_tx=\"false\">"
            "				<PdoEntry name=\"control_word\" index=\"0x6040\" subindex=\"0x00\" size=\"16\"/>"
+           "				<PdoEntry name=\"target_position\" index=\"0x607a\" subindex=\"0x00\" size=\"32\"/>"
+           "				<PdoEntry name=\"target_velocity\" index=\"0x60ff\" subindex=\"0x00\" size=\"32\"/>"
            "				<PdoEntry name=\"mode_of_operation\" index=\"0x6060\" subindex=\"0x00\" size=\"8\"/>"
+           "				<PdoEntry name=\"targer_toq\" index=\"0x6071\" subindex=\"0x00\" size=\"16\"/>"
+        //    "				<PdoEntry name=\"Touch_probe_function\" index=\"0x60b8\" subindex=\"0x00\" size=\"16\"/>"
+        //    "				<PdoEntry name=\"Positive_torque_limit_value\" index=\"0x60e0\" subindex=\"0x00\" size=\"16\"/>"
+        //    "				<PdoEntry name=\"Negative_torque_limit_value\" index=\"0x60e1\" subindex=\"0x00\" size=\"16\"/>"
+        //    "				<PdoEntry name=\"Maximum_profile_velocity\" index=\"0x607f\" subindex=\"0x00\" size=\"32\"/>"
            "			</Pdo>"
            "		</SyncManager>"
            "		<SyncManager is_tx=\"true\">"
-           "			<Pdo index=\"0x1A07\" is_tx=\"true\">"
+           "			<Pdo index=\"0x1a00\" is_tx=\"true\">"
            "				<PdoEntry name=\"status_word\" index=\"0x6041\" subindex=\"0x00\" size=\"16\"/>"
-           "				<PdoEntry name=\"mode_of_display\" index=\"0x6061\" subindex=\"0x00\" size=\"8\"/>"
            "				<PdoEntry name=\"pos_actual_value\" index=\"0x6064\" subindex=\"0x00\" size=\"32\"/>"
            "				<PdoEntry name=\"vel_actual_value\" index=\"0x606c\" subindex=\"0x00\" size=\"32\"/>"
            "				<PdoEntry name=\"toq_actual_value\" index=\"0x6077\" subindex=\"0x00\" size=\"16\"/>"
+           "				<PdoEntry name=\"Modes_of_operation_display\" index=\"0x6061\" subindex=\"0x00\" size=\"8\"/>"
+           "				<PdoEntry name=\"Current_actual_value\" index=\"0x6078\" subindex=\"0x00\" size=\"16\"/>"
+        //    "				<PdoEntry name=\"Touch_probe_status\" index=\"0x60b9\" subindex=\"0x00\" size=\"16\"/>"
+        //    "				<PdoEntry name=\"Touch_probe_1_positive_edge\" index=\"0x60ba\" subindex=\"0x00\" size=\"32\"/>"
+        //    "				<PdoEntry name=\"Digital_output\" index=\"0x60fe\" subindex=\"0x00\" size=\"32\"/>"
+        //    "				<PdoEntry name=\"Digital_inputs\" index=\"0x60fd\" subindex=\"0x00\" size=\"32\"/>"
            "			</Pdo>"
            "		</SyncManager>"
            "  </SyncManagerPoolObject>"
            "</EthercatSlave>";
-
     auto& s = master->slavePool().add<aris::control::EthercatSlave>();
     aris::core::fromXmlString(s, xml_str);
    

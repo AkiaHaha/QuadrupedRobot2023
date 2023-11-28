@@ -28,15 +28,15 @@
 void robot::QuadrupedRbtModel::createQuadrupedRbtModel() 
 {
 	//---part Length-->unit(m)---//
-	const double L1 = 0.134;
-	const double L2 = 0.306;
-	const double L3 = 0.310;
+	const double L1 = 0.1195;
+	const double L2 = 0.240;
+	const double L3 = 0.240;
 	const double PI = 3.14159265358979323846;
 
 	//---set body's size---//
-	const double kBodyLong  = 0.60398; // x方向
-	const double kBodyWidth = 0.126;   // z方向
-	const double kBodyHigh  = 0.530;   // y方向
+	const double kBodyLong  = 0.420; // x方向
+	const double kBodyWidth = 0.260;   // z方向
+	// const double kBodyHigh  = 0.530;   // y方向
 
 	//---define ee pose---//
 	const double ee_pose[4][6]
