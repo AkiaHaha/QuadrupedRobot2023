@@ -59,45 +59,45 @@ RM = /usr/cmake-3.12.3-Linux-x86_64/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/kaanh/Desktop/singleLeg2023
+CMAKE_SOURCE_DIR = /home/kaanh/Desktop/QuadrupedRobot2023
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/kaanh/Desktop/singleLeg2023/build
+CMAKE_BINARY_DIR = /home/kaanh/Desktop/QuadrupedRobot2023/build
 
 #=============================================================================
-# Target rules for target CMakeFiles/ellipseTrajectoryTest.dir
+# Target rules for target CMakeFiles/QuadrupedRobot.dir
 
 # All Build rule for target.
-CMakeFiles/ellipseTrajectoryTest.dir/all:
-	$(MAKE) -f CMakeFiles/ellipseTrajectoryTest.dir/build.make CMakeFiles/ellipseTrajectoryTest.dir/depend
-	$(MAKE) -f CMakeFiles/ellipseTrajectoryTest.dir/build.make CMakeFiles/ellipseTrajectoryTest.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/kaanh/Desktop/singleLeg2023/build/CMakeFiles --progress-num=1,2,3,4,5,6 "Built target ellipseTrajectoryTest"
-.PHONY : CMakeFiles/ellipseTrajectoryTest.dir/all
+CMakeFiles/QuadrupedRobot.dir/all:
+	$(MAKE) -f CMakeFiles/QuadrupedRobot.dir/build.make CMakeFiles/QuadrupedRobot.dir/depend
+	$(MAKE) -f CMakeFiles/QuadrupedRobot.dir/build.make CMakeFiles/QuadrupedRobot.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/kaanh/Desktop/QuadrupedRobot2023/build/CMakeFiles --progress-num=1,2,3,4,5 "Built target QuadrupedRobot"
+.PHONY : CMakeFiles/QuadrupedRobot.dir/all
 
 # Include target in all.
-all: CMakeFiles/ellipseTrajectoryTest.dir/all
+all: CMakeFiles/QuadrupedRobot.dir/all
 
 .PHONY : all
 
 # Build rule for subdir invocation for target.
-CMakeFiles/ellipseTrajectoryTest.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/kaanh/Desktop/singleLeg2023/build/CMakeFiles 6
-	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/ellipseTrajectoryTest.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/kaanh/Desktop/singleLeg2023/build/CMakeFiles 0
-.PHONY : CMakeFiles/ellipseTrajectoryTest.dir/rule
+CMakeFiles/QuadrupedRobot.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/kaanh/Desktop/QuadrupedRobot2023/build/CMakeFiles 5
+	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/QuadrupedRobot.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/kaanh/Desktop/QuadrupedRobot2023/build/CMakeFiles 0
+.PHONY : CMakeFiles/QuadrupedRobot.dir/rule
 
 # Convenience name for target.
-ellipseTrajectoryTest: CMakeFiles/ellipseTrajectoryTest.dir/rule
+QuadrupedRobot: CMakeFiles/QuadrupedRobot.dir/rule
 
-.PHONY : ellipseTrajectoryTest
-
-# clean rule for target.
-CMakeFiles/ellipseTrajectoryTest.dir/clean:
-	$(MAKE) -f CMakeFiles/ellipseTrajectoryTest.dir/build.make CMakeFiles/ellipseTrajectoryTest.dir/clean
-.PHONY : CMakeFiles/ellipseTrajectoryTest.dir/clean
+.PHONY : QuadrupedRobot
 
 # clean rule for target.
-clean: CMakeFiles/ellipseTrajectoryTest.dir/clean
+CMakeFiles/QuadrupedRobot.dir/clean:
+	$(MAKE) -f CMakeFiles/QuadrupedRobot.dir/build.make CMakeFiles/QuadrupedRobot.dir/clean
+.PHONY : CMakeFiles/QuadrupedRobot.dir/clean
+
+# clean rule for target.
+clean: CMakeFiles/QuadrupedRobot.dir/clean
 
 .PHONY : clean
 

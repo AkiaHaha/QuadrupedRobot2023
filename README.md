@@ -56,3 +56,6 @@
 ## E13 ->11.28
 * Change PDO for new robot and test successfully.[phy_id is carefully tuned cas the messy wiring; motor 1-3's output EtherCat is useless so has to carefully rewire them and change the phy_id together ]
 * Change the model's parameter with the reference of Design craft.
+
+## E14 ->11.29
+* Initially organize all the functions, keep only tested and needed funcs;

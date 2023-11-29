@@ -48,5 +48,5 @@ set(CMAKE_MAKEFILE_PRODUCTS
 
 # Dependency information for all targets:
 set(CMAKE_DEPEND_INFO_FILES
-  "CMakeFiles/ellipseTrajectoryTest.dir/DependInfo.cmake"
+  "CMakeFiles/QuadrupedRobot.dir/DependInfo.cmake"
   )

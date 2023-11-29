@@ -48,10 +48,10 @@ RM = /usr/cmake-3.12.3-Linux-x86_64/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/kaanh/Desktop/singleLeg2023
+CMAKE_SOURCE_DIR = /home/kaanh/Desktop/QuadrupedRobot2023
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/kaanh/Desktop/singleLeg2023/build
+CMAKE_BINARY_DIR = /home/kaanh/Desktop/QuadrupedRobot2023/build
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -80,9 +80,9 @@ edit_cache/fast: edit_cache
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/kaanh/Desktop/singleLeg2023/build/CMakeFiles /home/kaanh/Desktop/singleLeg2023/build/CMakeFiles/progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/kaanh/Desktop/QuadrupedRobot2023/build/CMakeFiles /home/kaanh/Desktop/QuadrupedRobot2023/build/CMakeFiles/progress.marks
 	$(MAKE) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/kaanh/Desktop/singleLeg2023/build/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/kaanh/Desktop/QuadrupedRobot2023/build/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
@@ -111,44 +111,17 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named ellipseTrajectoryTest
+# Target rules for targets named QuadrupedRobot
 
 # Build rule for target.
-ellipseTrajectoryTest: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 ellipseTrajectoryTest
-.PHONY : ellipseTrajectoryTest
+QuadrupedRobot: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 QuadrupedRobot
+.PHONY : QuadrupedRobot
 
 # fast build rule for target.
-ellipseTrajectoryTest/fast:
-	$(MAKE) -f CMakeFiles/ellipseTrajectoryTest.dir/build.make CMakeFiles/ellipseTrajectoryTest.dir/build
-.PHONY : ellipseTrajectoryTest/fast
-
-src/cplan.o: src/cplan.cpp.o
-
-.PHONY : src/cplan.o
-
-# target to build an object file
-src/cplan.cpp.o:
-	$(MAKE) -f CMakeFiles/ellipseTrajectoryTest.dir/build.make CMakeFiles/ellipseTrajectoryTest.dir/src/cplan.cpp.o
-.PHONY : src/cplan.cpp.o
-
-src/cplan.i: src/cplan.cpp.i
-
-.PHONY : src/cplan.i
-
-# target to preprocess a source file
-src/cplan.cpp.i:
-	$(MAKE) -f CMakeFiles/ellipseTrajectoryTest.dir/build.make CMakeFiles/ellipseTrajectoryTest.dir/src/cplan.cpp.i
-.PHONY : src/cplan.cpp.i
-
-src/cplan.s: src/cplan.cpp.s
-
-.PHONY : src/cplan.s
-
-# target to generate assembly for a file
-src/cplan.cpp.s:
-	$(MAKE) -f CMakeFiles/ellipseTrajectoryTest.dir/build.make CMakeFiles/ellipseTrajectoryTest.dir/src/cplan.cpp.s
-.PHONY : src/cplan.cpp.s
+QuadrupedRobot/fast:
+	$(MAKE) -f CMakeFiles/QuadrupedRobot.dir/build.make CMakeFiles/QuadrupedRobot.dir/build
+.PHONY : QuadrupedRobot/fast
 
 src/main.o: src/main.cpp.o
 
@@ -156,7 +129,7 @@ src/main.o: src/main.cpp.o
 
 # target to build an object file
 src/main.cpp.o:
-	$(MAKE) -f CMakeFiles/ellipseTrajectoryTest.dir/build.make CMakeFiles/ellipseTrajectoryTest.dir/src/main.cpp.o
+	$(MAKE) -f CMakeFiles/QuadrupedRobot.dir/build.make CMakeFiles/QuadrupedRobot.dir/src/main.cpp.o
 .PHONY : src/main.cpp.o
 
 src/main.i: src/main.cpp.i
@@ -165,7 +138,7 @@ src/main.i: src/main.cpp.i
 
 # target to preprocess a source file
 src/main.cpp.i:
-	$(MAKE) -f CMakeFiles/ellipseTrajectoryTest.dir/build.make CMakeFiles/ellipseTrajectoryTest.dir/src/main.cpp.i
+	$(MAKE) -f CMakeFiles/QuadrupedRobot.dir/build.make CMakeFiles/QuadrupedRobot.dir/src/main.cpp.i
 .PHONY : src/main.cpp.i
 
 src/main.s: src/main.cpp.s
@@ -174,7 +147,7 @@ src/main.s: src/main.cpp.s
 
 # target to generate assembly for a file
 src/main.cpp.s:
-	$(MAKE) -f CMakeFiles/ellipseTrajectoryTest.dir/build.make CMakeFiles/ellipseTrajectoryTest.dir/src/main.cpp.s
+	$(MAKE) -f CMakeFiles/QuadrupedRobot.dir/build.make CMakeFiles/QuadrupedRobot.dir/src/main.cpp.s
 .PHONY : src/main.cpp.s
 
 src/model.o: src/model.cpp.o
@@ -183,7 +156,7 @@ src/model.o: src/model.cpp.o
 
 # target to build an object file
 src/model.cpp.o:
-	$(MAKE) -f CMakeFiles/ellipseTrajectoryTest.dir/build.make CMakeFiles/ellipseTrajectoryTest.dir/src/model.cpp.o
+	$(MAKE) -f CMakeFiles/QuadrupedRobot.dir/build.make CMakeFiles/QuadrupedRobot.dir/src/model.cpp.o
 .PHONY : src/model.cpp.o
 
 src/model.i: src/model.cpp.i
@@ -192,7 +165,7 @@ src/model.i: src/model.cpp.i
 
 # target to preprocess a source file
 src/model.cpp.i:
-	$(MAKE) -f CMakeFiles/ellipseTrajectoryTest.dir/build.make CMakeFiles/ellipseTrajectoryTest.dir/src/model.cpp.i
+	$(MAKE) -f CMakeFiles/QuadrupedRobot.dir/build.make CMakeFiles/QuadrupedRobot.dir/src/model.cpp.i
 .PHONY : src/model.cpp.i
 
 src/model.s: src/model.cpp.s
@@ -201,8 +174,35 @@ src/model.s: src/model.cpp.s
 
 # target to generate assembly for a file
 src/model.cpp.s:
-	$(MAKE) -f CMakeFiles/ellipseTrajectoryTest.dir/build.make CMakeFiles/ellipseTrajectoryTest.dir/src/model.cpp.s
+	$(MAKE) -f CMakeFiles/QuadrupedRobot.dir/build.make CMakeFiles/QuadrupedRobot.dir/src/model.cpp.s
 .PHONY : src/model.cpp.s
+
+src/plan.o: src/plan.cpp.o
+
+.PHONY : src/plan.o
+
+# target to build an object file
+src/plan.cpp.o:
+	$(MAKE) -f CMakeFiles/QuadrupedRobot.dir/build.make CMakeFiles/QuadrupedRobot.dir/src/plan.cpp.o
+.PHONY : src/plan.cpp.o
+
+src/plan.i: src/plan.cpp.i
+
+.PHONY : src/plan.i
+
+# target to preprocess a source file
+src/plan.cpp.i:
+	$(MAKE) -f CMakeFiles/QuadrupedRobot.dir/build.make CMakeFiles/QuadrupedRobot.dir/src/plan.cpp.i
+.PHONY : src/plan.cpp.i
+
+src/plan.s: src/plan.cpp.s
+
+.PHONY : src/plan.s
+
+# target to generate assembly for a file
+src/plan.cpp.s:
+	$(MAKE) -f CMakeFiles/QuadrupedRobot.dir/build.make CMakeFiles/QuadrupedRobot.dir/src/plan.cpp.s
+.PHONY : src/plan.cpp.s
 
 src/robot.o: src/robot.cpp.o
 
@@ -210,7 +210,7 @@ src/robot.o: src/robot.cpp.o
 
 # target to build an object file
 src/robot.cpp.o:
-	$(MAKE) -f CMakeFiles/ellipseTrajectoryTest.dir/build.make CMakeFiles/ellipseTrajectoryTest.dir/src/robot.cpp.o
+	$(MAKE) -f CMakeFiles/QuadrupedRobot.dir/build.make CMakeFiles/QuadrupedRobot.dir/src/robot.cpp.o
 .PHONY : src/robot.cpp.o
 
 src/robot.i: src/robot.cpp.i
@@ -219,7 +219,7 @@ src/robot.i: src/robot.cpp.i
 
 # target to preprocess a source file
 src/robot.cpp.i:
-	$(MAKE) -f CMakeFiles/ellipseTrajectoryTest.dir/build.make CMakeFiles/ellipseTrajectoryTest.dir/src/robot.cpp.i
+	$(MAKE) -f CMakeFiles/QuadrupedRobot.dir/build.make CMakeFiles/QuadrupedRobot.dir/src/robot.cpp.i
 .PHONY : src/robot.cpp.i
 
 src/robot.s: src/robot.cpp.s
@@ -228,35 +228,8 @@ src/robot.s: src/robot.cpp.s
 
 # target to generate assembly for a file
 src/robot.cpp.s:
-	$(MAKE) -f CMakeFiles/ellipseTrajectoryTest.dir/build.make CMakeFiles/ellipseTrajectoryTest.dir/src/robot.cpp.s
+	$(MAKE) -f CMakeFiles/QuadrupedRobot.dir/build.make CMakeFiles/QuadrupedRobot.dir/src/robot.cpp.s
 .PHONY : src/robot.cpp.s
-
-src/tplan.o: src/tplan.cpp.o
-
-.PHONY : src/tplan.o
-
-# target to build an object file
-src/tplan.cpp.o:
-	$(MAKE) -f CMakeFiles/ellipseTrajectoryTest.dir/build.make CMakeFiles/ellipseTrajectoryTest.dir/src/tplan.cpp.o
-.PHONY : src/tplan.cpp.o
-
-src/tplan.i: src/tplan.cpp.i
-
-.PHONY : src/tplan.i
-
-# target to preprocess a source file
-src/tplan.cpp.i:
-	$(MAKE) -f CMakeFiles/ellipseTrajectoryTest.dir/build.make CMakeFiles/ellipseTrajectoryTest.dir/src/tplan.cpp.i
-.PHONY : src/tplan.cpp.i
-
-src/tplan.s: src/tplan.cpp.s
-
-.PHONY : src/tplan.s
-
-# target to generate assembly for a file
-src/tplan.cpp.s:
-	$(MAKE) -f CMakeFiles/ellipseTrajectoryTest.dir/build.make CMakeFiles/ellipseTrajectoryTest.dir/src/tplan.cpp.s
-.PHONY : src/tplan.cpp.s
 
 # Help Target
 help:
@@ -266,22 +239,19 @@ help:
 	@echo "... depend"
 	@echo "... rebuild_cache"
 	@echo "... edit_cache"
-	@echo "... ellipseTrajectoryTest"
-	@echo "... src/cplan.o"
-	@echo "... src/cplan.i"
-	@echo "... src/cplan.s"
+	@echo "... QuadrupedRobot"
 	@echo "... src/main.o"
 	@echo "... src/main.i"
 	@echo "... src/main.s"
 	@echo "... src/model.o"
 	@echo "... src/model.i"
 	@echo "... src/model.s"
+	@echo "... src/plan.o"
+	@echo "... src/plan.i"
+	@echo "... src/plan.s"
 	@echo "... src/robot.o"
 	@echo "... src/robot.i"
 	@echo "... src/robot.s"
-	@echo "... src/tplan.o"
-	@echo "... src/tplan.i"
-	@echo "... src/tplan.s"
 .PHONY : help
 
 
