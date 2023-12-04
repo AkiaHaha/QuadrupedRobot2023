@@ -13,7 +13,7 @@ using namespace aris::dynamic;
 //   v:速度，由用户输入，构造函数初始化
 //   a:加速度，由用户输入，构造函数初始化
 //  ta:加速段所需的时间，由输入的速度和加速度计算得到
-class tCurve
+class Tcurve
 {
 private:
 	double Tc_;
@@ -29,8 +29,8 @@ public:
 	auto getCurveParam()->void;         //计算梯形曲线的参数
 	auto getTc()->double { return Tc_; };  //运行一次T型曲线所需要的时间
 	auto getClassifyNumber(int count)->double ;
-	tCurve(double a, double v) { a_ = a; v_ = v; }  //构造函数
-	~tCurve() {} //析构函数
+	Tcurve(double a, double v) { a_ = a; v_ = v; getCurveParam(); }  //构造函数
+	~Tcurve() {} //析构函数
 };
 
 
@@ -305,5 +305,32 @@ public:
     }
 
     ~EllipseTrajectory7() {}
+};
+
+class EllipseTrajectoryPlan{
+
+private:
+	double move_height_{};
+	double move_vel_x_{};
+	double move_vel_y_{};
+	double delta_point_[3];
+	double lambda_{};
+	double major_length_{};
+	double minor_length_{};
+	double t_tjy_{};
+	double phi_{};
+	Tcurve t_;
+
+public:
+	auto get_delta_point(double count_t)->double* ;
+
+	EllipseTrajectoryPlan(double vx, double vy, double h, Tcurve& t):
+	move_vel_x_(vx),
+	move_vel_y_(vy), 
+	move_height_(h), 
+	t_(t) 
+	{};
+
+	~EllipseTrajectoryPlan() {}
 };
 #endif

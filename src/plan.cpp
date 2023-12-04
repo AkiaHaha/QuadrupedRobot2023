@@ -22,10 +22,15 @@ using namespace std;
 // -----------                          ---------------------
 // Case1:Triangle                         Case2：Trapezoid
 //--------------------------------------------------------------------------------------------
+constexpr double pi = aris::PI;
+constexpr double kDefaultMajorLength = 0.1;
+constexpr double kDefaultMinorLength = 0.01;
+constexpr int kTcurvePeriodCount = 900;
+
 
                             
 //==================================获取梯形曲线当下的值===================================//
-auto tCurve::getCurve(int count)->double
+auto Tcurve::getCurve(int count)->double
 {
 	int t = count % (this->circleCount);
 	double s = 0;
@@ -62,7 +67,7 @@ auto tCurve::getCurve(int count)->double
 
 //==================================计算梯形曲线的参数===================================//
                    //由成员函数初始化，对应输入参数由构造函数初始化//
-auto tCurve::getCurveParam()->void
+auto Tcurve::getCurveParam()->void
 {
 	if (v_ * v_ / a_ <= 1)
 	{
@@ -80,10 +85,9 @@ auto tCurve::getCurveParam()->void
 
 	this->circleCount=int(Tc_ * 1000);
 
-
 }
 
-auto tCurve::getClassifyNumber(int count)->double
+auto Tcurve::getClassifyNumber(int count)->double
 {
 	this->cmlCircle = count / (this->circleCount) ;
 	 
@@ -421,3 +425,18 @@ auto EllipseTrajectory7::crossProduct(const double vector1[3], const double vect
 	result[2] = vector1[0] * vector2[1] - vector1[1] * vector2[0];
 }
 
+// class EllipseTrajectoryPlan //
+auto EllipseTrajectoryPlan::get_delta_point(double count_t) -> double* {
+	t_tjy_ = count_t;
+	lambda_ = t_.getCurve(t_tjy_);
+	phi_ = pi * (1 - lambda_);
+	major_length_ = move_vel_x_ * kDefaultMajorLength;
+	minor_length_ = move_vel_y_ * kDefaultMinorLength;
+	
+	delta_point_[0] = major_length_ * 0.5 * (1 + std::cos(phi_));
+	delta_point_[1] = minor_length_ * 0.5 * (1 + std::cos(phi_));
+	delta_point_[2] = move_height_ * std::sin(phi_);
+
+	return delta_point_;
+
+}

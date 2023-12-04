@@ -59,3 +59,6 @@
 
 ## E14 ->11.29
 * Initially organize all the functions, keep only tested and needed funcs;
+
+## E15 ->12.4
+* Add Trot Move function;

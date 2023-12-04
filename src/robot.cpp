@@ -1040,16 +1040,6 @@ auto createPlanROSMotorTest()->std::unique_ptr<aris::plan::PlanRoot>
 
     //-------------自己写的命令-----------------//
     plan_root->planPool().add<SetMaxTorque>();
-    plan_root->planPool().add<VelDrive>();
-    plan_root->planPool().add<cosCurveDriveTogetherM3>();
-    plan_root->planPool().add<inverseKinLegTest>();
-    plan_root->planPool().add<forwardKinLegTest>();
-    plan_root->planPool().add<legInitialization>();
-    plan_root->planPool().add<moveBeeLineE2>();
-    plan_root->planPool().add<ellipticalTrajectoryDrive3>();
-    plan_root->planPool().add<MotorTest12>();
-    plan_root->planPool().add<Ellipse4LegDrive>();
-    plan_root->planPool().add<Ellipse4LegDrive2>();
     plan_root->planPool().add<Ellipse4LegDrive3>();
     plan_root->planPool().add<ReadInformation>();
     plan_root->planPool().add<MotorTest12E2>();
