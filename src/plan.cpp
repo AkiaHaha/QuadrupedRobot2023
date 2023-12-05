@@ -7,6 +7,54 @@
 #include "operator.h"
 using namespace std;
 
+/// <summary>
+/// class EllipseTrajectoryPlan 
+/// </summary>
+/// <param name="count_t"></param>
+/// <param name="result"></param>
+/// <returns></returns>
+auto EllipseTrajectoryPlan::get_delta_point(double count_t, double result[3])->void {
+	t_tjy_ = count_t;
+	lambda_ = t_.getCurve(t_tjy_);
+	phi_ = pi * (1 - lambda_);
+	major_length_ = move_vel_x_ * kDefaultMajorLength;
+	minor_length_ = move_vel_y_ * kDefaultMinorLength;
+
+	result[0] = major_length_ * 0.5 * (1 + std::cos(phi_));
+	result[1] = minor_length_ * 0.5 * (1 + std::cos(phi_));
+	result[2] = move_height_ * std::sin(phi_);
+}
+
+/// <summary>
+/// trot plan function
+/// </summary>
+/// <param name="t"></param>
+/// <param name="im"></param>
+/// <returns></returns>
+auto TrotPlan::get_current_matrix28(int t, double im[28])->void {
+	t_tjy_ = t;
+	ellipse_plan_ptr_.get_delta_point(t_tjy_, delta_point_);
+
+	if (switch_number_) {
+		for (int8_t i = 0; i < 3; ++i) {
+			current_ee_point_[i + 3] = init_ee_point_[i + 3] + delta_point_[i];
+			current_ee_point_[i + 9] = init_ee_point_[i + 9] + delta_point_[i];
+		}
+	}
+	else {
+		for (int8_t i = 0; i < 3; ++i) {
+			current_ee_point_[i] = init_ee_point_[i] + delta_point_[i];
+			current_ee_point_[i + 6] = init_ee_point_[i + 6] + delta_point_[i];
+		}
+	}
+
+	//modifyArray(delta_point_, init_ee_point_, current_ee_point_, switch_number_);
+	current_pose_[3] = init_pose_[3] + delta_point_[0];
+	current_pose_[7] = init_pose_[7] + delta_point_[1];
+
+	std::copy(current_matrix28_, current_matrix28_ + 28, im);
+}
+
 
 /////////////////////////////////////梯形曲线///////////////////////////////////////////////
 //生成梯形曲线0->1,用户可输入参数-速度和加速度，并自动判断生成梯形曲线还是三角形曲线
@@ -22,13 +70,7 @@ using namespace std;
 // -----------                          ---------------------
 // Case1:Triangle                         Case2：Trapezoid
 //--------------------------------------------------------------------------------------------
-constexpr double pi = aris::PI;
-constexpr double kDefaultMajorLength = 0.1;
-constexpr double kDefaultMinorLength = 0.01;
-constexpr int kTcurvePeriodCount = 900;
-
-
-                            
+                           
 //==================================获取梯形曲线当下的值===================================//
 auto Tcurve::getCurve(int count)->double
 {
@@ -425,18 +467,3 @@ auto EllipseTrajectory7::crossProduct(const double vector1[3], const double vect
 	result[2] = vector1[0] * vector2[1] - vector1[1] * vector2[0];
 }
 
-// class EllipseTrajectoryPlan //
-auto EllipseTrajectoryPlan::get_delta_point(double count_t) -> double* {
-	t_tjy_ = count_t;
-	lambda_ = t_.getCurve(t_tjy_);
-	phi_ = pi * (1 - lambda_);
-	major_length_ = move_vel_x_ * kDefaultMajorLength;
-	minor_length_ = move_vel_y_ * kDefaultMinorLength;
-	
-	delta_point_[0] = major_length_ * 0.5 * (1 + std::cos(phi_));
-	delta_point_[1] = minor_length_ * 0.5 * (1 + std::cos(phi_));
-	delta_point_[2] = move_height_ * std::sin(phi_);
-
-	return delta_point_;
-
-}
