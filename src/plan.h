@@ -4,6 +4,8 @@
 #include "operator.h"
 #include <aris.hpp>
 #include <iostream>
+#include"plan.h"
+
 using namespace aris::dynamic;
 /// <summary>
 /// const values
@@ -13,69 +15,6 @@ constexpr double kDefaultMajorLength = 0.1;
 constexpr double kDefaultMinorLength = 0.01;
 constexpr int kTcurvePeriodCount = 900;
 
-/// <summary>
-/// Ellipse trajectory plan
-/// </summary>
-class EllipseTrajectoryPlan {
-
-private:
-	double move_height_{};
-	double move_vel_x_{};
-	double move_vel_y_{};
-	double delta_point_[3]{};
-	double lambda_{};
-	double major_length_{};
-	double minor_length_{};
-	double t_tjy_{};
-	double phi_{};
-	Tcurve t_;
-
-public:
-	auto get_delta_point(double count_t, double result[3]) -> void;
-
-
-	EllipseTrajectoryPlan(double vx, double vy, double h, Tcurve& t) :
-		move_vel_x_(vx),
-		move_vel_y_(vy),
-		move_height_(h),
-		t_(t)
-	{};
-
-	~EllipseTrajectoryPlan() {}
-};
-
-/// <summary>
-/// trot movement plan
-/// </summary>
-class TrotPlan {
-
-private:
-	int t_tjy_{};
-	bool switch_number_{};
-	double init_matrix28_[28]{};
-	double* init_pose_;
-	double* init_ee_point_;
-	double current_matrix28_[28]{};
-	double* current_pose_;
-	double* current_ee_point_;
-	double  delta_point_[3]{};
-	EllipseTrajectoryPlan ellipse_plan_ptr_;
-
-public:
-	auto get_current_matrix28(int t, double im[28]) -> void;
-
-	TrotPlan(bool sn, double im[28], EllipseTrajectoryPlan& e) :
-		switch_number_(sn),
-		ellipse_plan_ptr_(e) {
-		std::copy(im, im + 28, init_matrix28_);
-		std::copy(im, im + 28, current_matrix28_);
-		init_pose_ = init_matrix28_;
-		init_ee_point_ = &init_matrix28_[16];
-		current_pose_ = current_matrix28_;
-		current_ee_point_ = &current_matrix28_[16];
-	}
-	~TrotPlan() {}
-};
 
 
 ///功能：生成0->1的梯形曲线。可根据输入的加速度和速度判断曲线为梯形还是三角形
@@ -378,4 +317,69 @@ public:
 
     ~EllipseTrajectory7() {}
 };
+
+/// <summary>
+/// Ellipse trajectory plan
+/// </summary>
+class EllipseTrajectoryPlan {
+
+private:
+	double move_height_{};
+	double move_vel_x_{};
+	double move_vel_y_{};
+	double delta_point_[3]{};
+	double lambda_{};
+	double major_length_{};
+	double minor_length_{};
+	double t_tjy_{};
+	double phi_{};
+	Tcurve t_;
+
+public:
+	auto get_delta_point(double count_t, double result[3]) -> void;
+
+
+	EllipseTrajectoryPlan(double vx, double vy, double h, Tcurve& t) :
+		move_vel_x_(vx),
+		move_vel_y_(vy),
+		move_height_(h),
+		t_(t)
+	{};
+
+	~EllipseTrajectoryPlan() {}
+};
+
+/// <summary>
+/// trot movement plan
+/// </summary>
+class TrotPlan {
+
+private:
+	int t_tjy_{};
+	bool switch_number_{};
+	double init_matrix28_[28]{};
+	double* init_pose_;
+	double* init_ee_point_;
+	double current_matrix28_[28]{};
+	double* current_pose_;
+	double* current_ee_point_;
+	double  delta_point_[3]{};
+	EllipseTrajectoryPlan ellipse_plan_ptr_;
+
+public:
+	auto get_current_matrix28(int t, double im[28]) -> void;
+
+	TrotPlan(bool sn, double im[28], EllipseTrajectoryPlan& e) :
+		switch_number_(sn),
+		ellipse_plan_ptr_(e) {
+		std::copy(im, im + 28, init_matrix28_);
+		std::copy(im, im + 28, current_matrix28_);
+		init_pose_ = init_matrix28_;
+		init_ee_point_ = &init_matrix28_[16];
+		current_pose_ = current_matrix28_;
+		current_ee_point_ = &current_matrix28_[16];
+	}
+	~TrotPlan() {}
+};
+
 #endif

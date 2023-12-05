@@ -9,6 +9,7 @@
 
 namespace robot
 {   
+
     class Ellipse4LegDrive3 : public aris::core::CloneObject<Ellipse4LegDrive3,aris::plan::Plan>
     {
     public:
