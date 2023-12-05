@@ -5,7 +5,7 @@
 #include "aris.hpp"
 #include "operator.h"
 
-// #define ARIS_USE_ETHERCAT_SIMULATION
+#define ARIS_USE_ETHERCAT_SIMULATION
 
 namespace robot
 {   

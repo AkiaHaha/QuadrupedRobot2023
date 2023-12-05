@@ -11,7 +11,7 @@ if(UNIX)
         find_package(aris REQUIRED PATHS /usr/aris)
 endif(UNIX)
 IF(WIN32)
-        find_package(aris REQUIRED PATHS C:/aris/aris-2.3.2.220803)
+        find_package(aris REQUIRED PATHS C:/aris)
 endif(WIN32)
 include_directories(${aris_INCLUDE_DIRS})
 
