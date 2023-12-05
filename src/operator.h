@@ -65,4 +65,12 @@ void Matrix<T>::print() const {
 // 添加其他操作
 void otherOperation();
 
+/// <summary>
+/// isQuotientOdd
+/// </summary>
+/// <param name="a"></param>
+/// <param name="b"></param>
+/// <returns></returns>
+bool isQuotientOdd(int a, int b);
+
 #endif // OPERATOR_H

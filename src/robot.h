@@ -4,12 +4,60 @@
 #include <memory>
 #include "aris.hpp"
 #include "operator.h"
+#include "plan.h"
 
 #define ARIS_USE_ETHERCAT_SIMULATION
 
 namespace robot
 {   
+    /// <summary>
+    /// 
+    /// </summary>
+    class TrotMove : public aris::core::CloneObject<TrotMove, aris::plan::Plan>
+    {
+    public:
+      auto virtual prepareNrt()->void;
+      auto virtual executeRT()->int;
+      auto virtual collectNrt()->void;
 
+      virtual ~TrotMove();
+      explicit TrotMove(const std::string& name = "TrotMove");
+
+
+    private:
+      Tcurve t_;
+      EllipseTrajectoryPlan ellipse_trot_start_;
+      EllipseTrajectoryPlan ellipse_trot_run_;
+      EllipseTrajectoryPlan ellipse_step_;
+
+      TrotPlan* tp_start_;
+      TrotPlan* tp_step_;
+      TrotPlan* tp_run;
+
+      double vel_x_{};
+      double vel_y_{};
+      double move_height_{};
+
+      int32_t count_stop_{};
+      int32_t trot_period_number_{};
+      int32_t step_peroid_number_{};
+      int32_t trot_total_count_{};
+      int32_t step_total_count_{};
+
+      int32_t current_period_number_{};
+      int16_t t_tjy{};
+      bool switch_number{};
+
+      double init_motor_pos_[12]{};
+      double init_matrix28_[28]{};
+      double current_motor_pos_[12]{};
+      double current_matrix28_[28]{};
+
+    };
+
+    /// <summary>
+    /// 
+    /// </summary>
     class Ellipse4LegDrive3 : public aris::core::CloneObject<Ellipse4LegDrive3,aris::plan::Plan>
     {
     public:

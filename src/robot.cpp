@@ -13,6 +13,170 @@ using namespace aris::plan;
 const double PI = aris::PI;
 namespace robot
 {
+/// <summary>
+/// trot movement
+/// </summary>
+/// <returns></returns>
+auto TrotMove::prepareNrt()->void
+{
+  vel_x_ = doubleParam("vel_x_");
+  vel_y_ = doubleParam("vel_y_");
+  move_height_ = doubleParam("move_height_");
+  trot_period_number_ = doubleParam("trot_period_number_");
+  step_peroid_number_ = doubleParam("step_peroid_number_");
+
+
+  for (auto& m : motorOptions()) m =
+    aris::plan::Plan::NOT_CHECK_POS_CONTINUOUS |
+    aris::plan::Plan::NOT_CHECK_ENABLE |
+    aris::plan::Plan::NOT_CHECK_POS_CONTINUOUS_SECOND_ORDER;
+}
+
+auto TrotMove::executeRT()->int
+{
+  current_period_number_ = count() / kTcurvePeriodCount + 1;
+  t_tjy = count() % kTcurvePeriodCount;
+  switch_number = (count() / kTcurvePeriodCount) != 0 ? false : true;
+
+  ///start trot
+  if (current_period_number_ == 1){
+    if (t_tjy == 1){
+      for (int8_t i = 0; i < 12; i++){
+        init_motor_pos_[i] = controller()->motorPool()[i].targetPos();
+      }
+
+      model()->setInputPos(init_motor_pos_);
+      if (model()->forwardKinematics()){
+        throw std::runtime_error("fwdKin failed");
+      }
+      model()->getOutputPos(init_matrix28_);
+      tp_start_ = new TrotPlan(switch_number, init_matrix28_, ellipse_trot_start_);
+    }
+
+    tp_start_->get_current_matrix28(t_tjy, current_matrix28_);
+    model()->setInputPos(current_matrix28_);
+    if (model()->inverseKinematics()) {
+      throw std::runtime_error("invKin failed");
+    }
+    model()->getInputPos(current_motor_pos_);
+    for (int8_t i = 0; i < 12; i++) {
+      controller()->motorPool()[i].setTargetPos(current_motor_pos_[i]);
+    }
+    
+    mout() << "peroid:" << current_period_number_ << " Start success" << std::endl;
+
+  }
+
+  ///trot
+  if (current_period_number_ > 1 && current_period_number_ <= trot_period_number_) {
+    if (t_tjy == 1) {
+      for (int8_t i = 0; i < 12; i++) {
+        init_motor_pos_[i] = controller()->motorPool()[i].targetPos();
+      }
+
+      model()->setInputPos(init_motor_pos_);
+      if (model()->forwardKinematics()) {
+        throw std::runtime_error("fwdKin failed");
+      }
+      model()->getOutputPos(init_matrix28_);
+      tp_run = new TrotPlan(switch_number, init_matrix28_, ellipse_trot_run_);
+    }
+
+    tp_run->get_current_matrix28(t_tjy, current_matrix28_);
+    model()->setInputPos(current_matrix28_);
+    if (model()->inverseKinematics()) {
+      throw std::runtime_error("invKin failed");
+    }
+    model()->getInputPos(current_motor_pos_);
+    for (int8_t i = 0; i < 12; i++) {
+      controller()->motorPool()[i].setTargetPos(current_motor_pos_[i]);
+    }
+
+    mout() << "peroid:" << current_period_number_ << " Start success" << std::endl;
+
+  }
+
+  ///switch to step and use 4 peroid to move leg-ee to step init position
+  if (current_period_number_ > trot_period_number_ && current_period_number_ <= trot_period_number_ + 4) {
+    if (t_tjy == 1) {
+      for (int8_t i = 0; i < 12; i++) {
+        init_motor_pos_[i] = controller()->motorPool()[i].targetPos();
+      }
+
+      model()->setInputPos(init_motor_pos_);
+      if (model()->forwardKinematics()) {
+        throw std::runtime_error("fwdKin failed");
+      }
+      model()->getOutputPos(init_matrix28_);
+      tp_run = new TrotPlan(switch_number, init_matrix28_, ellipse_trot_run_);
+    }
+
+    tp_run->get_current_matrix28(t_tjy, current_matrix28_);
+    model()->setInputPos(current_matrix28_);
+    if (model()->inverseKinematics()) {
+      throw std::runtime_error("invKin failed");
+    }
+    model()->getInputPos(current_motor_pos_);
+    for (int8_t i = 0; i < 12; i++) {
+      controller()->motorPool()[i].setTargetPos(current_motor_pos_[i]);
+    }
+
+    mout() << "peroid:" << current_period_number_ << " Start success" << std::endl;
+
+  }
+  ///step 
+  if (current_period_number_ < count_stop_ && current_period_number_ > trot_period_number_ + 4) {
+    if (t_tjy == 1) {
+      for (int8_t i = 0; i < 12; i++) {
+        init_motor_pos_[i] = controller()->motorPool()[i].targetPos();
+      }
+
+      model()->setInputPos(init_motor_pos_);
+      if (model()->forwardKinematics()) {
+        throw std::runtime_error("fwdKin failed");
+      }
+      model()->getOutputPos(init_matrix28_);
+      tp_step_ = new TrotPlan(switch_number, init_matrix28_, ellipse_step_);
+    }
+
+    tp_step_->get_current_matrix28(t_tjy, current_matrix28_);
+    model()->setInputPos(current_matrix28_);
+    if (model()->inverseKinematics()) {
+      throw std::runtime_error("invKin failed");
+    }
+    model()->getInputPos(current_motor_pos_);
+    for (int8_t i = 0; i < 12; i++) {
+      controller()->motorPool()[i].setTargetPos(current_motor_pos_[i]);
+    }
+
+    mout() << "peroid:" << current_period_number_ << " Start success" << std::endl;
+
+  }
+
+}
+auto TrotMove::collectNrt()->void {}
+TrotMove::TrotMove(const std::string& name) :
+  t_(5, 2),
+  ellipse_trot_start_(vel_x_ * 0.5, vel_y_ * 0.5, move_height_, t_),
+  ellipse_trot_run_(vel_x_ * 0.5, vel_y_ * 0.5, move_height_, t_),
+  ellipse_step_(0, 0, move_height_, t_)
+{
+  aris::core::fromXmlString(command(),
+    "<Command name=\"trot\">"
+    "  <GroupParam>"
+    "  <Param name=\"vel_x_\" default=\"1\" abbreviation=\"x\"/>"
+    "  <Param name=\"vel_y_\" default=\"0\" abbreviation=\"y\"/>"
+    "  <Param name=\"move_height_\" default=\"0.1\" abbreviation=\"h\"/>"
+    "  <Param name=\"trot_period_number_\" default=\"40\" abbreviation=\"t\"/>"
+    "  <Param name=\"step_peroid_number_\" default=\"10\" abbreviation=\"s\"/>"
+    "  </GroupParam>"
+    "</Command>");
+
+  trot_total_count_ = trot_period_number_ * kTcurvePeriodCount;
+  step_total_count_ = step_peroid_number_ * kTcurvePeriodCount;
+  count_stop_ = (4 + trot_period_number_ + step_peroid_number_) * kTcurvePeriodCount;
+}
+TrotMove::~TrotMove() = default;
 ///////////////////////////////////////////////////////< Ellipse-4-Legs Edition-3 >////////////////////////////////////
 auto Ellipse4LegDrive3::prepareNrt()->void
 {
