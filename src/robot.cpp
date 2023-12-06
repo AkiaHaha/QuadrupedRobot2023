@@ -34,12 +34,14 @@ auto TrotMove::prepareNrt()->void
 
 auto TrotMove::executeRT()->int
 {
+  ///3 time relative param;
   current_period_number_ = count() / kTcurvePeriodCount + 1;
   t_tjy = count() % kTcurvePeriodCount;
   switch_number = (count() / kTcurvePeriodCount) != 0 ? false : true;
 
-  ///start trot
+  ///start trot, move distance is half the trot move; use at period 1;
   if (current_period_number_ == 1){
+    ///get init matrix28 & tp_start
     if (t_tjy == 1){
       for (int8_t i = 0; i < 12; i++){
         init_motor_pos_[i] = controller()->motorPool()[i].targetPos();
@@ -50,10 +52,16 @@ auto TrotMove::executeRT()->int
         throw std::runtime_error("fwdKin failed");
       }
       model()->getOutputPos(init_matrix28_);
+
       tp_start_ = new TrotPlan(switch_number, init_matrix28_, ellipse_trot_start_);
+
+      mout() << "peroid " << current_period_number_ << " init success" << std::endl;
     }
 
+    ///use tp to get new M28 at time t_tjy;
     tp_start_->get_current_matrix28(t_tjy, current_matrix28_);
+
+    ///use new M28 to control motors and so the robot
     model()->setInputPos(current_matrix28_);
     if (model()->inverseKinematics()) {
       throw std::runtime_error("invKin failed");
@@ -62,12 +70,16 @@ auto TrotMove::executeRT()->int
     for (int8_t i = 0; i < 12; i++) {
       controller()->motorPool()[i].setTargetPos(current_motor_pos_[i]);
     }
-    
-    mout() << "peroid:" << current_period_number_ << " Start success" << std::endl;
-
+    splitMatrix28(current_matrix28_, current_pose_, current_leg_point_);
+    ///disp current robot pose and motor pos
+    std::cout << "Tn=" << current_period_number_ << "; t_tjy=" << t_tjy << std::endl;
+    std::cout << "Pose " << std::endl;
+    show(4, 4, current_pose_);
+    std::cout << "Leg Point" << std::endl;
+    show(4, 3, current_leg_point_);
   }
 
-  ///trot
+  ///trot state; use Tn to classify the states;
   if (current_period_number_ > 1 && current_period_number_ <= trot_period_number_) {
     if (t_tjy == 1) {
       for (int8_t i = 0; i < 12; i++) {
@@ -83,6 +95,7 @@ auto TrotMove::executeRT()->int
     }
 
     tp_run->get_current_matrix28(t_tjy, current_matrix28_);
+
     model()->setInputPos(current_matrix28_);
     if (model()->inverseKinematics()) {
       throw std::runtime_error("invKin failed");
@@ -91,9 +104,6 @@ auto TrotMove::executeRT()->int
     for (int8_t i = 0; i < 12; i++) {
       controller()->motorPool()[i].setTargetPos(current_motor_pos_[i]);
     }
-
-    mout() << "peroid:" << current_period_number_ << " Start success" << std::endl;
-
   }
 
   ///switch to step and use 4 peroid to move leg-ee to step init position
@@ -125,7 +135,7 @@ auto TrotMove::executeRT()->int
 
   }
   ///step 
-  if (current_period_number_ < count_stop_ && current_period_number_ > trot_period_number_ + 4) {
+  if (current_period_number_ < trot_period_number_ + 4 + step_peroid_number_  && current_period_number_ > trot_period_number_ + 4) {
     if (t_tjy == 1) {
       for (int8_t i = 0; i < 12; i++) {
         init_motor_pos_[i] = controller()->motorPool()[i].targetPos();
@@ -152,11 +162,15 @@ auto TrotMove::executeRT()->int
     mout() << "peroid:" << current_period_number_ << " Start success" << std::endl;
 
   }
-
+  
+  return count() - count_stop_;
 }
 auto TrotMove::collectNrt()->void {}
 TrotMove::TrotMove(const std::string& name) :
   t_(5, 2),
+  vel_x_(0.1), // 初始化 vel_x_
+  vel_y_(0.01), // 初始化 vel_y_
+  move_height_(0.05), // 初始化 move_height_
   ellipse_trot_start_(vel_x_ * 0.5, vel_y_ * 0.5, move_height_, t_),
   ellipse_trot_run_(vel_x_ * 0.5, vel_y_ * 0.5, move_height_, t_),
   ellipse_step_(0, 0, move_height_, t_)
@@ -164,11 +178,11 @@ TrotMove::TrotMove(const std::string& name) :
   aris::core::fromXmlString(command(),
     "<Command name=\"trot\">"
     "  <GroupParam>"
-    "  <Param name=\"vel_x_\" default=\"1\" abbreviation=\"x\"/>"
-    "  <Param name=\"vel_y_\" default=\"0\" abbreviation=\"y\"/>"
-    "  <Param name=\"move_height_\" default=\"0.1\" abbreviation=\"h\"/>"
-    "  <Param name=\"trot_period_number_\" default=\"40\" abbreviation=\"t\"/>"
-    "  <Param name=\"step_peroid_number_\" default=\"10\" abbreviation=\"s\"/>"
+    "  <Param name=\"vel_x_\" default=\"0.1\" abbreviation=\"x\"/>"
+    "  <Param name=\"vel_y_\" default=\"0.01\" abbreviation=\"y\"/>"
+    "  <Param name=\"move_height_\" default=\"0.05\" abbreviation=\"h\"/>"
+    "  <Param name=\"trot_period_number_\" default=\"10\" abbreviation=\"t\"/>"
+    "  <Param name=\"step_peroid_number_\" default=\"5\" abbreviation=\"s\"/>"
     "  </GroupParam>"
     "</Command>");
 
@@ -176,7 +190,9 @@ TrotMove::TrotMove(const std::string& name) :
   step_total_count_ = step_peroid_number_ * kTcurvePeriodCount;
   count_stop_ = (4 + trot_period_number_ + step_peroid_number_) * kTcurvePeriodCount;
 }
+
 TrotMove::~TrotMove() = default;
+
 ///////////////////////////////////////////////////////< Ellipse-4-Legs Edition-3 >////////////////////////////////////
 auto Ellipse4LegDrive3::prepareNrt()->void
 {
@@ -348,49 +364,7 @@ auto ReadInformation::executeRT()->int
     aris::dynamic::dsp(4, 3, modelPosArray);
 
 
-    // std::cout << std::endl << "Current Model's MotorPos with getInputPos> " << std::endl;
-    // std::vector<double> modelPosTest(12, 0.0);
-    // model()->getInputPos(modelPosTest.data());
-    // for (int i = 0; i < 4; i++)
-    // {
-    //     std::cout << "Leg" << i + 1 << "\t";
-    //     for (int j = 0; j < 3; j++)
-    //     {
-    //         std::cout << "M" << 3 * i + j << ": " << modelPosTest[3 * i + j] << "\t";
-    //     }
-    //     std::cout << std::endl;
-    // }
 
-// //---use aris matrix to storage data---//
-//     //---use fwdKin to get ModelPose；storage container uses aris-matrix---//
-//         model()->setInputPos(motorPos) ;    
-//         if (model()->solverPool()[1].kinPos())
-//         {
-//             throw std::runtime_error("Quadrupd Leg Forward Kinematics Failed!");
-//         }
-//         model()->getOutputPos(modelPose);
-
-
-//     std::cout << std::endl << "Current BodyPose aris-Matrix=> " <<std::endl;
-//     for (int i = 0; i < 4; i++)
-//     {
-//         for (int j = 0; j < 4; j++)
-//         {
-//             std::cout << modelPose[at(i, j)] << "\t";
-//         }
-//         std::cout << std::endl;
-//     }
-
-//     std::cout << std::endl << "Current 4-legPoint aris-Matrix=>" << std::endl;
-//     for (int i = 0; i < 4; i++)
-//     {
-//         for (int j = 4; j < 7; j++)
-//         {
-//             std::cout << modelPose[at(i, j)] << "\t";
-//         }
-//         std::cout << std::endl;
-//     }   
-/////////////////////////////////////////////////////////////////////////////////////
 
     //---use fwdKin to get ModelPose; storage container uses std::vector---//
     modelPoseVec.resize(28);
@@ -895,100 +869,6 @@ auto createMasterROSMotorTest()->std::unique_ptr<aris::control::Master>{
     for (aris::Size i = 0; i < 12 ; ++i){
         int phy_id[12]={8,9,10,5,3,4,6,7,11,0,1,2};
 
-//--------------------------XML from Leo---------------------//
-//           " min_pos=\"" + std::to_string(min_pos[i]) + "\" max_pos=\"" + std::to_string(max_pos[i]) + "\" max_vel=\"" + std::to_string(max_vel[i]) + "\" min_vel=\"" + std::to_string(-max_vel[i]) + "\""
-//           " max_acc=\"" + std::to_string(max_acc[i]) + "\" min_acc=\"" + std::to_string(-max_acc[i]) + "\" max_pos_following_error=\"10.0\" max_vel_following_error=\"20.0\""
-//           " home_pos=\"0\" pos_factor=\"" + std::to_string(pos_factor[i]) + "\" pos_offset=\"" + std::to_string(pos_offset[i]) + "\">"        
-        // std::string xml_str =
-        //    "<EthercatMotor phy_id=\"" + std::to_string(phy_id[i]) + "\" product_code=\"0x00\""
-        //    " vendor_id=\"0x00\" revision_num=\"0x00\" dc_assign_activate=\"0x0300\""
-        //    ">"
-        //    "	<SyncManagerPoolObject>"
-        //    "		<SyncManager is_tx=\"false\"/>"
-        //    "		<SyncManager is_tx=\"true\"/>"
-        //    "		<SyncManager is_tx=\"false\">"
-        //    "			<Pdo index=\"0x1605\" is_tx=\"false\">"
-        //    "				<PdoEntry name=\"target_pos\" index=\"0x607A\" subindex=\"0x00\" size=\"32\"/>"
-        //    "				<PdoEntry name=\"target_vel\" index=\"0x60FF\" subindex=\"0x00\" size=\"32\"/>"
-        //    "				<PdoEntry name=\"targer_toq\" index=\"0x6071\" subindex=\"0x00\" size=\"16\"/>"
-        //    "				<PdoEntry name=\"max_toq\" index=\"0x6072\" subindex=\"0x00\" size=\"16\"/>"
-        //    "				<PdoEntry name=\"control_word\" index=\"0x6040\" subindex=\"0x00\" size=\"16\"/>"
-        //    "				<PdoEntry name=\"mode_of_operation\" index=\"0x6060\" subindex=\"0x00\" size=\"8\"/>"
-        //    "			</Pdo>"
-        //    "		</SyncManager>"
-        //    "		<SyncManager is_tx=\"true\">"
-        //    "			<Pdo index=\"0x1A07\" is_tx=\"true\">"
-        //    "				<PdoEntry name=\"status_word\" index=\"0x6041\" subindex=\"0x00\" size=\"16\"/>"
-        //    "				<PdoEntry name=\"mode_of_display\" index=\"0x6061\" subindex=\"0x00\" size=\"8\"/>"
-        //    "				<PdoEntry name=\"pos_actual_value\" index=\"0x6064\" subindex=\"0x00\" size=\"32\"/>"
-        //    "				<PdoEntry name=\"vel_actual_value\" index=\"0x606c\" subindex=\"0x00\" size=\"32\"/>"
-        //    "				<PdoEntry name=\"toq_actual_value\" index=\"0x6077\" subindex=\"0x00\" size=\"16\"/>"
-        //    "			</Pdo>"
-        //    "		</SyncManager>"
-        //    "	</SyncManagerPoolObject>"
-        //    "</EthercatMotor>";
-
-//--------------------------the original XML for stepper---------------------//
-        // std::string xml_str =
-        //     "<EthercatSlave phy_id=\"" + std::to_string(phy_id[i]) + "\" product_code=\"0x00\""
-        //     " vendor_id=\"0x00\" revision_num=\"0x00\" dc_assign_activate=\"0x0300\""
-        //     ">"
-        //     "	<SyncManagerPoolObject>"
-        //     "		<SyncManager is_tx=\"false\"/>"
-        //     "		<SyncManager is_tx=\"true\"/>"
-        //     "		<SyncManager is_tx=\"false\">"
-        //     "			<Pdo index=\"0x1600\" is_tx=\"false\">"
-        //     "				<PdoEntry name=\"target_pos\" index=\"0x607A\" subindex=\"0x00\" size=\"32\"/>"
-        //     "				<PdoEntry name=\"target_vel\" index=\"0x60FF\" subindex=\"0x00\" size=\"32\"/>"
-        //     "				<PdoEntry name=\"control_word\" index=\"0x6040\" subindex=\"0x00\" size=\"16\"/>"
-        //     "				<PdoEntry name=\"mode_of_operation\" index=\"0x6060\" subindex=\"0x00\" size=\"8\"/>"
-        //     "			</Pdo>"
-        //     "		</SyncManager>"
-        //     "		<SyncManager is_tx=\"true\">"
-        //     "			<Pdo index=\"0x1a00\" is_tx=\"true\">"
-        //     "				<PdoEntry name=\"status_word\" index=\"0x6041\" subindex=\"0x00\" size=\"16\"/>"
-        //     "				<PdoEntry name=\"mode_of_display\" index=\"0x6061\" subindex=\"0x00\" size=\"8\"/>"
-        //     "				<PdoEntry name=\"pos_actual_value\" index=\"0x6064\" subindex=\"0x00\" size=\"32\"/>"
-        //     "				<PdoEntry name=\"vel_actual_value\" index=\"0x606c\" subindex=\"0x00\" size=\"32\"/>"
-        //     "				<PdoEntry name=\"toq_actual_value\" index=\"0x6077\" subindex=\"0x00\" size=\"16\"/>"
-        //     "				<PdoEntry name=\"digital_inputs\" index=\"0x60FD\" subindex=\"0x00\" size=\"32\"/>"
-        //     "			</Pdo>"
-        //     "		</SyncManager>"
-        //     "	</SyncManagerPoolObject>"
-        //     "</EthercatSlave>";
-
-//--------------------------XML from Guojing-----------------------------------------------//
-        // std::string xml_str =
-        //    "<EthercatSlave phy_id=\"" + std::to_string(phy_id[i]) + "\" product_code=\"0x00\""
-        //    " vendor_id=\"0x00\" revision_num=\"0x00\" dc_assign_activate=\"0x0300\""
-        //    ">"
-        //    "  <SyncManagerPoolObject>"
-        //    "    <SyncManager is_tx=\"false\"/>"
-        //    "    <SyncManager is_tx=\"true\"/>"
-        //    "    <SyncManager is_tx=\"false\">"
-        //    "      <Pdo index=\"0x1605\" is_tx=\"false\">"
-        //    "        <PdoEntry name=\"target_pos\" index=\"0x607A\" subindex=\"0x00\" size=\"32\"/>"
-        //    "        <PdoEntry name=\"target_vel\" index=\"0x60FF\" subindex=\"0x00\" size=\"32\"/>"
-        //    "        <PdoEntry name=\"targer_toq\" index=\"0x6071\" subindex=\"0x00\" size=\"16\"/>"
-        //    "        <PdoEntry name=\"max_toq\" index=\"0x6072\" subindex=\"0x00\" size=\"16\"/>"
-        //    "        <PdoEntry name=\"control_word\" index=\"0x6040\" subindex=\"0x00\" size=\"16\"/>"
-        //    "        <PdoEntry name=\"mode_of_operation\" index=\"0x6060\" subindex=\"0x00\" size=\"8\"/>"
-        //    "      </Pdo>"
-        //    "    </SyncManager>"
-        //    "    <SyncManager is_tx=\"true\">"
-        //    "      <Pdo index=\"0x1A02\" is_tx=\"true\">"
-        //    "        <PdoEntry name=\"pos_actual_value\" index=\"0x6064\" subindex=\"0x00\" size=\"32\"/>"
-        //    "        <PdoEntry name=\"toq_actual_value\" index=\"0x6077\" subindex=\"0x00\" size=\"16\"/>"
-        //    "        <PdoEntry name=\"status_word\" index=\"0x6041\" subindex=\"0x00\" size=\"16\"/>"
-        //    "        <PdoEntry name=\"mode_of_display\" index=\"0x6061\" subindex=\"0x00\" size=\"8\"/>"
-        //    "      </Pdo>"
-        //    "      <Pdo index=\"0x1A11\" is_tx=\"true\">"
-        //    "        <PdoEntry name=\"vel_actual_value\" index=\"0x606c\" subindex=\"0x00\" size=\"32\"/>"
-        //    "      </Pdo>"
-        //    "    </SyncManager>"
-        //    "  </SyncManagerPoolObject>"
-        //    "</EthercatSlave>";
-
 //----------------------------------Daniel for Single_leg Servo Motor Success in 2023.10.14--------------------------------------//
         // std::string xml_str =
         //    "<EthercatSlave phy_id=\"" + std::to_string(phy_id[i]) + "\" product_code=\"0x00\""
@@ -1035,10 +915,6 @@ auto createMasterROSMotorTest()->std::unique_ptr<aris::control::Master>{
            "				<PdoEntry name=\"target_velocity\" index=\"0x60ff\" subindex=\"0x00\" size=\"32\"/>"
            "				<PdoEntry name=\"mode_of_operation\" index=\"0x6060\" subindex=\"0x00\" size=\"8\"/>"
            "				<PdoEntry name=\"targer_toq\" index=\"0x6071\" subindex=\"0x00\" size=\"16\"/>"
-        //    "				<PdoEntry name=\"Touch_probe_function\" index=\"0x60b8\" subindex=\"0x00\" size=\"16\"/>"
-        //    "				<PdoEntry name=\"Positive_torque_limit_value\" index=\"0x60e0\" subindex=\"0x00\" size=\"16\"/>"
-        //    "				<PdoEntry name=\"Negative_torque_limit_value\" index=\"0x60e1\" subindex=\"0x00\" size=\"16\"/>"
-        //    "				<PdoEntry name=\"Maximum_profile_velocity\" index=\"0x607f\" subindex=\"0x00\" size=\"32\"/>"
            "			</Pdo>"
            "		</SyncManager>"
            "		<SyncManager is_tx=\"true\">"
@@ -1049,10 +925,6 @@ auto createMasterROSMotorTest()->std::unique_ptr<aris::control::Master>{
            "				<PdoEntry name=\"toq_actual_value\" index=\"0x6077\" subindex=\"0x00\" size=\"16\"/>"
            "				<PdoEntry name=\"Modes_of_operation_display\" index=\"0x6061\" subindex=\"0x00\" size=\"8\"/>"
            "				<PdoEntry name=\"Current_actual_value\" index=\"0x6078\" subindex=\"0x00\" size=\"16\"/>"
-        //    "				<PdoEntry name=\"Touch_probe_status\" index=\"0x60b9\" subindex=\"0x00\" size=\"16\"/>"
-        //    "				<PdoEntry name=\"Touch_probe_1_positive_edge\" index=\"0x60ba\" subindex=\"0x00\" size=\"32\"/>"
-        //    "				<PdoEntry name=\"Digital_output\" index=\"0x60fe\" subindex=\"0x00\" size=\"32\"/>"
-        //    "				<PdoEntry name=\"Digital_inputs\" index=\"0x60fd\" subindex=\"0x00\" size=\"32\"/>"
            "			</Pdo>"
            "		</SyncManager>"
            "  </SyncManagerPoolObject>"
@@ -1209,6 +1081,7 @@ auto createPlanROSMotorTest()->std::unique_ptr<aris::plan::PlanRoot>
     plan_root->planPool().add<MotorTest12E2>();
     plan_root->planPool().add<MotorTest12E3>();
     plan_root->planPool().add<SetZeroPose>();
+    plan_root->planPool().add<TrotMove>();
 
     return plan_root;
 }

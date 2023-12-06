@@ -52,6 +52,8 @@ namespace robot
       double init_matrix28_[28]{};
       double current_motor_pos_[12]{};
       double current_matrix28_[28]{};
+      double current_pose_[16]{};
+      double current_leg_point_[12]{};
 
     };
 

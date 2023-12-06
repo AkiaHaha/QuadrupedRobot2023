@@ -16,7 +16,7 @@ endif(WIN32)
 include_directories(${aris_INCLUDE_DIRS})
 
 
-add_executable(QuadrupedRobot src/main.cpp  src/model.cpp  src/robot.cpp src/robot.h src/plan.cpp src/plan.h)
+add_executable(QuadrupedRobot src/main.cpp  src/model.cpp  src/robot.cpp src/robot.h src/plan.cpp src/plan.h src/operator.h src/operator.cpp)
 
 if(UNIX)
     target_link_libraries(QuadrupedRobot ${aris_LIBRARIES} atomic)

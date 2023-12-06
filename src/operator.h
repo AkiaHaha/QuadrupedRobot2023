@@ -4,6 +4,14 @@
 #include <iostream>
 #include <vector>
 #include <aris.hpp>
+#include <algorithm>
+#include <array>
+#include <stdlib.h>
+#include <string>
+#include <bitset>
+#include <math.h>
+using namespace aris::dynamic;
+using namespace aris::plan;
 
 template<typename T>
 class Matrix {
@@ -72,5 +80,7 @@ void otherOperation();
 /// <param name="b"></param>
 /// <returns></returns>
 bool isQuotientOdd(int a, int b);
+void splitMatrix28(double a[28], double b[16], double c[12]);
+void show(int8_t m, int8_t n, double* a);
 
 #endif // OPERATOR_H

@@ -62,3 +62,10 @@
 
 ## E15 ->12.4
 * Add Trot Move function;
+
+## E16 ->12.6
+* Finish Trot move function and build and run success but could not realize continous movement;
+* Rewrite the function to show matrix;
+* Fix the bug that couldn't use functions in operator.h; solution is change Cmake;
+* Write some small module functions in operator.h;
+![image-20231206174447706](C:\Users\Daniel\AppData\Roaming\Typora\typora-user-images\image-20231206174447706.png)
