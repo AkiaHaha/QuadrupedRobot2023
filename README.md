@@ -68,4 +68,9 @@
 * Rewrite the function to show matrix;
 * Fix the bug that couldn't use functions in operator.h; solution is change Cmake;
 * Write some small module functions in operator.h;
-![image-20231206174447706](C:\Users\Daniel\AppData\Roaming\Typora\typora-user-images\image-20231206174447706.png)
+
+## E17 ->12.7
+* 1st edition of trot gait; includes 3 stages: trot_start, trot, stepping;
+* Build successfully but run failed and debug for a long time also not fixed;
+* So finally give up and rewrite it;
+* The picture below shows the final operation of the program.

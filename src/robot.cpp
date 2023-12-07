@@ -38,6 +38,7 @@ auto TrotMove::executeRT()->int
   current_period_number_ = count() / kTcurvePeriodCount + 1;
   t_tjy = count() % kTcurvePeriodCount;
   switch_number = (count() / kTcurvePeriodCount) != 0 ? false : true;
+  std::cout << "t_tjy= " << t_tjy << "3 time relative param init" << std::endl;
 
   ///start trot, move distance is half the trot move; use at period 1;
   if (current_period_number_ == 1){
@@ -53,12 +54,15 @@ auto TrotMove::executeRT()->int
       }
       model()->getOutputPos(init_matrix28_);
 
+      std::cout << "new tr_start_" << std::endl;
       tp_start_ = new TrotPlan(switch_number, init_matrix28_, ellipse_trot_start_);
 
-      mout() << "peroid " << current_period_number_ << " init success" << std::endl;
+      std::cout << "peroid " << current_period_number_ << " init success" << std::endl;
+
     }
 
     ///use tp to get new M28 at time t_tjy;
+    std::cout << "get_matrix_28 at t_tjy_ = " << t_tjy << std::endl;
     tp_start_->get_current_matrix28(t_tjy, current_matrix28_);
 
     ///use new M28 to control motors and so the robot
@@ -77,6 +81,11 @@ auto TrotMove::executeRT()->int
     show(4, 4, current_pose_);
     std::cout << "Leg Point" << std::endl;
     show(4, 3, current_leg_point_);
+
+    if (t_tjy == kTcurvePeriodCount) {
+      delete tp_start_;
+    }
+
   }
 
   ///trot state; use Tn to classify the states;
@@ -162,7 +171,7 @@ auto TrotMove::executeRT()->int
     mout() << "peroid:" << current_period_number_ << " Start success" << std::endl;
 
   }
-  
+  std::cout << "kakkakjcoiadj" << std::endl;
   return count() - count_stop_;
 }
 auto TrotMove::collectNrt()->void {}
