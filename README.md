@@ -74,3 +74,4 @@
 * Build successfully but run failed and debug for a long time also not fixed;
 * So finally give up and rewrite it;
 * The picture below shows the final operation of the program.
+* [QuadrupedRobot2023/image-20231206174447706.png at quadruped_robot · AkiaHaha/QuadrupedRobot2023 · GitHub](https://github.com/AkiaHaha/QuadrupedRobot2023/blob/quadruped_robot/image-20231206174447706.png)
