@@ -77,4 +77,6 @@
 
   ## E18 ->12.7
 * Delete all the funxtion that won't be used;
-* Completely adjusted the specification of code writing, including architecture, definition, annotation, and the use of punctuation marks;![3](pic/3.png)
+* Completely adjusted the specification of code writing, including architecture, definition, annotation, and the use of punctuation marks;
+* 
+![3](pic/3.png)
