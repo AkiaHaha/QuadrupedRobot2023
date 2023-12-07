@@ -8,15 +8,14 @@
 * Add a function of 12 motors drive separately ; MotorTest12() ;
 * Modify the function createControllerROSMotorTest() for adapting to the motor number ; and also other basic settings in the function ;
 * output the final Body PE & Leg Point using FwdKin of Matrix_28 ;
-* test them successfully with virtual motor ;![Alt text](image-1.png)
+* test them successfully with virtual motor ;
+* ![1](pic/1.png)
 
 ## E5->11.7:
 * Add a function for ellipse trajectory move for 4 legs; without gait planning;
 
 ## E6 ->11.10
 * Use modified aris of function "Show" to show motor pos successfuly.
-![1](pic/1.png)
-
 * Modified e4 and build success.
 
 ## E7 ->11.10
@@ -24,7 +23,7 @@
 * Set a class use template named Matrix to directly modify 28D matrix startModelPE(4, 7) and centerPoint(4, 3);
 * Use parameter list to transfer value in constructor function which improves efficiency;
 * Plan it with mindmap first and finally  built successfully  with long time debug~
-![2](pic/2.png)
+
 ## E8 ->11.10
 * A  new class to run  4-leg ellipse curve -> Ellipse4LegDrive2();
 * Build successfully at 1:20 AM;
@@ -77,4 +76,4 @@
 
 * The picture below shows the final operation of the program.
 
-  ![3](pic/3.png)
+  ![2](pic/2.png)
