@@ -75,6 +75,6 @@
 
 * So finally give up and rewrite it;
 
-* The picture below shows the final operation of the program.00
+* The picture below shows the final operation of the program.
 
   ![3](pic/3.png)
