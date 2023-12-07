@@ -77,4 +77,4 @@
 
 * The picture below shows the final operation of the program.
 
-  ![image-20231206174447706](pic/3.png)
+  ![3](pic/3.png)
