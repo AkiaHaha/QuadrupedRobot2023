@@ -78,4 +78,4 @@
 
 * The picture below shows the final operation of the program.
 
-  ![image-20231206174447706](X:\GitRepo\QuadrupedRobot2023\Pic\image-20231206174447706.png)
+  ![image-20231206174447706](QuadrupedRobot2023\Pic\image-20231206174447706.png)
