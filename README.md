@@ -8,8 +8,7 @@
 * Add a function of 12 motors drive separately ; MotorTest12() ;
 * Modify the function createControllerROSMotorTest() for adapting to the motor number ; and also other basic settings in the function ;
 * output the final Body PE & Leg Point using FwdKin of Matrix_28 ;
-* test them successfully with virtual motor ;
-* ![1](pic/1.png)
+* test them successfully with virtual motor;![1](pic/1.png)
 
 ## E5->11.7:
 * Add a function for ellipse trajectory move for 4 legs; without gait planning;
@@ -74,11 +73,8 @@
 
 * So finally give up and rewrite it;
 
-* The picture below shows the final operation of the program.
-
-  ![2](pic/2.png)
+* The picture below shows the final operation of the program;![2](pic/2.png)
 
   ## E18 ->12.7
 * Delete all the funxtion that won't be used;
-* Completely adjusted the specification of code writing, including architecture, definition, annotation, and the use of punctuation marks;
-  ![3](pic/3.png)
+* Completely adjusted the specification of code writing, including architecture, definition, annotation, and the use of punctuation marks;![3](pic/3.png)
