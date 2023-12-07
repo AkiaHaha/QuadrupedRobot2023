@@ -11,198 +11,8 @@
 using namespace aris::dynamic;
 using namespace aris::plan;
 const double PI = aris::PI;
-namespace robot
-{
-/// <summary>
-/// trot movement
-/// </summary>
-/// <returns></returns>
-auto TrotMove::prepareNrt()->void
-{
-  vel_x_ = doubleParam("vel_x_");
-  vel_y_ = doubleParam("vel_y_");
-  move_height_ = doubleParam("move_height_");
-  trot_period_number_ = doubleParam("trot_period_number_");
-  step_peroid_number_ = doubleParam("step_peroid_number_");
 
-
-  for (auto& m : motorOptions()) m =
-    aris::plan::Plan::NOT_CHECK_POS_CONTINUOUS |
-    aris::plan::Plan::NOT_CHECK_ENABLE |
-    aris::plan::Plan::NOT_CHECK_POS_CONTINUOUS_SECOND_ORDER;
-}
-
-auto TrotMove::executeRT()->int
-{
-  ///3 time relative param;
-  current_period_number_ = count() / kTcurvePeriodCount + 1;
-  t_tjy = count() % kTcurvePeriodCount;
-  switch_number = (count() / kTcurvePeriodCount) != 0 ? false : true;
-  std::cout << "t_tjy= " << t_tjy << "3 time relative param init" << std::endl;
-
-  ///start trot, move distance is half the trot move; use at period 1;
-  if (current_period_number_ == 1){
-    ///get init matrix28 & tp_start
-    if (t_tjy == 1){
-      for (int8_t i = 0; i < 12; i++){
-        init_motor_pos_[i] = controller()->motorPool()[i].targetPos();
-      }
-
-      model()->setInputPos(init_motor_pos_);
-      if (model()->forwardKinematics()){
-        throw std::runtime_error("fwdKin failed");
-      }
-      model()->getOutputPos(init_matrix28_);
-
-      std::cout << "new tr_start_" << std::endl;
-      tp_start_ = new TrotPlan(switch_number, init_matrix28_, ellipse_trot_start_);
-
-      std::cout << "peroid " << current_period_number_ << " init success" << std::endl;
-
-    }
-
-    ///use tp to get new M28 at time t_tjy;
-    std::cout << "get_matrix_28 at t_tjy_ = " << t_tjy << std::endl;
-    tp_start_->get_current_matrix28(t_tjy, current_matrix28_);
-
-    ///use new M28 to control motors and so the robot
-    model()->setInputPos(current_matrix28_);
-    if (model()->inverseKinematics()) {
-      throw std::runtime_error("invKin failed");
-    }
-    model()->getInputPos(current_motor_pos_);
-    for (int8_t i = 0; i < 12; i++) {
-      controller()->motorPool()[i].setTargetPos(current_motor_pos_[i]);
-    }
-    splitMatrix28(current_matrix28_, current_pose_, current_leg_point_);
-    ///disp current robot pose and motor pos
-    std::cout << "Tn=" << current_period_number_ << "; t_tjy=" << t_tjy << std::endl;
-    std::cout << "Pose " << std::endl;
-    show(4, 4, current_pose_);
-    std::cout << "Leg Point" << std::endl;
-    show(4, 3, current_leg_point_);
-
-    if (t_tjy == kTcurvePeriodCount) {
-      delete tp_start_;
-    }
-
-  }
-
-  ///trot state; use Tn to classify the states;
-  if (current_period_number_ > 1 && current_period_number_ <= trot_period_number_) {
-    if (t_tjy == 1) {
-      for (int8_t i = 0; i < 12; i++) {
-        init_motor_pos_[i] = controller()->motorPool()[i].targetPos();
-      }
-
-      model()->setInputPos(init_motor_pos_);
-      if (model()->forwardKinematics()) {
-        throw std::runtime_error("fwdKin failed");
-      }
-      model()->getOutputPos(init_matrix28_);
-      tp_run = new TrotPlan(switch_number, init_matrix28_, ellipse_trot_run_);
-    }
-
-    tp_run->get_current_matrix28(t_tjy, current_matrix28_);
-
-    model()->setInputPos(current_matrix28_);
-    if (model()->inverseKinematics()) {
-      throw std::runtime_error("invKin failed");
-    }
-    model()->getInputPos(current_motor_pos_);
-    for (int8_t i = 0; i < 12; i++) {
-      controller()->motorPool()[i].setTargetPos(current_motor_pos_[i]);
-    }
-  }
-
-  ///switch to step and use 4 peroid to move leg-ee to step init position
-  if (current_period_number_ > trot_period_number_ && current_period_number_ <= trot_period_number_ + 4) {
-    if (t_tjy == 1) {
-      for (int8_t i = 0; i < 12; i++) {
-        init_motor_pos_[i] = controller()->motorPool()[i].targetPos();
-      }
-
-      model()->setInputPos(init_motor_pos_);
-      if (model()->forwardKinematics()) {
-        throw std::runtime_error("fwdKin failed");
-      }
-      model()->getOutputPos(init_matrix28_);
-      tp_run = new TrotPlan(switch_number, init_matrix28_, ellipse_trot_run_);
-    }
-
-    tp_run->get_current_matrix28(t_tjy, current_matrix28_);
-    model()->setInputPos(current_matrix28_);
-    if (model()->inverseKinematics()) {
-      throw std::runtime_error("invKin failed");
-    }
-    model()->getInputPos(current_motor_pos_);
-    for (int8_t i = 0; i < 12; i++) {
-      controller()->motorPool()[i].setTargetPos(current_motor_pos_[i]);
-    }
-
-    mout() << "peroid:" << current_period_number_ << " Start success" << std::endl;
-
-  }
-  ///step 
-  if (current_period_number_ < trot_period_number_ + 4 + step_peroid_number_  && current_period_number_ > trot_period_number_ + 4) {
-    if (t_tjy == 1) {
-      for (int8_t i = 0; i < 12; i++) {
-        init_motor_pos_[i] = controller()->motorPool()[i].targetPos();
-      }
-
-      model()->setInputPos(init_motor_pos_);
-      if (model()->forwardKinematics()) {
-        throw std::runtime_error("fwdKin failed");
-      }
-      model()->getOutputPos(init_matrix28_);
-      tp_step_ = new TrotPlan(switch_number, init_matrix28_, ellipse_step_);
-    }
-
-    tp_step_->get_current_matrix28(t_tjy, current_matrix28_);
-    model()->setInputPos(current_matrix28_);
-    if (model()->inverseKinematics()) {
-      throw std::runtime_error("invKin failed");
-    }
-    model()->getInputPos(current_motor_pos_);
-    for (int8_t i = 0; i < 12; i++) {
-      controller()->motorPool()[i].setTargetPos(current_motor_pos_[i]);
-    }
-
-    mout() << "peroid:" << current_period_number_ << " Start success" << std::endl;
-
-  }
-  std::cout << "kakkakjcoiadj" << std::endl;
-  return count() - count_stop_;
-}
-auto TrotMove::collectNrt()->void {}
-TrotMove::TrotMove(const std::string& name) :
-  t_(5, 2),
-  vel_x_(0.1), // 初始化 vel_x_
-  vel_y_(0.01), // 初始化 vel_y_
-  move_height_(0.05), // 初始化 move_height_
-  ellipse_trot_start_(vel_x_ * 0.5, vel_y_ * 0.5, move_height_, t_),
-  ellipse_trot_run_(vel_x_ * 0.5, vel_y_ * 0.5, move_height_, t_),
-  ellipse_step_(0, 0, move_height_, t_)
-{
-  aris::core::fromXmlString(command(),
-    "<Command name=\"trot\">"
-    "  <GroupParam>"
-    "  <Param name=\"vel_x_\" default=\"0.1\" abbreviation=\"x\"/>"
-    "  <Param name=\"vel_y_\" default=\"0.01\" abbreviation=\"y\"/>"
-    "  <Param name=\"move_height_\" default=\"0.05\" abbreviation=\"h\"/>"
-    "  <Param name=\"trot_period_number_\" default=\"10\" abbreviation=\"t\"/>"
-    "  <Param name=\"step_peroid_number_\" default=\"5\" abbreviation=\"s\"/>"
-    "  </GroupParam>"
-    "</Command>");
-
-  trot_total_count_ = trot_period_number_ * kTcurvePeriodCount;
-  step_total_count_ = step_peroid_number_ * kTcurvePeriodCount;
-  count_stop_ = (4 + trot_period_number_ + step_peroid_number_) * kTcurvePeriodCount;
-}
-
-TrotMove::~TrotMove() = default;
-
-///////////////////////////////////////////////////////< Ellipse-4-Legs Edition-3 >////////////////////////////////////
+namespace robot {
 auto Ellipse4LegDrive3::prepareNrt()->void
 {
     moveX_ = doubleParam("moveX");
@@ -348,7 +158,6 @@ Ellipse4LegDrive3::Ellipse4LegDrive3(const std::string &name)
 }
 Ellipse4LegDrive3::~Ellipse4LegDrive3() = default; 
 
-///////////////////////////////////////////////////////< ReadInformation1  >////////////////////////////////////////////////////
 auto ReadInformation::prepareNrt()->void
 {
     for(auto &m:motorOptions()) m =
@@ -414,8 +223,7 @@ ReadInformation::ReadInformation(const std::string &name)
 }
 ReadInformation::~ReadInformation() = default; 
 
-///////////////////////////////////////////////////////< Control 12 motors seperatelt >////////////////////////////////////////////////////
-auto MotorTest12E3::prepareNrt()->void
+auto MotorTest::prepareNrt()->void
 {
     motor0_ = doubleParam("motor0");
     motor1_ = doubleParam("motor1");
@@ -436,7 +244,7 @@ auto MotorTest12E3::prepareNrt()->void
 
     this->controlServer()->idleMotionCheckOption()[0];
 }
-auto MotorTest12E3::executeRT()->int
+auto MotorTest::executeRT()->int
 {
     if (count() == 1){
         //--get init motor pos and target motor pos--//
@@ -541,8 +349,8 @@ auto MotorTest12E3::executeRT()->int
 
     return ret_all;
 }
-auto MotorTest12E3::collectNrt()->void {}
-MotorTest12E3::MotorTest12E3(const std::string &name) 
+auto MotorTest::collectNrt()->void {}
+MotorTest::MotorTest(const std::string &name) 
 {
     aris::core::fromXmlString(command(),
        "<Command name=\"t\">"
@@ -562,17 +370,16 @@ MotorTest12E3::MotorTest12E3(const std::string &name)
        "	</GroupParam>"
        "</Command>");
 }
-MotorTest12E3::~MotorTest12E3() = default; 
+MotorTest::~MotorTest() = default; 
 
-///////////////////////////////////////////////////////< Set 12 motors to all 0 >////////////////////////////////////////////////////
-auto SetZeroPose::prepareNrt()->void
+auto SetMotorPosZero::prepareNrt()->void
 {
     for(auto &m:motorOptions()) m =
             aris::plan::Plan::CHECK_NONE;
 
     this->controlServer()->idleMotionCheckOption()[0];
 }
-auto SetZeroPose::executeRT()->int
+auto SetMotorPosZero::executeRT()->int
 {
     if (count() == 1){
         //--get current motor pos--//
@@ -667,8 +474,8 @@ auto SetZeroPose::executeRT()->int
 
     return ret_all;
 }
-auto SetZeroPose::collectNrt()->void {}
-SetZeroPose::SetZeroPose(const std::string &name) 
+auto SetMotorPosZero::collectNrt()->void {}
+SetMotorPosZero::SetMotorPosZero(const std::string &name) 
 {
     aris::core::fromXmlString(command(),
        "<Command name=\"zero\">"
@@ -676,10 +483,9 @@ SetZeroPose::SetZeroPose(const std::string &name)
        "	</GroupParam>"
        "</Command>");
 }
-SetZeroPose::~SetZeroPose() = default; 
+SetMotorPosZero::~SetMotorPosZero() = default; 
 
-///////////////////////////////////////////////////////< Set motors from Zero pos => Ellipse initial pos  >////////////////////////////////////////////////////
-auto MotorTest12E2::prepareNrt()->void
+auto ModelMotorInitialize::prepareNrt()->void
 {
     motor0_ = doubleParam("motor0");
     motor1_ = doubleParam("motor1");
@@ -700,7 +506,7 @@ auto MotorTest12E2::prepareNrt()->void
 
     this->controlServer()->idleMotionCheckOption()[0];
 }
-auto MotorTest12E2::executeRT()->int
+auto ModelMotorInitialize::executeRT()->int
 {
     if (count() == 1){
         //--get init motor pos and target motor pos--//
@@ -805,8 +611,8 @@ auto MotorTest12E2::executeRT()->int
 
     return ret_all;
 }
-auto MotorTest12E2::collectNrt()->void {}
-MotorTest12E2::MotorTest12E2(const std::string &name) 
+auto ModelMotorInitialize::collectNrt()->void {}
+ModelMotorInitialize::ModelMotorInitialize(const std::string &name) 
 {
     aris::core::fromXmlString(command(),
        "<Command name=\"tt\">"
@@ -844,9 +650,8 @@ MotorTest12E2::MotorTest12E2(const std::string &name)
     //    "	</GroupParam>"
     //    "</Command>");
 }
-MotorTest12E2::~MotorTest12E2() = default; 
+ModelMotorInitialize::~ModelMotorInitialize() = default; 
 
-///////////////////////////////////////////////< set-maxTorque >/////////////////////////////////////////////////////////
 auto SetMaxTorque::prepareNrt()->void{
     for(auto &m:motorOptions()){ 
         m =
@@ -871,13 +676,11 @@ SetMaxTorque::SetMaxTorque(const std::string &name)
 }
 SetMaxTorque::~SetMaxTorque() = default; 
 
-//////////////////////////////////////////< Basic Setting: XML for Motor PDO ; Motor Number ; Plan Instruction >/////////////
 auto createMasterROSMotorTest()->std::unique_ptr<aris::control::Master>{
     std::unique_ptr<aris::control::Master> master(new aris::control::EthercatMaster);
 
     for (aris::Size i = 0; i < 12 ; ++i){
         int phy_id[12]={8,9,10,5,3,4,6,7,11,0,1,2};
-
 //----------------------------------Daniel for Single_leg Servo Motor Success in 2023.10.14--------------------------------------//
         // std::string xml_str =
         //    "<EthercatSlave phy_id=\"" + std::to_string(phy_id[i]) + "\" product_code=\"0x00\""
@@ -907,7 +710,6 @@ auto createMasterROSMotorTest()->std::unique_ptr<aris::control::Master>{
         //    "		</SyncManager>"
         //    "  </SyncManagerPoolObject>"
         //    "</EthercatSlave>";
-
 
 //---------------------------------------XML for New Quadruped Robot of Kaanh 11.28------------------------------------------//
         std::string xml_str =
@@ -948,7 +750,6 @@ auto createMasterROSMotorTest()->std::unique_ptr<aris::control::Master>{
     #ifndef ARIS_USE_ETHERCAT_SIMULATION
             dynamic_cast<aris::control::EthercatSlave&>(master->slavePool().back()).scanInfoForCurrentSlave();
     #endif
-
        s.setSync0ShiftNs(600000);
        s.setDcAssignActivate(0x300);
     }
@@ -1057,7 +858,6 @@ auto createControllerROSMotorTest()->std::unique_ptr<aris::control::Controller>
        auto& s = controller->motorPool().add<aris::control::EthercatMotor>();
                aris::core::fromXmlString(s, xml_str);
        s.setEnableWaitingCount(100);
-
     };
     return controller;
 }
@@ -1087,10 +887,9 @@ auto createPlanROSMotorTest()->std::unique_ptr<aris::plan::PlanRoot>
     plan_root->planPool().add<SetMaxTorque>();
     plan_root->planPool().add<Ellipse4LegDrive3>();
     plan_root->planPool().add<ReadInformation>();
-    plan_root->planPool().add<MotorTest12E2>();
-    plan_root->planPool().add<MotorTest12E3>();
-    plan_root->planPool().add<SetZeroPose>();
-    plan_root->planPool().add<TrotMove>();
+    plan_root->planPool().add<ModelMotorInitialize>();
+    plan_root->planPool().add<MotorTest>();
+    plan_root->planPool().add<SetMotorPosZero>();
 
     return plan_root;
 }
