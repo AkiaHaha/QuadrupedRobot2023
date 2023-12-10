@@ -125,3 +125,42 @@ auto EllipseTrajectory7::crossProduct(const double vector1[3], const double vect
 	result[1] = vector1[2] * vector2[0] - vector1[0] * vector2[2];
 	result[2] = vector1[0] * vector2[1] - vector1[1] * vector2[0];
 }
+
+auto EllipseMovePlan::planInit()->void {
+	lambda = t_.getCurve(time_);
+	theta = pi * lambda;
+	delta_p[0] = vel_x_ * (1 + std::cos(theta)) * 0.5 * kDefaultMajorLength;
+	delta_p[1] = vel_h_ * std::sin(theta) * kDefaultHeight;
+	delta_p[2] = vel_z_ * (1 + std::cos(theta)) * 0.5 * kDefaultMinorLength;
+}
+
+auto EllipseMovePlan::legPlan() -> void{
+	if (switch_number){
+		for (int8_t i = 0; i < 3; i++){
+			move_pee_[3 + i] += delta_p[i];
+			move_pee_[9 + i] += delta_p[i];
+		}
+	}
+	else{
+		for (int8_t i = 0; i < 3; i++) {
+			move_pee_[0 + i] += delta_p[i];
+			move_pee_[6 + i] += delta_p[i];
+		}
+	}
+}
+
+auto EllipseMovePlan::bodyPlan() -> void{
+	move_mb_[3] += delta_p[0];
+	move_mb_[11] += delta_p[3];
+}
+
+
+
+auto EllipseMovePlan::getCurrentM28(int t)->double* {
+	time_ = t;
+	planInit();
+	legPlan();
+	std::copy(move_mb_, move_mb_ + 16, move_m28_);
+	std::copy(move_pee_, move_pee_ + 12, move_m28_);
+	return move_m28_;
+}

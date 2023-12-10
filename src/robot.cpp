@@ -13,6 +13,67 @@ using namespace aris::plan;
 const double PI = aris::PI;
 
 namespace robot {
+  auto TrotMove::prepareNrt()->void
+  {
+    vel_x = doubleParam("vel_x");
+    vel_z = doubleParam("vel_z");
+    vel_h = doubleParam("vel_h");
+
+    for (auto& m : motorOptions()) m =
+      aris::plan::Plan::CHECK_NONE;
+  }
+  auto TrotMove::executeRT()->int
+  {
+    if (count() == 1) {
+      double current_motor_pos[12]{};
+      for (int8_t i = 0; i < 12; i++) {
+        current_motor_pos[i] = controller()->motorPool()[i].targetPos();
+      }
+      model()->setInputPos(current_motor_pos);
+      model()->forwardKinematics();
+      model()->getOutputPos(init_m28);
+    }
+
+    period_n = count() / kTcurvePeriodCount + 1;
+    time_in_pn = count() % kTcurvePeriodCount;
+    switch_number = period_n % 2 == 1 ? false : true;
+
+    EllipseMovePlan ep(vel_x, vel_z, vel_h, switch_number, init_m28);
+    move_m28 = ep.getCurrentM28(time_in_pn);
+
+    model()->setOutputPos(move_m28);
+    model()->inverseKinematics();
+    model()->getInputPos(move_motor_pos);
+
+    for (int8_t i = 0; i < 12; ++i) {
+      controller()->motorPool()[i].setTargetPos(move_motor_pos[i]);
+    }
+    
+    std::cout << "---motor pos---" << std::endl;
+    show(4, 3, move_motor_pos);
+
+    std::cout << "---mb and pee---" << std::endl;
+    std::copy(move_m28, move_m28 + 16, move_mb);
+    std::copy(move_m28 + 17, move_m28 + 28, move_pee);
+    show(4, 4, move_mb);
+    show(4, 3, move_pee);
+    
+    return count() - kTcurvePeriodCount;
+  }
+  auto TrotMove::collectNrt()->void {}
+  TrotMove::TrotMove(const std::string& name)
+  {
+    aris::core::fromXmlString(command(),
+      "<Command name=\"trtr\">"
+      "	<GroupParam>"
+      "	<Param name=\"vel_x\" default=\"0.1\" abbreviation=\"x\"/>"
+      "	<Param name=\"vel_z\" default=\"0\" abbreviation=\"z\"/>"
+      "	<Param name=\"vel_h\" default=\"0.1\" abbreviation=\"h\"/>"
+      "	</GroupParam>"
+      "</Command>");
+  }
+  TrotMove::~TrotMove() = default;
+
 auto Ellipse4LegDrive3::prepareNrt()->void
 {
     moveX_ = doubleParam("moveX");
@@ -890,6 +951,7 @@ auto createPlanROSMotorTest()->std::unique_ptr<aris::plan::PlanRoot>
     plan_root->planPool().add<ModelMotorInitialize>();
     plan_root->planPool().add<MotorTest>();
     plan_root->planPool().add<SetMotorPosZero>();
+    plan_root->planPool().add<TrotMove>();
 
     return plan_root;
 }

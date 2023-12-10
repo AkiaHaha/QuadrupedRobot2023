@@ -8,6 +8,35 @@
 
 namespace robot
 {   
+  /// <summary>
+  /// Trot move
+  /// </summary>
+  class  TrotMove : public aris::core::CloneObject<TrotMove, aris::plan::Plan> {
+  public:
+    auto virtual prepareNrt()->void;
+    auto virtual executeRT()->int;
+    auto virtual collectNrt()->void;
+
+    virtual ~TrotMove();
+    explicit TrotMove(const std::string& name = "TrotMove");
+
+  private:
+    double vel_x{};
+    double vel_z{};
+    double vel_h{};
+
+    double init_m28[28]{};
+    double* move_m28{};
+    double move_mb[16]{};
+    double move_pee[12]{};
+    double move_motor_pos[12]{};
+
+    int16_t period_n{};
+    int32_t time_in_pn{};
+
+    bool switch_number{};
+  };
+
     /// <summary>
     /// 4 legs run ellipse curve together
     /// </summary>

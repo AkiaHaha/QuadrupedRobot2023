@@ -13,6 +13,7 @@ using namespace aris::dynamic;
 constexpr double pi = aris::PI;
 constexpr double kDefaultMajorLength = 0.1;
 constexpr double kDefaultMinorLength = 0.01;
+constexpr double kDefaultHeight = 0.1;
 constexpr int kTcurvePeriodCount = 900;
 
 /// <summary>
@@ -54,8 +55,7 @@ public:
 /// <summary>
 /// ellipse trajectory generator
 /// </summary>
-class EllipseTrajectory7
-{
+class EllipseTrajectory7{
 private:
     double moveX_{};
     double moveY_{};
@@ -86,4 +86,59 @@ public:
     }
     ~EllipseTrajectory7() {}
 };
+
+
+class EllipseMovePlan {
+	private: 
+		double vel_x_{};
+		double vel_z_{};
+		double vel_h_{};
+
+		double* init_m28_;
+		double move_m28_[28]{};
+		double move_mb_[16]{};
+		double move_pee_[12]{};
+
+		bool switch_number{};
+
+		Tcurve t_;
+		int time_{};
+		double lambda{};
+		double theta{};
+		double delta_p[3]{};
+
+
+
+	public:
+		auto getCurrentM28(int t)->double*;
+		auto planInit() -> void;
+		auto legPlan() -> void;
+		auto bodyPlan() -> void;
+
+		EllipseMovePlan(double x, double z, double h, bool s, double* initM28)
+		: vel_x_(x), vel_z_(z), vel_h_(h), switch_number(s), init_m28_(initM28), t_(5, 2) {
+			std::copy(init_m28_, init_m28_ + 28, move_m28_);
+			std::copy(move_m28_, move_m28_ + 16, move_mb_);
+			std::copy(move_m28_ + 17, move_m28_ + 28, move_pee_);
+		}
+		~EllipseMovePlan() {}
+};
+
+
+//class EllipseCurve {
+//private:
+//	double vel_x_{};
+//	double vel_y_{};
+//	double vel_h_{};
+//
+//	double* stt_p_;
+//	double* vel_p_[3]{};
+//
+//	Tcurve t_;
+//	int time_{};
+//public:
+//
+//	EllipseCurve() : t_(5, 2) {}
+//	~EllipseCurve() {}
+//};
 #endif
