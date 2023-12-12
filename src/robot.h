@@ -24,6 +24,8 @@ namespace robot
     double vel_x{};
     double vel_z{};
     double vel_h{};
+    int16_t total_tn{};
+
 
     double init_m28[30]{};
     double* move_m28{};
@@ -31,11 +33,14 @@ namespace robot
     double move_pee[12]{};
     double move_motor_pos[12]{};
     double init_motor_pos[12]{};
-
+    double period_init_m28[28]{};
+    
+    int count_stop{};
     int16_t period_n{};
     int32_t time_in_pn{};
 
     bool switch_number{};
+    //EllipseMovePlan ep;
   };
 
     /// <summary>

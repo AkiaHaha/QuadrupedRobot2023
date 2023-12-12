@@ -13,163 +13,115 @@ using namespace aris::plan;
 const double PI = aris::PI;
 
 namespace robot {
-  auto TrotMove::prepareNrt()->void
-  {
-    vel_x = doubleParam("vel_x");
-    vel_z = doubleParam("vel_z");
-    vel_h = doubleParam("vel_h");
+auto TrotMove::prepareNrt()->void
+{
+  vel_x = doubleParam("vel_x");
+  vel_z = doubleParam("vel_z");
+  vel_h = doubleParam("vel_h");
+  total_tn = doubleParam("total_number_of_run_period");
 
-    for (auto& m : motorOptions()) m =
-      aris::plan::Plan::CHECK_NONE;
+  for (auto& m : motorOptions()) m =
+    aris::plan::Plan::CHECK_NONE;
+}
+auto TrotMove::executeRT()->int
+{
+  //初始运行时1ms, 生成初始位姿矩阵, 正常
+  if (count() == 1) {
+    for (int8_t i = 0; i < 4; i++) {
+      init_motor_pos[0 + 3 * i] = 0;
+      init_motor_pos[1 + 3 * i] = 0.78;
+      init_motor_pos[2 + 3 * i] = 1.57;
+      init_motor_pos[2] = -1.57;
+      init_motor_pos[4] = -0.78;
+      init_motor_pos[8] = -1.57;
+      init_motor_pos[10] = -0.78;
+    }
+    model()->setInputPos(init_motor_pos);
+    model()->forwardKinematics();
+    model()->getOutputPos(init_m28);
+
+    this->master()->logFileRawName("trot_test");
+    count_stop = kTcurvePeriodCount * 2 * total_tn - 1;
+    std::copy(init_m28, init_m28 + 28, period_init_m28);
   }
-  auto TrotMove::executeRT()->int
-  {
-    //初始运行时1ms, 生成初始位姿矩阵, 正常
-    if (count() == 1) {
-      for (int8_t i = 0; i < 4; i++) {
-        init_motor_pos[0 + 3 * i] = 0;
-        init_motor_pos[1 + 3 * i] = 0.78;
-        init_motor_pos[2 + 3 * i] = 1.57;
-        init_motor_pos[2] = -1.57;
-        init_motor_pos[4] = -0.78;
-        init_motor_pos[8] = -1.57;
-        init_motor_pos[10] = -0.78;
-      }
-      //std::cout << "---initial motor---" << std::endl;
-      //show(4, 3, init_motor_pos);
+  std::cout << kBars50 << "count = " << count() << std::endl;
 
-      model()->setInputPos(init_motor_pos);
-      model()->forwardKinematics();
-      model()->getOutputPos(init_m28);
+  //生成循环和周期的一些参数指标
+  period_n = count() / kTcurvePeriodCount + 1;
+  time_in_pn = count() % kTcurvePeriodCount;
+  switch_number = period_n % 2 == 1 ? false : true;
 
-      ////输出初始模型位姿信息, 正常
-      //double m16[16]{}, m12[12]{};
-      //std::copy(init_m28, init_m28 + 16, m16);
-      //std::copy(init_m28 + 16, init_m28 + 28, m12);
-      //std::cout << "---init pose and pee---" << std::endl;
-      //show(4, 4, m16);
-      //show(4, 3, m12);
-      this->master()->logFileRawName("trot_test");
+  //设置生成新的初始矩阵在周期结束后, 第一个count()
+  if (time_in_pn == 0) {
+    double motor[12]{};
+    for (int8_t i = 0; i < 12; i++) {
+      motor[i] = controller()->motorPool()[i].targetPos();
     }
-    std::cout << kBars50 << "count = " << count() << std::endl;
-
-    ////模型反解测试,成功//
-    //std::cout << "---test 1---" << std::endl;
-    //double test[12]{};
-    //model()->setOutputPos(init_m28);
-    //if (model()->inverseKinematics())
-    //{
-    //  throw std::runtime_error("Move Status Inverse kinematic position failed wawawaw");
-    //}
-    //model()->getInputPos(test);
-    //show(4, 3, test);
-    //std::cout << "---test 2---" << std::endl;
+    model()->setInputPos(motor);
+    model()->forwardKinematics();
+    model()->getOutputPos(period_init_m28);
+  }
 
 
-    //生成循环和周期的一些参数指标
-    period_n = count() / kTcurvePeriodCount + 1;
-    time_in_pn = count() % kTcurvePeriodCount;
-    switch_number = period_n % 2 == 1 ? false : true;
+  //使用椭圆轨迹的trot规划生成实时运动矩阵,成功
+  double a{}, b{};
+  a = (period_n == 1 ? vel_x : (2 * vel_x));
+  b = (period_n == 1 ? vel_z : (2 * vel_z));
+  EllipseMovePlan ep(a, b, vel_h, switch_number, period_init_m28);
+  move_m28 = ep.getCurrentM28(time_in_pn);
 
-    //std::cout << "---period params---" << std::endl;
-    //std::cout << period_n << "\t" << time_in_pn << "\t" << switch_number << std::endl;
-
-    //使用椭圆轨迹的trot规划生成实时运动矩阵,成功
-    EllipseMovePlan ep(vel_x, vel_z, vel_h, switch_number, init_m28);
-    move_m28 = ep.getCurrentM28(time_in_pn);
-
-    //std::cout << "ellipse plan test" << std::endl;
-    //show(7, 4, move_m28);
-
-    //model()->setOutputPos(move_m28);
-    //model()->inverseKinematics();
-    //model()->getInputPos(move_motor_pos);
-
-    //model()->setOutputPos(move_m28);
-    //if (model()->solverPool()[0].kinPos())
-    //{
-    //  throw std::runtime_error("Move Status Inverse kinematic position failed wawawaw");
-    //}
-    //model()->getInputPos(move_motor_pos);
-
-    model()->setOutputPos(move_m28);
-    if (model()->inverseKinematics()){
-      throw std::runtime_error("Move Status Inverse kinematic position failed wawawaw");}
-    model()->getInputPos(move_motor_pos);
+  model()->setOutputPos(move_m28);
+  if (model()->inverseKinematics()){
+    throw std::runtime_error("Move Status Inverse kinematic position failed wawawaw");}
+  model()->getInputPos(move_motor_pos);
 
 
-    //控制电机运动
-    for (int8_t i = 0; i < 12; ++i) {
-      controller()->motorPool()[i].setTargetPos(move_motor_pos[i]);
-    }
-    std::cout << "current motor pos " << count() << std::endl;
-    show(4, 3, move_motor_pos);
+  //控制电机运动
+  for (int8_t i = 0; i < 12; ++i) {
+    controller()->motorPool()[i].setTargetPos(move_motor_pos[i]);
+  }
+  std::cout << "current motor pos " << count() << std::endl;
+  show(4, 3, move_motor_pos);
 
+  double m16[16]{}, m12[12]{};
+  std::copy(move_m28, move_m28 + 16, m16);
+  std::copy(move_m28 + 16, move_m28 + 28, m12);
+  std::cout << "body pose " << count() << std::endl;
+  show(4, 4, m16);
+  std::cout << "feet pee " << count() << std::endl;
+  show(4, 3, m12);
+    
+  //将末端运动数据写入文件
+  for (int8_t i = 0; i < 4; i++) {
+    lout() << std::setw(10) << m12[0 + i * 3] << std::setw(10) << m12[1 + i * 3] << std::setw(10) << m12[2 + i * 3] << std::endl;
+  }
+
+  //程序运行结束打印最终的参数
+  if (count() == count_stop) {
     double m16[16]{}, m12[12]{};
-    std::copy(move_m28, move_m28 + 16, m16);
-    std::copy(move_m28 + 16, move_m28 + 28, m12);
-    std::cout << "body pose " << count() << std::endl;
+    std::copy(init_m28, init_m28 + 16, m16);
+    std::copy(init_m28 + 16, init_m28 + 28, m12);
+    std::cout << "init motor_pos,pose, pee" << std::endl;
+    show(4, 3, init_motor_pos);
     show(4, 4, m16);
-    std::cout << "feet pee " << count() << std::endl;
-    show(4, 3, m12);
-    
-    //将末端运动数据写入文件
-    lout() << std::setw(10) << m12[0] << std::setw(10) << m12[1] << std::setw(10) << m12[2] << std::endl;
-
-
-    //程序运行结束打印最终的参数
-    if (count() == (kTcurvePeriodCount - 1)) {
-      double m16[16]{}, m12[12]{};
-      std::copy(init_m28, init_m28 + 16, m16);
-      std::copy(init_m28 + 16, init_m28 + 28, m12);
-      std::cout << "init motor_pos,pose, pee" << std::endl;
-      show(4, 3, init_motor_pos);
-      show(4, 4, m16);
-      show(4, 3, m12);
-    }
-    //std::cout << "---motor pos---" << std::endl;
-    //show(4, 3, move_motor_pos);
-
-    //std::cout << "---mb and pee---" << std::endl;
-    //std::copy(move_m28, move_m28 + 16, move_mb);
-    //std::copy(move_m28 + 16, move_m28 + 28, move_pee);
-    //show(4, 4, move_mb);
-    //show(4, 3, move_pee);
-    //show(7, 4, move_m28);
-
-    //std::cout << "---plan test---" << std::endl;
-    //double* m16{};
-    //double* m12{};
-    //m16 = ep.getM16();
-    //m12 = ep.getM12();
-    //show(4, 4, m16);
-    //show(4, 3, m12);
-
-    //std::cout << "---motor pos test---" << std::endl;
-    //double mm28[28]{};
-    //model()->setInputPos(move_motor_pos);
-    //model()->forwardKinematics();
-    //model()->getOutputPos(mm28);
-    //show(4, 3, move_motor_pos);
-    //show(7, 4, mm28);
-    //模型输入电机位置, 正解输出模型位姿, 正常
-    
-    //return count() - kTcurvePeriodCount;
-    return kTcurvePeriodCount -1 - count();
   }
-  auto TrotMove::collectNrt()->void {}
-  TrotMove::TrotMove(const std::string& name)
-  {
-    aris::core::fromXmlString(command(),
-      "<Command name=\"trtr\">"
-      "	<GroupParam>"
-      "	<Param name=\"vel_x\" default=\"0.1\" abbreviation=\"x\"/>"
-      "	<Param name=\"vel_z\" default=\"0\" abbreviation=\"z\"/>"
-      "	<Param name=\"vel_h\" default=\"0.1\" abbreviation=\"h\"/>"
-      "	</GroupParam>"
-      "</Command>");
-  }
-  TrotMove::~TrotMove() = default;
+    
+  return count_stop - count();
+}
+auto TrotMove::collectNrt()->void {}
+TrotMove::TrotMove(const std::string& name)
+{
+  aris::core::fromXmlString(command(),
+    "<Command name=\"trtr\">"
+    "	<GroupParam>"
+    "	<Param name=\"vel_x\" default=\"0.1\" abbreviation=\"x\"/>"
+    "	<Param name=\"vel_z\" default=\"0\" abbreviation=\"z\"/>"
+    "	<Param name=\"vel_h\" default=\"0.1\" abbreviation=\"h\"/>"
+    "	<Param name=\"total_number_of_run_period\" default=\"2\" abbreviation=\"n\"/>"
+    "	</GroupParam>"
+    "</Command>");
+}
+TrotMove::~TrotMove() = default;
 
 auto Ellipse4LegDrive3::prepareNrt()->void
 {

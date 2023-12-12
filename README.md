@@ -78,7 +78,6 @@
 ## E18 ->12.7
 * Delete all the funxtion that won't be used;
 * Completely adjusted the specification of code writing, including architecture, definition, annotation, and the use of punctuation marks;
- 
 ![3](pic/3.png)
 
 ## E19->12.10
@@ -87,4 +86,5 @@
 ## E20->12.12
 * trot gait run successfully but only one period;
 * verified in matlab to see ellipse curve;
+* include lots of test and annotation code;
 ![4](pic/4.png)
