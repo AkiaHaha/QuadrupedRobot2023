@@ -5,6 +5,7 @@
 #include <aris.hpp>
 #include <iostream>
 #include"plan.h"
+#include <array>
 using namespace aris::dynamic;
 
 /// <summary>
@@ -15,6 +16,11 @@ constexpr double kDefaultMajorLength = 0.1;
 constexpr double kDefaultMinorLength = 0.01;
 constexpr double kDefaultHeight = 0.1;
 constexpr int kTcurvePeriodCount = 900;
+constexpr int kFactorThousnad = 0.001;
+constexpr char kBars10[] = "----------";
+constexpr char kBars20[] = "--------------------";
+constexpr char kBars40[] = "----------------------------------------";
+constexpr char kBars50[] = "--------------------------------------------------";
 
 /// <summary>
 /// 功能：生成0->1的梯形曲线。可根据输入的加速度和速度判断曲线为梯形还是三角形
@@ -95,6 +101,9 @@ class EllipseMovePlan {
 		double vel_h_{};
 
 		double* init_m28_;
+		double init_mb_[16]{};
+		double init_pee_[12]{};
+
 		double move_m28_[28]{};
 		double move_mb_[16]{};
 		double move_pee_[12]{};
@@ -114,31 +123,19 @@ class EllipseMovePlan {
 		auto planInit() -> void;
 		auto legPlan() -> void;
 		auto bodyPlan() -> void;
+		auto getM28() -> double* { return move_m28_; };
+		auto getM16() -> double* { return move_mb_; };
+		auto getM12() -> double* { return move_pee_;};
 
 		EllipseMovePlan(double x, double z, double h, bool s, double* initM28)
 		: vel_x_(x), vel_z_(z), vel_h_(h), switch_number(s), init_m28_(initM28), t_(5, 2) {
+			std::copy(init_m28_, init_m28_ + 16, init_mb_);
+			std::copy(init_m28_ + 16, init_m28_ + 28, init_pee_);
+
 			std::copy(init_m28_, init_m28_ + 28, move_m28_);
-			std::copy(move_m28_, move_m28_ + 16, move_mb_);
-			std::copy(move_m28_ + 17, move_m28_ + 28, move_pee_);
+			std::copy(init_m28_, init_m28_ + 16, move_mb_);
+			std::copy(init_m28_ + 16, init_m28_ + 28, move_pee_);
 		}
 		~EllipseMovePlan() {}
 };
-
-
-//class EllipseCurve {
-//private:
-//	double vel_x_{};
-//	double vel_y_{};
-//	double vel_h_{};
-//
-//	double* stt_p_;
-//	double* vel_p_[3]{};
-//
-//	Tcurve t_;
-//	int time_{};
-//public:
-//
-//	EllipseCurve() : t_(5, 2) {}
-//	~EllipseCurve() {}
-//};
 #endif

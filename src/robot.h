@@ -25,11 +25,12 @@ namespace robot
     double vel_z{};
     double vel_h{};
 
-    double init_m28[28]{};
+    double init_m28[30]{};
     double* move_m28{};
     double move_mb[16]{};
     double move_pee[12]{};
     double move_motor_pos[12]{};
+    double init_motor_pos[12]{};
 
     int16_t period_n{};
     int32_t time_in_pn{};

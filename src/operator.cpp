@@ -4,11 +4,11 @@ using namespace aris::control;
 using namespace aris::dynamic;
 using namespace aris::plan;
 
-bool isQuotientOdd(int a, int b) {
+bool inline isQuotientOdd(int a, int b) {
   int c = a / b;
   return c % 2 != 0;
 }
-void splitMatrix28(double a[28], double b[16], double c[12]) {
+void inline splitMatrix28(double a[28], double b[16], double c[12]) {
   for (int8_t i = 0; i < 16; i++) {
     b[i] = a[i];
   }

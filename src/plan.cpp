@@ -128,39 +128,51 @@ auto EllipseTrajectory7::crossProduct(const double vector1[3], const double vect
 
 auto EllipseMovePlan::planInit()->void {
 	lambda = t_.getCurve(time_);
-	theta = pi * lambda;
+	theta = pi * (1 - lambda);
 	delta_p[0] = vel_x_ * (1 + std::cos(theta)) * 0.5 * kDefaultMajorLength;
 	delta_p[1] = vel_h_ * std::sin(theta) * kDefaultHeight;
 	delta_p[2] = vel_z_ * (1 + std::cos(theta)) * 0.5 * kDefaultMinorLength;
+
+	std::cout << "plan init test => ";
+	std::cout << "tn: " << time_ << std::setw(4)  << "\t";
+	std::cout << "lambda: " << lambda << std::setw(4)  << "\t";
+	std::cout << "theta: " << theta << std::setw(4) << std::endl;
+	show(1, 3, delta_p);
 }
 
 auto EllipseMovePlan::legPlan() -> void{
 	if (switch_number){
 		for (int8_t i = 0; i < 3; i++){
-			move_pee_[3 + i] += delta_p[i];
-			move_pee_[9 + i] += delta_p[i];
+			move_pee_[3 + i] = delta_p[i] + init_pee_[3 + i];
+			move_pee_[9 + i] = delta_p[i] + init_pee_[9 + i];
 		}
 	}
 	else{
 		for (int8_t i = 0; i < 3; i++) {
-			move_pee_[0 + i] += delta_p[i];
-			move_pee_[6 + i] += delta_p[i];
+			move_pee_[0 + i] = delta_p[i] + init_pee_[0 + i];
+			move_pee_[6 + i] = delta_p[i] + init_pee_[6 + i];
 		}
 	}
+	//std::cout << "---leg plan test---" << std::endl;
+	//show(4, 3, init_pee_);
+	//show(4, 3, move_pee_);
 }
 
 auto EllipseMovePlan::bodyPlan() -> void{
-	move_mb_[3] += delta_p[0];
-	move_mb_[11] += delta_p[3];
+	move_mb_[3] = delta_p[0] + init_mb_[3];
+	move_mb_[11] = delta_p[2] + init_mb_[11];
+	//std::cout << "---body plan test---" << std::endl;
+	//show(4, 4, init_mb_);
+	//show(4, 4, move_mb_);
 }
-
-
 
 auto EllipseMovePlan::getCurrentM28(int t)->double* {
 	time_ = t;
 	planInit();
 	legPlan();
+	bodyPlan();
 	std::copy(move_mb_, move_mb_ + 16, move_m28_);
-	std::copy(move_pee_, move_pee_ + 12, move_m28_);
+	std::copy(move_pee_, move_pee_ + 12, move_m28_ + 16);
+	std::cout << kBars40 << "plan test ends" << time_  << std::endl << std::endl;
 	return move_m28_;
 }

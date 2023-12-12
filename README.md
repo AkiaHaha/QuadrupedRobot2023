@@ -83,3 +83,8 @@
 
 ## E19->12.10
 * Rewrite trot plan func; failed to run; only build success;
+
+## E20->12.12
+* trot gait run successfully but only one period;
+* verified in matlab to see ellipse curve;
+![4](pic/4.png)

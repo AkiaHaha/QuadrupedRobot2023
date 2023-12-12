@@ -34,5 +34,5 @@ void inline splitMatrix28(double a[28], double b[16], double c[12]);
 /// <param name="m"></param>
 /// <param name="n"></param>
 /// <param name="a"></param>
-void inline show(int8_t m, int8_t n, double* a);
+void show(int8_t m, int8_t n, double* a);
 #endif
