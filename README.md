@@ -88,3 +88,9 @@
 * verified in matlab to see ellipse curve;
 * include lots of test and annotation code;
 ![4](pic/4.png)
+
+## E21->12.19
+* trot gait in multiperiod and step_length changable;
+* verified in matlab as pic.5
+![5](pic/5.png)
+
