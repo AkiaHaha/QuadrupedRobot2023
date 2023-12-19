@@ -94,3 +94,9 @@
 * verified in matlab as pic.5
 ![5](pic/5.png)
 
+## E22->12.19
+#### 1
+* use xml to visualize the model's movement;
+* copy json.hpp and DogGet functions and any other related codes, build and run success but loaded failed in localhost:8001
+
+![6](pic/6.png)

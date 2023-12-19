@@ -786,6 +786,273 @@ SetMaxTorque::SetMaxTorque(const std::string &name)
 }
 SetMaxTorque::~SetMaxTorque() = default; 
 
+//2023.12.19 copy yw code of xml model visulization and test//
+std::atomic_bool g_is_enabled = false;
+std::atomic_bool g_is_error = false;
+std::atomic_bool g_is_manual = false;
+std::atomic_bool g_is_auto = false;
+std::atomic_bool g_is_running = false;
+std::atomic_bool g_is_paused = false;
+std::atomic_bool g_is_stopped = false;
+std::atomic_bool g_emergency_stop = false;
+int interval = 1; //插补周期，单位ms
+double g_counter = 1.0 * interval;
+double g_count = 0.0;
+uint32_t connectioncounter = 0;
+
+auto update_state(aris::server::ControlServer& cs) -> void
+{
+  static bool motion_state[256] = { false };
+
+  aris::Size motion_num = cs.controller().motorPool().size();
+  //Size motion_num = 5;//----for 5 axes
+
+  //获取motion的使能状态，0表示去使能状态，1表示使能状态//
+  for (aris::Size i = 0; i < motion_num; i++)
+  {
+    auto cm = dynamic_cast<aris::control::EthercatMotor*>(&cs.controller().motorPool()[i]);
+    if ((cm->statusWord() & 0x6f) != 0x27)
+    {
+      motion_state[i] = 0;
+    }
+    else
+    {
+      motion_state[i] = 1;
+    }
+  }
+
+  //获取ret_code的值，判断是否报错，if条件可以初始化变量，并且取变量进行条件判断//
+  g_is_error.store(cs.errorCode());
+
+  g_is_enabled.store(std::all_of(motion_state, motion_state + motion_num, [](bool i) { return i; }));
+
+  auto& inter = dynamic_cast<aris::server::ProgramWebInterface&>(cs.interfacePool().at(0));
+  if (inter.isAutoMode())
+  {
+    g_is_auto.store(true);
+  }
+  else
+  {
+    g_is_auto.store(false);
+  }
+
+  g_is_running.store(inter.isAutoRunning());
+  g_is_paused.store(inter.isAutoPaused());
+  g_is_stopped.store(inter.isAutoStopped());
+  //暂停、恢复功能复位//
+  if (!inter.isAutoRunning())
+  {
+    g_counter = 1.0 * interval;
+  }
+
+  //software emergency
+  if (g_emergency_stop.exchange(false))
+  {
+    if (connectioncounter < 500)
+      connectioncounter++;
+    else
+    {
+      connectioncounter = 0;
+      //cs.setErrorCode(-3000);
+    }
+  }
+
+  //socket lose connection
+  //if(!g_socket_connected.exchange(true))cs.setErrorCode(-4000);
+
+  //获取力传感器数据，并进行滤波--条件是力传感器存在
+  //这里只是简单通过从站数量超过6进行判断，第七个从站可以是io也可以是力传感器，用户需要通过FS_NUM来设定
+  // if (cs.controller().slavePool().size() > FS_NUM)
+  // {
+  //     auto slave7 = dynamic_cast<aris::control::EthercatSlave*>(&cs.controller().slavePool().at(FS_NUM));
+  //     /*static int fcinit = 0;
+  //     if ((motion_state[4] == 1) && fcinit < 1)
+  //     {
+  //         std::uint8_t led1 = 0x01;
+  //         slave7->writePdo(0x7010, 1, &led1, 1);
+  //         fcinit++;
+  //     }*/
+  //     std::array<double, 6> outdata = { 0,0,0,0,0,0 };
+  //     for (int i = 0; i < 6; i++)
+  //     {
+  //         slave7->readPdo(0x6020, i + 11, &rawdata[i], 32);
+  //         lp[i].get_filter_data(2, 10, 0.001, rawdata[i], outdata[i]);
+  //         outdata[i] *= 9.8;
+  //     }
+  //     filterdata.store(outdata);
+  // }
+}
+
+//获取状态字——100:去使能,200:手动,300:自动,400:程序运行中,410:程序暂停中,420:程序停止，500:错误//
+auto get_state_code() -> std::int32_t
+{
+  if (g_is_enabled.load())
+  {
+    if (g_is_error.load())
+    {
+      return 500;
+    }
+    else
+    {
+      if (!g_is_auto.load())
+      {
+        return 200;
+      }
+      else
+      {
+        if (g_is_running.load())
+        {
+          if (g_is_stopped)
+          {
+            return 420;
+          }
+          else if (g_is_paused.load())
+          {
+            return 410;
+          }
+          else
+          {
+            return 400;
+          }
+        }
+        else
+        {
+          return 300;
+        }
+      }
+    }
+  }
+  else
+  {
+    return 100;
+  }
+}
+struct GetParam
+{
+  std::vector<std::vector<double>> part_pq; // 怎么获得 body_pq?
+  std::int32_t state_code;
+  bool is_cs_started;
+  std::string currentPlan;
+  std::int32_t currentPlanId;
+};
+
+auto DogGet::prepareNrt() -> void
+{
+  option() |= NOT_RUN_EXECUTE_FUNCTION | NOT_PRINT_CMD_INFO;
+  for (auto& m : motorOptions()) m = aris::plan::Plan::NOT_CHECK_ENABLE;
+  GetParam par;
+  par.part_pq.resize(model()->partPool().size());
+  std::vector<double> temp_pq(7, 0.0);
+  std::any param = par;
+  if (controlServer()->running())
+  {
+    controlServer()->getRtData(
+      [&](aris::server::ControlServer& cs, const aris::plan::Plan* target, std::any& data)-> void
+      {
+        // for (aris::Size i(-1); ++i < cs.model().partPool().size();)
+        // {
+        //     model()->generalMotionPool().at(i).updP();
+        //     model()->generalMotionPool().at(i).updA();
+        //     model()->generalMotionPool().at(i).updV();
+        // }
+
+        auto& get_param = std::any_cast<GetParam&>(data);
+        // model()->generalMotionPool().at(0).updP();
+
+        auto m = dynamic_cast<aris::dynamic::Model*>(&cs.model());
+
+        for (aris::Size i(-1); ++i < m->partPool().size();)
+        {
+          //par.tool->getPq(*par.wobj, std::any_cast<GetParam &>(data).part_pq.data() + i * 7);
+          m->partPool().at(i).getPq(temp_pq.data());
+          get_param.part_pq[i].assign(temp_pq.begin(), temp_pq.end());
+        }
+
+        if (target == nullptr)
+        {
+          get_param.currentPlan = "none";
+          get_param.currentPlanId = -1;
+        }
+        else
+        {
+          get_param.currentPlan = target->command().name();
+          get_param.currentPlanId = const_cast<aris::plan::Plan*>(target)->cmdId();
+        }
+      },
+      param
+    );
+  }
+  auto out_data = std::any_cast<GetParam&>(param);
+  auto& cs = *controlServer();
+  auto& inter = dynamic_cast<aris::server::ProgramWebInterface&>(cs.interfacePool().at(0));
+
+  std::vector<std::pair<std::string, std::any>> out_param;
+  //out_param.push_back(std::make_pair<std::string, std::any>("part_pq", out_data.part_pq));
+  nlohmann::json j = nlohmann::json(out_data.part_pq);
+  //std::cout << j.dump() << std::endl;
+  out_data.state_code = get_state_code();
+  out_data.is_cs_started = controlServer()->running();
+  // out_param.push_back(std::make_pair<std::string, std::any>("part_pq", std::make_any<nlohmann::json>(std::move(js))));
+  out_param.push_back(std::make_pair<std::string, std::any>("part_pq", j.dump()));
+  out_param.push_back(std::make_pair<std::string, std::any>("state_code", out_data.state_code));
+  out_param.push_back(std::make_pair(std::string("cs_err_code"), std::make_any<int>(cs.errorCode())));
+  out_param.push_back(std::make_pair(std::string("cs_err_msg"), std::make_any<std::string>(cs.errorMsg())));
+  out_param.push_back(std::make_pair<std::string, std::any>("cs_is_started", out_data.is_cs_started));
+  out_param.push_back(std::make_pair<std::string, std::any>("current_plan", out_data.currentPlan));
+  out_param.push_back(std::make_pair<std::string, std::any>("current_plan_id", out_data.currentPlanId));
+  out_param.push_back(std::make_pair<std::string, std::any>("pro_err_code", inter.lastErrorCode()));
+  // export const getProErrCode = state => state.server.pro_err_code;
+  out_param.push_back(std::make_pair<std::string, std::any>("pro_err_line", inter.lastErrorLine())); // 
+  out_param.push_back(std::make_pair<std::string, std::any>("pro_err_msg", inter.lastError()));
+  // export const getProErrMsg = state => state.server.pro_err_msg;
+  out_param.push_back(std::make_pair<std::string, std::any>("line", std::get<1>(inter.currentFileLine())));
+  // export const getProgramLine = state => state.server.line;
+  out_param.push_back(std::make_pair<std::string, std::any>("file", std::get<0>(inter.currentFileLine())));
+  //out_param.push_back(std::make_pair<std::string, std::any>("robot_gait", std::make_any<std::string>(gait)));
+  // export const getProgramFile = state = > state.server.file;
+  ret() = out_param;
+  // option() |= NOT_RUN_EXECUTE_FUNCTION | NOT_PRINT_CMD_INFO;
+  // option() |= NOT_RUN_EXECUTE_FUNCTION | NOT_RUN_COLLECT_FUNCTION;
+}
+  // auto DogGet::executeRT() -> int
+  // {
+  //     return 0;
+  // }
+auto DogGet::collectNrt() -> void
+{
+}
+DogGet::DogGet(const std::string& name)
+{
+  aris::core::fromXmlString(command(),
+    "<Command name=\"get\">"
+    "	<GroupParam>"
+    "		<Param name=\"tool\" default=\"tool0\"/>"
+    "		<Param name=\"wobj\" default=\"wobj0\"/>"
+    "	</GroupParam>"
+    "</Command>");
+}
+
+ARIS_REGISTRATION
+{  
+    aris::core::class_<SetMaxTorque>("SetMaxTorque")
+        .inherit<Plan>();
+    aris::core::class_<Ellipse4LegDrive3>("Ellipse4LegDrive3")
+        .inherit<Plan>();
+    aris::core::class_<ReadInformation>("ReadInformation")
+        .inherit<Plan>();
+    aris::core::class_<ModelMotorInitialize>("ModelMotorInitialize")
+        .inherit<Plan>();
+    aris::core::class_<MotorTest>("MotorTest")
+        .inherit<Plan>();
+    aris::core::class_<SetMotorPosZero>("SetMotorPosZero")
+        .inherit<Plan>();
+    aris::core::class_<TrotMove>("TrotMove")
+        .inherit<Plan>();
+    aris::core::class_<QuadrupedRbtModel>("QuadrupedRbtModel")
+        .inherit<Model>();
+}
+//2023.12.19 copy yw code of xml model visulization and test//
+
 auto createMasterROSMotorTest()->std::unique_ptr<aris::control::Master>{
     std::unique_ptr<aris::control::Master> master(new aris::control::EthercatMaster);
 

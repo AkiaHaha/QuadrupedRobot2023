@@ -4,6 +4,7 @@
 #include "aris.hpp"
 #include "operator.h"
 #include "plan.h"
+#include "json.hpp"
 #define ARIS_USE_ETHERCAT_SIMULATION
 
 namespace robot
@@ -210,6 +211,19 @@ namespace robot
         virtual ~SetMaxTorque();
         explicit SetMaxTorque(const std::string &name = "set_max_torque");
     };  
+
+    /// <summary>
+    /// dog get plan
+    /// </summary>
+    class DogGet : public aris::core::CloneObject<DogGet, aris::plan::Plan>
+    {
+    public:
+      auto virtual prepareNrt()->void;
+      auto virtual collectNrt()->void;
+      explicit DogGet(const std::string& name = "DogGet_plan");
+      // ARIS_DEFINE_BIG_FOUR(DogGet);
+      // 如果有参数，需要指定相应的成员变量用来获取和使用参数
+    };
 
     /// <summary>
     /// define motor drive pdo and sequence of motor pool

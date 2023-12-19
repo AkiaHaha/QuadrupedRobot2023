@@ -22,6 +22,13 @@ int main(int argc, char *argv[])
     cs.resetModel(robot::createQuadrupedRbtModelPtr().release());
 
 
+    cs.resetMiddleWare(std::unique_ptr<aris::server::ProgramMiddleware>(new aris::server::ProgramMiddleware).release()); // 需要引入ProgramMiddleware才有一些指令支持
+
+    //网页控制代码
+    cs.interfacePool().add<aris::server::ProgramWebInterface>("", "5866", aris::core::Socket::Type::WEB);
+    cs.interfacePool().add<aris::server::HttpInterface>("", "8001", "X:\\GitRepo\\QuadrupedRobot2023\\build");
+    cs.middleWare();
+
     cs.init();//初始化WebSocket/socket服务器//
     
     cs.open();//开启WebSocket/socket服务器//
