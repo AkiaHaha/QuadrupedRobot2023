@@ -103,3 +103,8 @@
 * copy json.hpp and DogGet functions and any other related codes, build and run success but loaded failed in localhost:8001
 
 ![6](pic/6.png)
+
+## E23->1.4
+* Reconstruct the fils and set 6 subfolders seperately;
+* Build and run succeed on windows with debug and release;
+* Rewrite CmakeLists with a more intelligent method;

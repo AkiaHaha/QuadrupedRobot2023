@@ -2,6 +2,7 @@
 #include "control/robot.h"
 #include "model/model.h"
 #include "control/plan.h"
+#include "server/server.h"
 
 using namespace robot;
 
