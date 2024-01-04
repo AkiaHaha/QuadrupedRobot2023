@@ -4,10 +4,7 @@
 #include <aris.hpp>
 #include <iostream>
 
-namespace robot
-{
-	using namespace aris::dynamic;
-
+namespace robot{
 	////---Model for singleLeg---//
 	//class singleLegModel : public aris::dynamic::Model
 	//{
@@ -16,7 +13,7 @@ namespace robot
 	//	singleLegModel();
 	//	~singleLegModel();
 	//};
-
+	
 	//auto createSingleLegModelPtr() -> std::unique_ptr<aris::dynamic::Model>;
 
 	//--Model for Quadruped Robot---//

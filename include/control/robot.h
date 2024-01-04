@@ -2,9 +2,9 @@
 #define ROBOT_H_
 #include <memory>
 #include "aris.hpp"
-#include "operator.h"
-#include "plan.h"
-#include "json.hpp"
+#include "tools/operator.h"
+#include "control/plan.h"
+#include "tools/json.hpp"
 #define ARIS_USE_ETHERCAT_SIMULATION
 
 namespace robot

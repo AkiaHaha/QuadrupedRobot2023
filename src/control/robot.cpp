@@ -4,10 +4,10 @@
 #include <string>
 #include <bitset>
 #include <math.h>
-#include "robot.h"
-#include "plan.h"
-#include "model.h"
-#include "operator.h"
+#include "control/robot.h"
+#include "control/plan.h"
+#include "model/model.h"
+#include "tools/operator.h"
 using namespace aris::dynamic;
 using namespace aris::plan;
 const double PI = aris::PI;

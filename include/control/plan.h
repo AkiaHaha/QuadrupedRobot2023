@@ -1,11 +1,11 @@
-#ifndef TPLAN_H_
-#define TPLAN_H_
+#ifndef PLAN_H_
+#define PLAN_H_
 #include <vector>
-#include "operator.h"
-#include <aris.hpp>
 #include <iostream>
-#include"plan.h"
 #include <array>
+#include <aris.hpp>
+#include "tools/operator.h"
+
 using namespace aris::dynamic;
 
 /// <summary>

@@ -1,6 +1,9 @@
-#include "robot.h"
 #include <aris.hpp>
-#include "model.h"
+#include "control/robot.h"
+#include "model/model.h"
+#include "control/plan.h"
+
+using namespace robot;
 
 int main(int argc, char *argv[])
 {

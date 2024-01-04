@@ -1,10 +1,11 @@
-#include"plan.h"
-#include"operator.h"
 #include<cmath>
 #include<cstdlib>
 #include<vector>
 #include<iostream>
-#include "operator.h"
+#include "aris.hpp"
+#include "tools/operator.h"
+#include "model/model.h"
+#include "control/plan.h"
 using namespace std;
 
 auto Tcurve::getCurve(int count)->double
