@@ -19,7 +19,6 @@ auto TrotMove::prepareNrt()->void
   vel_z = doubleParam("vel_z");
   vel_h = doubleParam("vel_h");
   total_tn = doubleParam("total_number_of_run_period");
-
   for (auto& m : motorOptions()) m =
     aris::plan::Plan::CHECK_NONE;
 }
@@ -36,6 +35,7 @@ auto TrotMove::executeRT()->int
       init_motor_pos[8] = -1.57;
       init_motor_pos[10] = -0.78;
     }
+
     model()->setInputPos(init_motor_pos);
     model()->forwardKinematics();
     model()->getOutputPos(init_m28);

@@ -8,19 +8,6 @@
 
 using namespace aris::dynamic;
 
-/// <summary>
-/// const values
-/// </summary>
-constexpr double pi = aris::PI;
-constexpr double kDefaultMajorLength = 0.1;
-constexpr double kDefaultMinorLength = 0.01;
-constexpr double kDefaultHeight = 0.1;
-constexpr int kTcurvePeriodCount = 900;
-constexpr int kFactorThousnad = 0.001;
-constexpr char kBars10[] = "----------";
-constexpr char kBars20[] = "--------------------";
-constexpr char kBars40[] = "----------------------------------------";
-constexpr char kBars50[] = "--------------------------------------------------";
 
 /// <summary>
 /// 功能：生成0->1的梯形曲线。可根据输入的加速度和速度判断曲线为梯形还是三角形
