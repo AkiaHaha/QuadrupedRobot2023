@@ -1,5 +1,6 @@
 #include "server/server.h"
 #include "test/MotorTest.h"
+#include "motor/PIDTest.h"
 
 
 namespace robot {
@@ -457,6 +458,8 @@ namespace robot {
     plan_root->planPool().add<robot::ModelMotorInitialize>();
     plan_root->planPool().add<robot::MotorTest>();
     plan_root->planPool().add<robot::SetMotorPosZero>();
+    plan_root->planPool().add<robot::PidPosCtrl>();
+    plan_root->planPool().add<robot::PidPosVelCtrl>();
 
     return plan_root;
   }

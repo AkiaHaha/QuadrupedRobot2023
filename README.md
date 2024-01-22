@@ -108,3 +108,6 @@
 * Reconstruct the fils and set 6 subfolders seperately;
 * Build and run succeed on windows with debug and release;
 * Rewrite CmakeLists with a more intelligent method;
+* 
+## E24->1.22
+* Add PID controller and test programs; not finished yet;

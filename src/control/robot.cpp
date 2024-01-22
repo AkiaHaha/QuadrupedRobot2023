@@ -268,7 +268,6 @@ Ellipse4LegDrive3::Ellipse4LegDrive3(const std::string &name)
 }
 Ellipse4LegDrive3::~Ellipse4LegDrive3() = default; 
 
-
   ARIS_REGISTRATION{
       aris::core::class_<TrotMove>("TrotMove")
           .inherit<Plan>();
