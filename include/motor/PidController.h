@@ -3,7 +3,7 @@
 #include <aris.hpp>
 #include <memory>
 #include "server/server.h"
-#include "model/model.h"
+#include "model/Model.h"
 
 namespace robot {
     class PidController {
@@ -13,7 +13,7 @@ namespace robot {
                 : kp_q_(kpq), ki_q_(kiq), kd_q_(kdq), kp_v_(kpv), ki_v_(kiv), kd_v_(kdv) {};
             virtual ~PidController() = default;
 
-            auto getTargetToq(const double toq_des, const double target_q, const double actual_q, const double target_v, const double actual_v) -> double;
+            auto getTargetOut(const double toq_des, const double target_q, const double actual_q, const double target_v, const double actual_v) -> double;
             //auto setPidParam(const double kp, const double ki, const double kd, const double max_integral = 1, const double max_output = 0) -> void;
 
         private:
@@ -43,13 +43,35 @@ namespace robot {
             : kp_(kp), kd_(kd){};
         virtual ~PController() = default;
 
-        auto getTargetToq(const double toq_des, const double target_q, const double actual_q, const double target_v, const double actual_v) -> double;
+        auto getTargetOut(const double toq_des, const double target_q, const double actual_q, const double target_v, const double actual_v) -> double;
 
     private:
         double kp_{};
         double kd_{};
         double dif_q_{};
         double dif_v_{};
+    };
+
+    class PidController2 {
+    public:
+      PidController2() = default;
+      explicit PidController2(const double kp, const double ki, const double kd)
+        : kp_(kp), ki_(ki), kd_(kd) {};
+      virtual ~PidController2() = default;
+
+      auto getTargetOut(const double target, const double actual) -> double;
+      auto setPidParam(const double kp, const double ki, const double kd) -> void;
+      //auto setPidParam(const double kp, const double ki, const double kd, const double max_integral = 1, const double max_output = 0) -> void;
+
+    private:
+      double kp_{};
+      double ki_{};
+      double kd_{};
+      double itg_{};
+      double div_{};
+      double dif_now_{};
+      double dif_lst_{};
+      double toq_{}; //output torque
     };
 }
 #endif // !PID_TEST_

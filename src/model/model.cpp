@@ -23,7 +23,7 @@
 //						     
 //   < The dog's forward move direction is along the positive direction of X axis >
 //------------------------------------------------------------------------------------------//
-#include "model/model.h"
+#include "model/Model.h"
 #include "aris.hpp"
 
 
@@ -231,7 +231,7 @@ auto robot::createQuadrupedRbtModelPtr() -> std::unique_ptr<aris::dynamic::Model
 // //						     
 // //   < The dog's forward move direction is along the positive direction of X axis >
 // //------------------------------------------------------------------------------------------//
-// #include "model.h"
+// #include "Model.h"
 
 // void robot::QuadrupedRbtModel::createQuadrupedRbtModel() 
 // {
@@ -462,7 +462,7 @@ auto robot::createQuadrupedRbtModelPtr() -> std::unique_ptr<aris::dynamic::Model
 
 
 // 单腿的建模与控制  <SingleLeg Model Edition 2  --对应于实际的本条单腿 >
-//#include "model.h"
+//#include "Model.h"
 //-------------------------------------------------------------------------------------------------------//
 //两个杆件，三个电机，髋关节两个，膝关节一个
 //上端身体固定点，末端足尖作为轨迹规划点      ^ Y 

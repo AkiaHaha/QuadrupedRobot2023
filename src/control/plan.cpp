@@ -5,7 +5,7 @@
 #include "aris.hpp"
 #include "tools/operator.h"
 #include "model/model.h"
-#include "control/plan.h"
+#include "control/Plan.h"
 using namespace std;
 
 auto Tcurve::getCurve(int count)->double

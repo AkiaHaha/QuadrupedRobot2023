@@ -63,8 +63,8 @@
 ## E16 ->12.6
 * Finish Trot move function and build and run success but could not realize continous movement;
 * Rewrite the function to show matrix;
-* Fix the bug that couldn't use functions in operator.h; solution is change Cmake;
-* Write some small module functions in operator.h;
+* Fix the bug that couldn't use functions in Operator.h; solution is change Cmake;
+* Write some small module functions in Operator.h;
 
 ## E17 ->12.7
 * 1st edition of trot gait; includes 3 stages: trot_start, trot, stepping;
@@ -111,3 +111,8 @@
 * 
 ## E24->1.22
 * Add PID controller and test programs; not finished yet;
+
+## E25->1.23
+* Pid program finished and build success but  run failed cas the toqrue mode could change pos&vel;
+* Add VelLoop and PosLoop and MixControlPVT;
+* Add control cmd in fsm that control the robot from ppassive to fix stand, just a begin, not finshed;

@@ -4,11 +4,11 @@
 #include <string>
 #include <bitset>
 #include <math.h>
-#include "control/robot.h"
-#include "control/plan.h"
+#include "control/Robot.h"
+#include "control/Plan.h"
 #include "server/server.h"
-#include "model/model.h"
-#include "tools/operator.h"
+#include "model/Model.h"
+#include "tools/Operator.h"
 using namespace aris::dynamic;
 using namespace aris::plan;
 

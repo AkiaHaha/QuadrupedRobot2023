@@ -2,8 +2,8 @@
 #define MOTOR_TEST_H_
 #include <memory>
 #include "aris.hpp"
-#include "tools/operator.h"
-#include "control/plan.h"
+#include "tools/Operator.h"
+#include "control/Plan.h"
 #include "tools/json.hpp"
 
 namespace robot {

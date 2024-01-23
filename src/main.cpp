@@ -1,7 +1,7 @@
 #include <aris.hpp>
-#include "control/robot.h"
-#include "model/model.h"
-#include "control/plan.h"
+#include "control/Robot.h"
+#include "model/Model.h"
+#include "control/Plan.h"
 #include "server/server.h"
 
 using namespace robot;
@@ -42,9 +42,11 @@ int main(int argc, char *argv[])
     try {
     cs.start();
     // cs.executeCmd("set_max_trq");
-    // cs.executeCmd("ds -a");
-    // cs.executeCmd("md -a");
-    // cs.executeCmd("en -a");
+    #ifdef ARIS_USE_ETHERCAT_SIMULATION
+        cs.executeCmd("ds -a");
+        cs.executeCmd("md -a");
+        cs.executeCmd("en -a");
+    #endif
     }
 
     catch (const std::exception& err) {

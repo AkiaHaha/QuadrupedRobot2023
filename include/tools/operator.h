@@ -28,6 +28,18 @@ constexpr char kBars10[] = "----------";
 constexpr char kBars20[] = "--------------------";
 constexpr char kBars40[] = "----------------------------------------";
 constexpr char kBars50[] = "--------------------------------------------------";
+//enum class OperationMode : uint8_t {
+//  kPositionMode = 8,
+//  kVelocityMode = 9,
+//  kTorqueMode = 10,
+//};
+
+enum OperationMode : std::uint8_t {
+  kPositionMode = 8,
+  kVelocityMode = 9,
+  kTorqueMode = 10,
+};
+
 
 /// <summary>
 /// classify if 2 number is Quotient Odd

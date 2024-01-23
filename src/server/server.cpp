@@ -1,6 +1,7 @@
 #include "server/server.h"
 #include "test/MotorTest.h"
 #include "motor/PIDTest.h"
+#include "fsm/BasicStateControl.h"
 
 
 namespace robot {
@@ -458,8 +459,11 @@ namespace robot {
     plan_root->planPool().add<robot::ModelMotorInitialize>();
     plan_root->planPool().add<robot::MotorTest>();
     plan_root->planPool().add<robot::SetMotorPosZero>();
-    plan_root->planPool().add<robot::PidPosCtrl>();
+    plan_root->planPool().add<robot::PidVelCtrl>();
     plan_root->planPool().add<robot::PidPosVelCtrl>();
+    plan_root->planPool().add<robot::PidPosVelToqCtrl>(); 
+    plan_root->planPool().add<robot::ToqTest>(); 
+    plan_root->planPool().add<StatePassive2Stand>();
 
     return plan_root;
   }
@@ -476,5 +480,16 @@ namespace robot {
         std::cout << "Set Motor " << i << " max torque failed!" << std::endl;
       }
     }
+  }
+  auto setOperationMode(aris::control::Controller* controller, std::uint8_t mode, size_t index) -> bool {
+    if (controller->motorPool()[index].modeOfOperation() == mode) {
+      return true;
+    }
+    controller->motorPool()[index].setModeOfOperation(mode);
+    if (controller->motorPool()[index].modeOfOperation() == mode) {
+      std::cout <<  "Switch mode to :" << mode << std::endl;
+      return true;
+    }
+    return false;
   }
 }

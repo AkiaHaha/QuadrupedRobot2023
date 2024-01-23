@@ -1,5 +1,5 @@
 #include <aris.hpp>
-#include "tools/operator.h"
+#include "tools/Operator.h"
 using namespace aris::control;
 using namespace aris::dynamic;
 using namespace aris::plan;

@@ -7,18 +7,18 @@
 #include <string>
 #include <bitset>
 #include <math.h>
-#include "control/robot.h"
-#include "model/model.h"
-#include "tools/operator.h"
+#include "control/Robot.h"
+#include "model/Model.h"
+#include "tools/Operator.h"
 #include <memory>
-#include "tools/operator.h"
-#include "control/plan.h"
+#include "tools/Operator.h"
+#include "control/Plan.h"
 #include "tools/json.hpp"
-#include "control/robot.h"
-#include "control/plan.h"
+#include "control/Robot.h"
+#include "control/Plan.h"
 #include "server/server.h"
-#include "model/model.h"
-#include "tools/operator.h"
+#include "model/Model.h"
+#include "tools/Operator.h"
 using namespace aris::dynamic;
 using namespace aris::plan;
 const double PI = aris::PI;
@@ -58,5 +58,15 @@ namespace robot {
   /// set single motor max torque
   /// </summary>
   auto setMaxTorque(aris::control::EthercatMaster* ecMaster, std::uint16_t value, size_t index) -> bool;
+
+  /// <summary>
+  /// functions from GJ
+  /// </summary>
+  /// <param name="controller"></param>
+  /// <param name="mode"></param>
+  /// <param name="index"></param>
+  /// <returns></returns>
+  auto setOperationMode(aris::control::Controller* controller, std::uint8_t mode, size_t index) -> bool;
+
 }
 #endif // !QRBT_SERVER_H
