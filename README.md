@@ -116,3 +116,7 @@
 * Pid program finished and build success but  run failed cas the toqrue mode could change pos&vel;
 * Add VelLoop and PosLoop and MixControlPVT;
 * Add control cmd in fsm that control the robot from ppassive to fix stand, just a begin, not finshed;
+
+## E26->1.24
+* StatePassive2Stance run success; a little problem with Tcurve;
+![7](pic/7.png)

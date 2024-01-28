@@ -55,7 +55,7 @@ bool inline isQuotientOdd(int a, int b);
 /// <param name="a"></param>
 /// <param name="b"></param>
 /// <param name="c"></param>
-void inline splitMatrix28(double a[28], double b[16], double c[12]);
+void splitMatrix28(double a[28], double b[16], double c[12]);
 
 /// <summary>
 /// print an array in matrix type  of row * col automatically

@@ -41,7 +41,11 @@ public:
 	auto getCurveParam()->void;         //计算梯形曲线的参数
 	auto getTc()->double { return Tc_; };  //运行一次T型曲线所需要的时间
 	auto getClassifyNumber(int count)->double ;
-	Tcurve(double a, double v) { a_ = a; v_ = v; getCurveParam(); }  //构造函数
+	//Tcurve(double a, double v) { a_ = a; v_ = v; getCurveParam(); }  //构造函数
+	Tcurve::Tcurve(double a, double v) : a_(a), v_(v) {
+		getCurveParam();
+	}
+
 	~Tcurve() {} //析构函数
 };
 

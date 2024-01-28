@@ -29,8 +29,8 @@ namespace robot {
     };
 
     /// <summary>
-/// drive motors to init pos so the model in init pose
-/// </summary>
+    /// drive motors to init pos so the model in init pose
+    /// </summary>
     class SetMotorPosZero : public aris::core::CloneObject<SetMotorPosZero, aris::plan::Plan>
     {
     public:

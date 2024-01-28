@@ -61,7 +61,6 @@ namespace robot {
   {
     motorId_ = int32Param("motorId");
     pos_move_ = doubleParam("pos_move");
-    vel_des_ = doubleParam("vel_des");
 
     kp_ = doubleParam("kp");
     kd_ = doubleParam("kd");
@@ -114,7 +113,6 @@ namespace robot {
       "	<GroupParam>"
       "	<Param name=\"motorId\" default=\"1\" abbreviation=\"m\"/>"
       "	<Param name=\"pos_move\" default=\"0.1\" abbreviation=\"q\"/>"
-      "	<Param name=\"vel_des\" default=\"0.1\" abbreviation=\"v\"/>"
       "	<Param name=\"kp\" default=\"5\" abbreviation=\"p\"/>"
       "	<Param name=\"ki\" default=\"1\" abbreviation=\"i\"/>"
       "	<Param name=\"kd\" default=\"1\" abbreviation=\"d\"/>"
@@ -215,16 +213,16 @@ namespace robot {
 
     controller()->motorPool()[motorId_].setTargetToq(toq_cmd_);
 
-    vel_ = controller()->motorPool()[motorId_].actualVel();
-    pos_ = controller()->motorPool()[motorId_].actualPos();
-    toq_ = controller()->motorPool()[motorId_].actualToq();
+    vel_ = controller()->motorPool()[motorId_].targetVel();
+    pos_ = controller()->motorPool()[motorId_].targetPos();
+    toq_ = controller()->motorPool()[motorId_].targetToq();
 
     mout() << "T---> " << count() << "\t"
       << "actual toq: " << toq_ << "\t"
       << "actual vel: " << vel_ << "\t"
       << "actual pos: " << pos_ << std::endl;
 
-    return 1;
+    return 10 - count();
   }
 
   auto ToqTest::collectNrt()->void {}

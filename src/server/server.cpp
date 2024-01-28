@@ -463,8 +463,7 @@ namespace robot {
     plan_root->planPool().add<robot::PidPosVelCtrl>();
     plan_root->planPool().add<robot::PidPosVelToqCtrl>(); 
     plan_root->planPool().add<robot::ToqTest>(); 
-    plan_root->planPool().add<StatePassive2Stand>();
-
+    plan_root->planPool().add<robot::StatePassive2Stance>();
     return plan_root;
   }
   auto setMaxTorque(aris::control::EthercatMaster* ecMaster, std::uint16_t value, size_t index) -> bool
@@ -491,5 +490,14 @@ namespace robot {
       return true;
     }
     return false;
+  }
+  auto setAllOperationMode(aris::control::Controller* controller, std::uint8_t mode) -> bool {
+    for (size_t i = 0; i < controller->motorPool().size(); i++) {
+      if (!setOperationMode(controller, mode, i)) {
+        std::cout << "Set Motor " << i << " max torque failed!" << std::endl;
+        return false;
+      }
+    }
+    return true;
   }
 }

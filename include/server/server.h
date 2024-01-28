@@ -67,6 +67,7 @@ namespace robot {
   /// <param name="index"></param>
   /// <returns></returns>
   auto setOperationMode(aris::control::Controller* controller, std::uint8_t mode, size_t index) -> bool;
+  auto setAllOperationMode(aris::control::Controller* controller, std::uint8_t mode) -> bool;
 
 }
 #endif // !QRBT_SERVER_H
