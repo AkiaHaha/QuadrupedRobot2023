@@ -120,3 +120,5 @@
 ## E26->1.24
 * StatePassive2Stance run success; a little problem with Tcurve;
 ![7](pic/7.png)
+
+git tets
