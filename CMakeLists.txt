@@ -5,6 +5,10 @@ project(QuadrupedRobot)
 # aris use c++ 17 standard
 set(CMAKE_CXX_STANDARD 17)
 
+if(NOT CMAKE_BUILD_TYPE)
+    set(CMAKE_BUILD_TYPE Release)
+endif()
+
 # find aris
 if(UNIX)
 	add_definitions(-DUNIX)

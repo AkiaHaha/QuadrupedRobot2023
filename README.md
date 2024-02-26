@@ -121,4 +121,7 @@
 * StatePassive2Stance run success; a little problem with Tcurve;
 ![7](pic/7.png)
 
-git tets---
+## E27->2.23
+* hardware test in shanghai, including single motor pd pos control in current loop, all time run in current loop, robot kinematics calculation;
+* all commands have been tested successfully in real robot;
+* use reflection of xml, cllBack, multimodel;

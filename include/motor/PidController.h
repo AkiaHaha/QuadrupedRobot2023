@@ -2,8 +2,9 @@
 #define PID_CONTROLLER_H
 #include <aris.hpp>
 #include <memory>
-#include "server/server.h"
+#include "server/Server.h"
 #include "model/Model.h"
+#include "tools/Operator.h"
 
 namespace robot {
     class PidController {
@@ -44,12 +45,14 @@ namespace robot {
         virtual ~PController() = default;
 
         auto getTargetOut(const double toq_des, const double target_q, const double actual_q, const double target_v, const double actual_v) -> double;
+        auto setPdParam(const double kp, const double kd) -> void;
 
     private:
         double kp_{};
         double kd_{};
         double dif_q_{};
         double dif_v_{};
+        double maxToq_{};
     };
 
     class PidController2 {
@@ -61,6 +64,9 @@ namespace robot {
 
       auto getTargetOut(const double target, const double actual) -> double;
       auto setPidParam(const double kp, const double ki, const double kd) -> void;
+      auto getDif() -> double;
+      auto getDiv() -> double;
+      auto getItg() -> double;
       //auto setPidParam(const double kp, const double ki, const double kd, const double max_integral = 1, const double max_output = 0) -> void;
 
     private:
@@ -72,6 +78,7 @@ namespace robot {
       double dif_now_{};
       double dif_lst_{};
       double toq_{}; //output torque
+      double maxToq_{};
     };
 }
 #endif // !PID_TEST_

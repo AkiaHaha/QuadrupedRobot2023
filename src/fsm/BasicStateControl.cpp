@@ -3,20 +3,14 @@
 using namespace aris::dynamic;
 using namespace aris::plan;
 using namespace robot;
-//    ARIS_REGISTRATION{
-//        aris::core::class_<QuadrupedRbtModel>("QuadrupedRbtModel")
-//            .inherit<Model>();
-//        aris::core::class_<Ellipse4LegDrive3>("Ellipse4LegDrive3")
-//            .inherit<Plan>();
-//    }
 
-auto StatePassive2Stance::prepareNrt()->void {
+auto StatePassive2Stance2::prepareNrt()->void {
   move_height_ = doubleParam("body_move_height_updown");
 
   for (auto& m : motorOptions()) m =
     aris::plan::Plan::CHECK_NONE;
 }
-auto StatePassive2Stance::executeRT()->int {
+auto StatePassive2Stance2::executeRT()->int {
   if (robot::setAllOperationMode(controller(), OperationMode::kTorqueMode)) {
     mout() << "set torque mode success" << std::endl;
   }
@@ -29,9 +23,9 @@ auto StatePassive2Stance::executeRT()->int {
     std::cout << "init motor pool" << std::endl;
     aris::dynamic::dsp(4, 3, init_mPos_);
     //use init motor pos for init pp//
-    model()->setInputPos(init_mPos_);
-    if (model()->forwardKinematics()) {THROW_FILE_LINE("Forward kinematics failed");}
-    model()->getOutputPos(init_BodyPPFootEE_);
+    modelBase()->setInputPos(init_mPos_);
+    if (modelBase()->forwardKinematics()) {THROW_FILE_LINE("Forward kinematics failed");}
+    modelBase()->getOutputPos(init_BodyPPFootEE_);
     std::copy(init_BodyPPFootEE_, init_BodyPPFootEE_ + 28, move_BodyPPFootEE_);
     std::cout << "set init pos" << std::endl;
   }
@@ -44,9 +38,9 @@ auto StatePassive2Stance::executeRT()->int {
   //set body height and use it to get corresponding motor//
   move_BodyPPFootEE_[11] = init_BodyPPFootEE_[11] + move_height_ * tcurve.getCurve(count());
   std::cout << "actual height" << move_BodyPPFootEE_[11] << std::endl;//-------------------
-  model()->setOutputPos(move_BodyPPFootEE_);
-  if (model()->inverseKinematics()) {THROW_FILE_LINE("Forward kinematics failed");}
-  model()->getInputPos(move_mPos_);
+  modelBase()->setOutputPos(move_BodyPPFootEE_);
+  if (modelBase()->inverseKinematics()) {THROW_FILE_LINE("Forward kinematics failed");}
+  modelBase()->getInputPos(move_mPos_);
   dsp(4, 3, move_mPos_);//--------------
   for (size_t i = 0; i < 12; i++) {
     toq_[i] = controller()->motorPool()[i].actualToq();
@@ -73,9 +67,92 @@ auto StatePassive2Stance::executeRT()->int {
     for (size_t i = 0; i < 12; i++) {
       m_pos[i] = controller()->motorPool()[i].actualPos();
     }
-    model()->setInputPos(m_pos);
-    if (model()->forwardKinematics()) { THROW_FILE_LINE("Forward kinematics failed"); }
-    model()->getOutputPos(m_PE);
+    modelBase()->setInputPos(m_pos);
+    if (modelBase()->forwardKinematics()) { THROW_FILE_LINE("Forward kinematics failed"); }
+    modelBase()->getOutputPos(m_PE);
+
+    //print pp and ee seperately//
+    std::cout << std::endl << "Final motor pos ===> " << std::endl;
+    dsp(4, 3, m_pos);
+    splitMatrix28(m_PE, m_pp, L_ee);
+    std::cout << std::endl << "Final body pose ===>>> " << std::endl;
+    dsp(4, 4, m_pp);
+    std::cout << std::endl << "Final Leg ee ===> " << std::endl;
+    dsp(4, 3, L_ee);
+
+    std::cout << "Finished !!!" << std::endl;
+  }
+  return kStop;
+}
+auto StatePassive2Stance2::collectNrt()->void {}
+StatePassive2Stance2::StatePassive2Stance2(const std::string& name)
+{
+  aris::core::fromXmlString(command(),
+    "<Command name=\"qqqq\">"
+    "	<GroupParam>"
+    "	<Param name=\"body_move_height_updown\" default=\"-0.1\" abbreviation=\"h\"/>"
+    "	</GroupParam>"
+    "</Command>");
+}
+StatePassive2Stance2::~StatePassive2Stance2() = default;
+
+/*-------------------------StatePassive2Stance run in POS LOOP------------------------------------*/
+auto StatePassive2Stance::prepareNrt()->void {
+   std::cout  << "pre0" << std::endl;  
+  move_height_ = doubleParam("body_move_height_updown");
+
+  for (auto& m : motorOptions()) m =
+    aris::plan::Plan::CHECK_NONE;
+    mout() << "pre" << std::endl;
+}
+auto StatePassive2Stance::executeRT()->int {
+  if (count() == 1 ) {
+    //read & print init motor pos// 
+    for (size_t i = 0; i < 12; i++) {
+      init_mPos_[i] = controller()->motorPool()[i].actualPos();
+      mout() << "prexee" << std::endl;
+
+    }
+    std::cout << "init motor pool" << std::endl;
+    aris::dynamic::dsp(4, 3, init_mPos_);
+    
+    //use init motor pos for init pp//
+    modelBase()->setInputPos(init_mPos_);
+    if (modelBase()->forwardKinematics()) {THROW_FILE_LINE("Forward kinematics failed");}
+    modelBase()->getOutputPos(init_BodyPPFootEE_);
+    std::copy(init_BodyPPFootEE_, init_BodyPPFootEE_ + 28, move_BodyPPFootEE_);
+    std::cout << "set init pos" << std::endl;
+  }
+  
+  //create tcurve to plan h//
+  Tcurve tcurve(5, 2);
+  int kStop = tcurve.getTc() * 1000 - count() -1;
+  std::cout << "T---->" << kStop << std::endl;
+
+  //set body height and use it to get corresponding motor//
+  move_BodyPPFootEE_[11] = init_BodyPPFootEE_[11] + move_height_ * tcurve.getCurve(count());
+  std::cout << "actual height" << move_BodyPPFootEE_[11] << std::endl;//-------------------
+  modelBase()->setOutputPos(move_BodyPPFootEE_);
+  if (modelBase()->inverseKinematics()) {THROW_FILE_LINE("Forward kinematics failed");}
+  modelBase()->getInputPos(move_mPos_);
+  dsp(4, 3, move_mPos_);//--------------//
+  
+  for (size_t i = 0; i < 12; i++) {
+    controller()->motorPool()[i].setTargetPos(move_mPos_[i]);
+  }
+
+  if (kStop == 0)
+  {
+    double m_pos[12]{};
+    double m_PE[28]{};
+    double m_pp[16]{};
+    double L_ee[12]{};
+    for (size_t i = 0; i < 12; i++) {
+      m_pos[i] = controller()->motorPool()[i].actualPos();
+    }
+    modelBase()->setInputPos(m_pos);
+    if (modelBase()->forwardKinematics()) { THROW_FILE_LINE("Forward kinematics failed"); }
+    modelBase()->getOutputPos(m_PE);
 
     //print pp and ee seperately//
     std::cout << std::endl << "Final motor pos ===> " << std::endl;
@@ -102,10 +179,7 @@ StatePassive2Stance::StatePassive2Stance(const std::string& name)
 }
 StatePassive2Stance::~StatePassive2Stance() = default;
 
-/// <summary>
-/// TrotMove
-/// </summary>
-/// <returns></returns>
+/*--------------------------trot move in pos loop-------------------------------*/
 auto TrotMove::prepareNrt()->void
 {
   vel_x = doubleParam("vel_x");
@@ -117,7 +191,7 @@ auto TrotMove::prepareNrt()->void
 }
 auto TrotMove::executeRT()->int
 {
-  //³õÊ¼ÔËÐÐÊ±1ms, Éú³É³õÊ¼Î»×Ë¾ØÕó, Õý³£
+  //ï¿½ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½Ê±1ms, ï¿½ï¿½ï¿½É³ï¿½Ê¼Î»ï¿½Ë¾ï¿½ï¿½ï¿½, ï¿½ï¿½ï¿½ï¿½
   if (count() == 1) {
     for (int8_t i = 0; i < 4; i++) {
       init_motor_pos[0 + 3 * i] = 0;
@@ -129,9 +203,9 @@ auto TrotMove::executeRT()->int
       init_motor_pos[10] = -0.78;
     }
 
-    model()->setInputPos(init_motor_pos);
-    model()->forwardKinematics();
-    model()->getOutputPos(init_m28);
+    modelBase()->setInputPos(init_motor_pos);
+    modelBase()->forwardKinematics();
+    modelBase()->getOutputPos(init_m28);
 
     this->master()->logFileRawName("trot_test");
     count_stop = kTcurvePeriodCount * 2 * total_tn - 1;
@@ -139,38 +213,38 @@ auto TrotMove::executeRT()->int
   }
   std::cout << kBars50 << "count = " << count() << std::endl;
 
-  //Éú³ÉÑ­»·ºÍÖÜÆÚµÄÒ»Ð©²ÎÊýÖ¸±ê
+  //ï¿½ï¿½ï¿½ï¿½Ñ­ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Úµï¿½Ò»Ð©ï¿½ï¿½ï¿½ï¿½Ö¸ï¿½ï¿½
   period_n = count() / kTcurvePeriodCount + 1;
   time_in_pn = count() % kTcurvePeriodCount;
   switch_number = period_n % 2 == 1 ? false : true;
 
-  //ÉèÖÃÉú³ÉÐÂµÄ³õÊ¼¾ØÕóÔÚÖÜÆÚ½áÊøºó, µÚÒ»¸öcount()
+  //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÂµÄ³ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ú½ï¿½ï¿½ï¿½ï¿½ï¿½, ï¿½ï¿½Ò»ï¿½ï¿½count()
   if (time_in_pn == 0) {
     double motor[12]{};
     for (int8_t i = 0; i < 12; i++) {
       motor[i] = controller()->motorPool()[i].targetPos();
     }
-    model()->setInputPos(motor);
-    model()->forwardKinematics();
-    model()->getOutputPos(period_init_m28);
+    modelBase()->setInputPos(motor);
+    modelBase()->forwardKinematics();
+    modelBase()->getOutputPos(period_init_m28);
   }
 
 
-  //Ê¹ÓÃÍÖÔ²¹ì¼£µÄtrot¹æ»®Éú³ÉÊµÊ±ÔË¶¯¾ØÕó,³É¹¦
+  //Ê¹ï¿½ï¿½ï¿½ï¿½Ô²ï¿½ì¼£ï¿½ï¿½trotï¿½æ»®ï¿½ï¿½ï¿½ï¿½ÊµÊ±ï¿½Ë¶ï¿½ï¿½ï¿½ï¿½ï¿½,ï¿½É¹ï¿½
   double a{}, b{};
   a = (period_n == 1 ? vel_x : (2 * vel_x));
   b = (period_n == 1 ? vel_z : (2 * vel_z));
   EllipseMovePlan ep(a, b, vel_h, switch_number, period_init_m28);
   move_m28 = ep.getCurrentM28(time_in_pn);
 
-  model()->setOutputPos(move_m28);
-  if (model()->inverseKinematics()) {
+  modelBase()->setOutputPos(move_m28);
+  if (modelBase()->inverseKinematics()) {
     throw std::runtime_error("Move Status Inverse kinematic position failed wawawaw");
   }
-  model()->getInputPos(move_motor_pos);
+  modelBase()->getInputPos(move_motor_pos);
 
 
-  //¿ØÖÆµç»úÔË¶¯
+  //ï¿½ï¿½ï¿½Æµï¿½ï¿½ï¿½Ë¶ï¿½
   for (int8_t i = 0; i < 12; ++i) {
     controller()->motorPool()[i].setTargetPos(move_motor_pos[i]);
   }
@@ -185,12 +259,12 @@ auto TrotMove::executeRT()->int
   std::cout << "feet pee " << count() << std::endl;
   show(4, 3, m12);
 
-  //½«Ä©¶ËÔË¶¯Êý¾ÝÐ´ÈëÎÄ¼þ
+  //ï¿½ï¿½Ä©ï¿½ï¿½ï¿½Ë¶ï¿½ï¿½ï¿½ï¿½ï¿½Ð´ï¿½ï¿½ï¿½Ä¼ï¿½
   for (int8_t i = 0; i < 4; i++) {
     lout() << std::setw(10) << m12[0 + i * 3] << std::setw(10) << m12[1 + i * 3] << std::setw(10) << m12[2 + i * 3] << std::endl;
   }
 
-  //³ÌÐòÔËÐÐ½áÊø´òÓ¡×îÖÕµÄ²ÎÊý
+  //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð½ï¿½ï¿½ï¿½ï¿½ï¿½Ó¡ï¿½ï¿½ï¿½ÕµÄ²ï¿½ï¿½ï¿½
   if (count() == count_stop) {
     double m16[16]{}, m12[12]{};
     std::copy(init_m28, init_m28 + 16, m16);
@@ -216,7 +290,7 @@ TrotMove::TrotMove(const std::string& name)
     "</Command>");
 }
 TrotMove::~TrotMove() = default;
-
+/*---------------------------------------------------------------------------------*/
 auto Ellipse4LegDrive3::prepareNrt()->void
 {
   moveX_ = doubleParam("moveX");
@@ -246,12 +320,12 @@ auto Ellipse4LegDrive3::executeRT()->int
     //---use fwdKin with startMotorPos to get startModelPE---//
     mout() << "|||Test flag ===>>> 3" << std::endl;
 
-    model()->setInputPos(startMotorPos);
+    modelBase()->setInputPos(startMotorPos);
     if (model()->solverPool()[1].kinPos())
     {
       throw std::runtime_error("Leg Initialization Forward Kinematics Position Failed!");
     }
-    model()->getOutputPos(startModelPE);
+    modelBase()->getOutputPos(startModelPE);
 
     //---display startModelPE ---//
     for (int i = 0; i < 16; i++) {
@@ -300,7 +374,7 @@ auto Ellipse4LegDrive3::executeRT()->int
   aris::dynamic::dsp(4, 3, moveLegPoint);
 
   //---use planned target moveModelPose to get target moveMotorPos---//
-  model()->setOutputPos(moveModelPE);
+  modelBase()->setOutputPos(moveModelPE);
   if (model()->solverPool()[0].kinPos())
   {
     throw std::runtime_error("Move Status Inverse kinematic position failed wawawaw");
@@ -323,13 +397,13 @@ auto Ellipse4LegDrive3::executeRT()->int
 
 
     //--Solve the Forward Kinematics--//
-    model()->setInputPos(moveMotorPos);
+    modelBase()->setInputPos(moveMotorPos);
 
     if (model()->solverPool()[1].kinPos())
     {
       throw std::runtime_error("Quadrupd Leg Forward Kinematics Failed!");
     }
-    model()->getOutputPos(finalModelPE);
+    modelBase()->getOutputPos(finalModelPE);
 
     //--Output body pose and leg point--//        
     for (int i = 0; i < 16; i++) {
@@ -361,3 +435,11 @@ Ellipse4LegDrive3::Ellipse4LegDrive3(const std::string& name)
     "</Command>");
 }
 Ellipse4LegDrive3::~Ellipse4LegDrive3() = default;
+
+
+ARIS_REGISTRATION{
+    aris::core::class_<robot::Ellipse4LegDrive3>("Ellipse4LegDrive3").inherit<aris::plan::Plan>();
+    aris::core::class_<robot::TrotMove>("TrotMove").inherit<aris::plan::Plan>();
+    aris::core::class_<robot::StatePassive2Stance>("StatePassive2Stance").inherit<aris::plan::Plan>();
+    aris::core::class_<robot::StatePassive2Stance2>("StatePassive2Stance2").inherit<aris::plan::Plan>();
+}

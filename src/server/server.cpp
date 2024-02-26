@@ -1,7 +1,8 @@
-#include "server/server.h"
+#include "server/Server.h"
 #include "test/MotorTest.h"
 #include "motor/PIDTest.h"
 #include "fsm/BasicStateControl.h"
+#define ARIS_USE_ETHERCAT_SIMULATION
 
 
 namespace robot {
@@ -14,7 +15,7 @@ namespace robot {
   std::atomic_bool g_is_paused = false;
   std::atomic_bool g_is_stopped = false;
   std::atomic_bool g_emergency_stop = false;
-  int interval = 1; //²å²¹ÖÜÆÚ£¬µ¥Î»ms
+  int interval = 1; //ï¿½å²¹ï¿½ï¿½ï¿½Ú£ï¿½ï¿½ï¿½Î»ms
   double g_counter = 1.0 * interval;
   double g_count = 0.0;
   uint32_t connectioncounter = 0;
@@ -25,7 +26,7 @@ namespace robot {
     aris::Size motion_num = cs.controller().motorPool().size();
     //Size motion_num = 5;//----for 5 axes
 
-    //»ñÈ¡motionµÄÊ¹ÄÜ×´Ì¬£¬0±íÊ¾È¥Ê¹ÄÜ×´Ì¬£¬1±íÊ¾Ê¹ÄÜ×´Ì¬//
+    //ï¿½ï¿½È¡motionï¿½ï¿½Ê¹ï¿½ï¿½×´Ì¬ï¿½ï¿½0ï¿½ï¿½Ê¾È¥Ê¹ï¿½ï¿½×´Ì¬ï¿½ï¿½1ï¿½ï¿½Ê¾Ê¹ï¿½ï¿½×´Ì¬//
     for (aris::Size i = 0; i < motion_num; i++)
     {
       auto cm = dynamic_cast<aris::control::EthercatMotor*>(&cs.controller().motorPool()[i]);
@@ -39,7 +40,7 @@ namespace robot {
       }
     }
 
-    //»ñÈ¡ret_codeµÄÖµ£¬ÅÐ¶ÏÊÇ·ñ±¨´í£¬ifÌõ¼þ¿ÉÒÔ³õÊ¼»¯±äÁ¿£¬²¢ÇÒÈ¡±äÁ¿½øÐÐÌõ¼þÅÐ¶Ï//
+    //ï¿½ï¿½È¡ret_codeï¿½ï¿½Öµï¿½ï¿½ï¿½Ð¶ï¿½ï¿½Ç·ñ±¨´ï¿½ï¿½ï¿½ifï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô³ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð¶ï¿½//
     g_is_error.store(cs.errorCode());
 
     g_is_enabled.store(std::all_of(motion_state, motion_state + motion_num, [](bool i) { return i; }));
@@ -57,7 +58,7 @@ namespace robot {
     g_is_running.store(inter.isAutoRunning());
     g_is_paused.store(inter.isAutoPaused());
     g_is_stopped.store(inter.isAutoStopped());
-    //ÔÝÍ£¡¢»Ö¸´¹¦ÄÜ¸´Î»//
+    //ï¿½ï¿½Í£ï¿½ï¿½ï¿½Ö¸ï¿½ï¿½ï¿½ï¿½Ü¸ï¿½Î»//
     if (!inter.isAutoRunning())
     {
       g_counter = 1.0 * interval;
@@ -78,8 +79,8 @@ namespace robot {
     //socket lose connection
     //if(!g_socket_connected.exchange(true))cs.setErrorCode(-4000);
 
-    //»ñÈ¡Á¦´«¸ÐÆ÷Êý¾Ý£¬²¢½øÐÐÂË²¨--Ìõ¼þÊÇÁ¦´«¸ÐÆ÷´æÔÚ
-    //ÕâÀïÖ»ÊÇ¼òµ¥Í¨¹ý´ÓÕ¾ÊýÁ¿³¬¹ý6½øÐÐÅÐ¶Ï£¬µÚÆß¸ö´ÓÕ¾¿ÉÒÔÊÇioÒ²¿ÉÒÔÊÇÁ¦´«¸ÐÆ÷£¬ÓÃ»§ÐèÒªÍ¨¹ýFS_NUMÀ´Éè¶¨
+    //ï¿½ï¿½È¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ý£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ë²ï¿½--ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+    //ï¿½ï¿½ï¿½ï¿½Ö»ï¿½Ç¼ï¿½Í¨ï¿½ï¿½ï¿½ï¿½Õ¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½6ï¿½ï¿½ï¿½ï¿½ï¿½Ð¶Ï£ï¿½ï¿½ï¿½ï¿½ß¸ï¿½ï¿½ï¿½Õ¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ioÒ²ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ã»ï¿½ï¿½ï¿½ÒªÍ¨ï¿½ï¿½FS_NUMï¿½ï¿½ï¿½è¶¨
     // if (cs.controller().slavePool().size() > FS_NUM)
     // {
     //     auto slave7 = dynamic_cast<aris::control::EthercatSlave*>(&cs.controller().slavePool().at(FS_NUM));
@@ -101,7 +102,7 @@ namespace robot {
     // }
   }
   auto get_state_code() -> std::int32_t
-    //»ñÈ¡×´Ì¬×Ö¡ª¡ª100:È¥Ê¹ÄÜ,200:ÊÖ¶¯,300:×Ô¶¯,400:³ÌÐòÔËÐÐÖÐ,410:³ÌÐòÔÝÍ£ÖÐ,420:³ÌÐòÍ£Ö¹£¬500:´íÎó
+    //ï¿½ï¿½È¡×´Ì¬ï¿½Ö¡ï¿½ï¿½ï¿½100:È¥Ê¹ï¿½ï¿½,200:ï¿½Ö¶ï¿½,300:ï¿½Ô¶ï¿½,400:ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½,410:ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í£ï¿½ï¿½,420:ï¿½ï¿½ï¿½ï¿½Í£Ö¹ï¿½ï¿½500:ï¿½ï¿½ï¿½ï¿½
   {
     if (g_is_enabled.load())
     {
@@ -146,7 +147,7 @@ namespace robot {
   }
   struct GetParam
   {
-    std::vector<std::vector<double>> part_pq; // ÔõÃ´»ñµÃ body_pq?
+    std::vector<std::vector<double>> part_pq; // ï¿½ï¿½Ã´ï¿½ï¿½ï¿½ body_pq?
     std::int32_t state_code;
     bool is_cs_started;
     std::string currentPlan;
@@ -248,8 +249,9 @@ namespace robot {
   auto createMasterROSMotorTest() -> std::unique_ptr<aris::control::Master> {
     std::unique_ptr<aris::control::Master> master(new aris::control::EthercatMaster);
 
-    for (aris::Size i = 0; i < 12; ++i) {
-      int phy_id[12] = { 8,9,10,5,3,4,6,7,11,0,1,2 };
+    for (aris::Size i = 0; i < 1; ++i) {
+      // int phy_id[12] = { 0,1,2,3,4,5,6,7,8,9,10,11};
+      int phy_id[12] = {0};
       //----------------------------------Daniel for Single_leg Servo Motor Success in 2023.10.14--------------------------------------//
               // std::string xml_str =
               //    "<EthercatSlave phy_id=\"" + std::to_string(phy_id[i]) + "\" product_code=\"0x00\""
@@ -349,7 +351,7 @@ namespace robot {
         // -1.4974336956172, 0.128106570548551, 0.844257485597249,
         // -1.4974336956172, 0.128106570548551, 0.844257485597249,
         // -1.4974336956172, 0.128106570548551, 0.844257485597249,
-        // -1.4974336956172, 0.128106570548551, 0.844257485597249, // ¶È£º 85£¬ 7.4, 48.35
+        // -1.4974336956172, 0.128106570548551, 0.844257485597249, // ï¿½È£ï¿½ 85ï¿½ï¿½ 7.4, 48.35
         // -0.894181369710104, 0.119132782939402, 0.844199961317703
 
         // -PI/2, -PI/4, -PI/2,
@@ -367,16 +369,21 @@ namespace robot {
         // 0, PI/4, -PI/2,             
       };
 #endif
-      double pos_factor[12] //Æ«ÖÃÏµÊý//
+      double pos_factor[12] //Æ«ï¿½ï¿½Ïµï¿½ï¿½//
       {
         // 2000/PI,2000/PI,2000/PI
-        131072 * 5 / PI,131072 * 5 / PI,131072 * 10 / PI,
-        131072 * 5 / PI,131072 * 5 / PI,131072 * 10 / PI,
-        131072 * 5 / PI,131072 * 5 / PI,131072 * 10 / PI,
-        131072 * 5 / PI,131072 * 5 / PI,131072 * 10 / PI,
+        // 524288 * 5 / PI,524288 * 5 / PI,524288 * 10 / PI,
+        // 524288 * 5 / PI,524288 * 5 / PI,524288 * 10 / PI,
+        // 524288 * 5 / PI,524288 * 5 / PI,524288 * 10 / PI,
+        // 524288 * 5 / PI,524288 * 5 / PI,524288 * 10 / PI,
+
+        524288 * 1 / 2 * PI, 524288 * 1 / 2 * PI, 524288 * 1 / 2 * PI,
+        524288 * 1 / 2 * PI, 524288 * 1 / 2 * PI, 524288 * 1 / 2 * PI,
+        524288 * 1 / 2 * PI, 524288 * 1 / 2 * PI, 524288 * 1 / 2 * PI,
+        524288 * 1 / 2 * PI, 524288 * 1 / 2 * PI, 524288 * 1 / 2 * PI,
 
       };
-      double max_pos[12] //×î´óÎ»ÖÃ//
+      double max_pos[12] //ï¿½ï¿½ï¿½Î»ï¿½ï¿½//
       {
         // 500*PI,500*PI,500*PI  
         // PI/6, PI/2, 2 * PI/3
@@ -390,7 +397,7 @@ namespace robot {
         500 * PI,500 * PI,500 * PI,
 
       };
-      double min_pos[12] //×îÐ¡Î»ÖÃ//
+      double min_pos[12] //ï¿½ï¿½Ð¡Î»ï¿½ï¿½//
       {
           -500 * PI,-500 * PI,-500 * PI,
           -500 * PI,-500 * PI,-500 * PI,
@@ -401,7 +408,7 @@ namespace robot {
           // -0.6, -0.4, -1.8,
           // -0.6, -0.4, -1.8,
       };
-      double max_vel[12]  //×î´óËÙ¶È//
+      double max_vel[12]  //ï¿½ï¿½ï¿½ï¿½Ù¶ï¿½//
       {
         // 330 / 60 * 2 * PI, 330 / 60 * 2 * PI,  330 / 60 * 2 * PI
         1, 1, 1,
@@ -409,7 +416,7 @@ namespace robot {
         1, 1, 1,
         1, 1, 1,
       };
-      double max_acc[12]  //×î´ó¼ÓËÙ¶È//
+      double max_acc[12]  //ï¿½ï¿½ï¿½ï¿½ï¿½Ù¶ï¿½//
       {
         // 3000,  3000,  3000
         10, 10, 10,
@@ -452,7 +459,7 @@ namespace robot {
     plan_root->planPool().add<aris::plan::Start>();
     plan_root->planPool().add<aris::plan::Stop>();
 
-    //-------------×Ô¼ºÐ´µÄÃüÁî-----------------//
+    //-------------ï¿½Ô¼ï¿½Ð´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½-----------------//
     plan_root->planPool().add<robot::Ellipse4LegDrive3>();
     plan_root->planPool().add<robot::TrotMove>();
     plan_root->planPool().add<robot::ReadInformation>();
@@ -461,9 +468,10 @@ namespace robot {
     plan_root->planPool().add<robot::SetMotorPosZero>();
     plan_root->planPool().add<robot::PidVelCtrl>();
     plan_root->planPool().add<robot::PidPosVelCtrl>();
-    plan_root->planPool().add<robot::PidPosVelToqCtrl>(); 
+    plan_root->planPool().add<robot::PDMixedControl>(); 
     plan_root->planPool().add<robot::ToqTest>(); 
     plan_root->planPool().add<robot::StatePassive2Stance>();
+    plan_root->planPool().add<robot::StatePassive2Stance2>();
     return plan_root;
   }
   auto setMaxTorque(aris::control::EthercatMaster* ecMaster, std::uint16_t value, size_t index) -> bool
@@ -500,4 +508,64 @@ namespace robot {
     }
     return true;
   }
+
+/*----------------------------------------------------*/
+
+struct MotorConfig::Imp {
+
+    double feed_constant_ = 360; //å½“é‡æ¯”(æœºæ¢°ç»“æž„è¡Œç¨‹/å‡é€Ÿæœºè¾“å‡ºç«¯è½¬1åœˆ)--ç›´çº¿è½´:å¯¼ç¨‹mm/1åœˆ;æ—‹è½¬è½´:360åº¦/1åœˆ
+    double gear_ratio_ = 1.0;    //å‡é€Ÿæ¯”
+    int resolution_ = 131072;       //ç”µæœºåˆ†è¾¨çŽ‡
+    int direction_ = 1;        //1ï¼šç”µæœºé¡ºæ—¶é’ˆæ–¹å‘ï¼›-1ï¼šç”µæœºé€†æ—¶é’ˆæ–¹å‘------
+    double unit_factor_ = 180.0 / aris::PI;
+    std::string  motion_type_ = "rotatory"; // 1è¡¨ç¤ºæ—‹è½¬ ï¼› 2è¡¨ç¤ºç›´çº¿
+    uint32_t current;
+    uint32_t torque;
+    int64_t encoder_pulse;
+};
+auto MotorConfig::setFeedConstant(double feed_constant)->void { imp_->feed_constant_ = feed_constant; }
+auto MotorConfig::getFeedConstant()const->double { return imp_->feed_constant_; }
+auto MotorConfig::setGearRatio(double gear_ratio)->void { imp_->gear_ratio_ = gear_ratio; }
+auto MotorConfig::getGearRatio()const->double { return imp_->gear_ratio_; }
+auto MotorConfig::setResolution(int resolution)->void { imp_->resolution_ = resolution; }
+auto MotorConfig::getResolution()const ->int { return imp_->resolution_; }
+auto MotorConfig::setDirection(int direction)->void { imp_->direction_ = direction; }
+auto MotorConfig::getDirection()const ->int { return imp_->direction_; }
+auto MotorConfig::setMotionType(std::string  motion_type)->void { imp_->motion_type_ = motion_type; }
+auto MotorConfig::getMotionType()const->std::string { return imp_->motion_type_; }
+
+MotorConfig::MotorConfig(aris::control::EthercatSlave* slave
+    , double max_pos, double min_pos, double max_vel, double min_vel, double max_acc, double min_acc
+    , double max_pos_following_error, double max_vel_following_error, double pos_factor, double pos_offset, double home_pos
+    , double unit_factor, double feed_constant, double gear_ratio, int resolution, int direction, int motion_type)
+    :aris::control::EthercatMotor(slave, max_pos, min_pos, max_vel, min_vel, max_acc, min_acc, max_pos_following_error,
+        max_vel_following_error, pos_factor, pos_offset, home_pos) {}
+MotorConfig::~MotorConfig() = default;
+
+
+
+
+ARIS_REGISTRATION{
+    aris::core::class_<MotorConfig>("MotorConfig")
+    .inherit<aris::control::EthercatMotor>()
+    .prop("feed_constant",&MotorConfig::setFeedConstant,&MotorConfig::getFeedConstant)
+    .prop("gear_ratio",&MotorConfig::setGearRatio,&MotorConfig::getGearRatio)
+    .prop("resolution",&MotorConfig::setResolution,&MotorConfig::getResolution)
+    .prop("direction",&MotorConfig::setDirection,&MotorConfig::getDirection)
+    .prop("motion_type",&MotorConfig::setMotionType,&MotorConfig::getMotionType)
+    ;
+}
+
+    // plan_root->planPool().add<robot::Ellipse4LegDrive3>();
+    // plan_root->planPool().add<robot::TrotMove>();
+    // plan_root->planPool().add<robot::ReadInformation>();
+    // plan_root->planPool().add<robot::ModelMotorInitialize>();
+    // plan_root->planPool().add<robot::MotorTest>();
+    // plan_root->planPool().add<robot::SetMotorPosZero>();
+    // plan_root->planPool().add<robot::PidVelCtrl>();
+    // plan_root->planPool().add<robot::PidPosVelCtrl>();
+    // plan_root->planPool().add<robot::PidPosVelToqCtrl>(); 
+    // plan_root->planPool().add<robot::ToqTest>(); 
+    // plan_root->planPool().add<robot::StatePassive2Stance>();
+    // plan_root->planPool().add<robot::StatePassive2Stance2>();
 }

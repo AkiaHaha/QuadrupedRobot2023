@@ -4,7 +4,7 @@
 #include <iostream>
 #include <array>
 #include <aris.hpp>
-#include "tools/operator.h"
+#include "tools/Operator.h"
 
 using namespace aris::dynamic;
 
@@ -42,7 +42,7 @@ public:
 	auto getTc()->double { return Tc_; };  //运行一次T型曲线所需要的时间
 	auto getClassifyNumber(int count)->double ;
 	//Tcurve(double a, double v) { a_ = a; v_ = v; getCurveParam(); }  //构造函数
-	Tcurve::Tcurve(double a, double v) : a_(a), v_(v) {
+	Tcurve(double a, double v) : a_(a), v_(v) {
 		getCurveParam();
 	}
 

@@ -25,5 +25,6 @@ namespace robot{
 		~QuadrupedRbtModel();
 	};
 	auto createQuadrupedRbtModelPtr() -> std::unique_ptr<aris::dynamic::Model>;
+    auto createQuadrupedRbtModelPtr2() -> std::unique_ptr<aris::dynamic::Model>;
 }
 #endif 

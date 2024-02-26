@@ -1,28 +1,3 @@
-//-----------------Model and control of Whole body with four legs_E2------------------------//
-//
-//   {leg_3}<motor 6, 7, 8>                         {leg_2}<motor 3, 4, 5>
-//
-//			      []---o							              	o----[]  
-//				      	  \			       0.126		       /
-//				 	         \ 	       kBodyWidth       /
-//				 	          o---o________________o---o    
-//				           			|                |             Z *----------------* Y
-//				          			|                |                                |
-//				          			|                |                                |
-//				           			|                |                                |
-//	<@---Top View---@>		|                |   0.60398                      |
-//				          			|       O        |  kBodylong                     |
-//				          			|                |                                |            
-//												|                |                               \_/ X 
-//				 	[]---o			  |                |      o----[]
-//								 \	    |                |     /    
-// 			          	\	    |                |    /
-//			          	 	o---o________________o---o            
-//		                                  
-//        {leg_4}<motor 9, 10, 11>      {leg_1}<motor 0, 1, 2>
-//						     
-//   < The dog's forward move direction is along the positive direction of X axis >
-//------------------------------------------------------------------------------------------//
 #include "model/Model.h"
 #include "aris.hpp"
 
@@ -37,7 +12,7 @@ void robot::QuadrupedRbtModel::createQuadrupedRbtModel()
 
 	//---set body's size---//
 	const double kBodyLong  = 0.420; // x方向
-	const double kBodyWidth = 0.260;   // z方向
+	const double kBodyWidth = 0.130;   // z方向
 	// const double kBodyHigh  = 0.530;   // y方向
 
 	//---define ee pose---//
@@ -205,6 +180,178 @@ auto robot::createQuadrupedRbtModelPtr() -> std::unique_ptr<aris::dynamic::Model
 	return std::unique_ptr<aris::dynamic::Model>(new QuadrupedRbtModel);
 }
 
+auto robot::createQuadrupedRbtModelPtr2() -> std::unique_ptr<aris::dynamic::Model>
+{
+    std::unique_ptr<aris::dynamic::Model> model (new aris::dynamic::Model);
+
+    //---part Length-->unit(m)---//
+    const double L1 = 0.1195;
+    const double L2 = 0.240;
+    const double L3 = 0.240;
+    const double PI = 3.14159265358979323846;
+
+    //---set body's size---//
+    const double kBodyLong  = 0.420; // x方向
+    const double kBodyWidth = 0.130;   // z方向
+    // const double kBodyHigh  = 0.530;   // y方向
+
+    //---define ee pose---//
+    const double ee_pose[4][6]
+    {
+        { kBodyLong / 2, -L3 - L2, -(kBodyWidth / 2) - L1, 0.0, 0.0, 0.0},   //leg1 ->0 1  2
+        {-kBodyLong / 2, -L3 - L2, -(kBodyWidth / 2) - L1, 0.0, 0.0, 0.0},   //leg2 ->3 4  5
+        {-kBodyLong / 2, -L3 - L2,  (kBodyWidth / 2) + L1, 0.0, 0.0, 0.0},   //leg3 ->6 7  8
+        { kBodyLong / 2, -L3 - L2,  (kBodyWidth / 2) + L1, 0.0, 0.0, 0.0},   //leg4 ->9 10 11
+    };
+
+
+    //---set gravity---//
+    const double gravity[6]{ 0.0, -9.8, 0.0, 0.0, 0.0, 0.0 };
+    model->environment().setGravity(gravity);
+
+    //---define joint pos---//
+    const double joint_pos[12][3]
+    {
+        {  kBodyLong / 2,   0, -kBodyWidth / 2      },
+        {  kBodyLong / 2,   0, -kBodyWidth / 2 - L1 },
+        {  kBodyLong / 2, -L2, -kBodyWidth / 2 - L1 },
+        { -kBodyLong / 2,   0, -kBodyWidth / 2      },
+        { -kBodyLong / 2,   0, -kBodyWidth / 2 - L1 },
+        { -kBodyLong / 2, -L2, -kBodyWidth / 2 - L1 },
+        { -kBodyLong / 2,   0,  kBodyWidth / 2      },
+        { -kBodyLong / 2,   0,  kBodyWidth / 2 + L1 },
+        { -kBodyLong / 2, -L2,  kBodyWidth / 2 + L1 },
+        {  kBodyLong / 2,   0,  kBodyWidth / 2      },
+        {  kBodyLong / 2,   0,  kBodyWidth / 2 + L1 },
+        {  kBodyLong / 2, -L2,  kBodyWidth / 2 + L1 },
+    };
+
+    //---define iv param---//
+    //iv:10x1 inertia vector [m, cx, cy, cz, Ixx, Iyy, Izz, Ixy, Ixz, Iyz]//
+    const double body_iv[10]{ 15.1007177439,0,0,0,0.68976308,0.612989762,0.1389151407,0,0,0 };
+    //leg1
+    const double lf_p1_iv[10]{ 2.3523814491,0,0,0,1.0480809884E-02,8.8825903772E-03,4.266754639E-03,0,0,0 };
+    const double lf_p2_iv[10]{ 0.5868045476,0,0,0,6.9738871315E-03,6.8932585512E-03,5.6065308443E-04,0,0,0 };
+    const double lf_p3_iv[10]{ 1.0111367876,0,0,0,1.1955933401E-02,1.1656650714E-02,5.8819775854E-04,0,0,0 };
+    //leg2
+    const double lr_p1_iv[10]{ 2.3523814491,0,0,0,1.0480809884E-02,8.8825903772E-03,4.266754639E-03,0,0,0 };
+    const double lr_p2_iv[10]{ 0.5868045476,0,0,0,6.9738871315E-03,6.8932585512E-03,5.6065308443E-04,0,0,0 };
+    const double lr_p3_iv[10]{ 1.0111367876,0,0,0,1.1955933401E-02,1.1656650714E-02,5.8819775854E-04,0,0,0 };
+    //leg3
+    const double rr_p1_iv[10]{ 2.3523814491,0,0,0,1.0480809884E-02,8.8825903772E-03,4.266754639E-03,0,0,0 };
+    const double rr_p2_iv[10]{ 0.5868045476,0,0,0,6.9738871315E-03,6.8932585512E-03,5.6065308443E-04,0,0,0 };
+    const double rr_p3_iv[10]{ 1.0111367876,0,0,0,1.1955933401E-02,1.1656650714E-02,5.8819775854E-04,0,0,0 };
+    //leg4
+    const double rf_p1_iv[10]{ 2.3523814491,0,0,0,1.0480809884E-02,8.8825903772E-03,4.266754639E-03,0,0,0 };
+    const double rf_p2_iv[10]{ 0.5868045476,0,0,0,6.9738871315E-03,6.8932585512E-03,5.6065308443E-04,0,0,0 };
+    const double rf_p3_iv[10]{ 1.0111367876,0,0,0,1.1955933401E-02,1.1656650714E-02,5.8819775854E-04,0,0,0 };
+
+
+    //---add part---//
+    //abreviation--<left, right>-<forward, rear>//
+    auto& body = model->partPool().add<aris::dynamic::Part>("BODY", body_iv);
+    //leg1
+    auto& lf_p1 = model->partPool().add<aris::dynamic::Part>("LF_P1", lf_p1_iv);
+    auto& lf_p2 = model->partPool().add<aris::dynamic::Part>("LF_P2", lf_p2_iv);
+    auto& lf_p3 = model->partPool().add<aris::dynamic::Part>("LF_P3", lf_p3_iv);
+    //leg2
+    auto& lr_p1 = model->partPool().add<aris::dynamic::Part>("LR_P1", lr_p1_iv);
+    auto& lr_p2 = model->partPool().add<aris::dynamic::Part>("LR_P2", lr_p2_iv);
+    auto& lr_p3 = model->partPool().add<aris::dynamic::Part>("LR_P3", lr_p3_iv);
+    //leg3
+    auto& rr_p1 = model->partPool().add<aris::dynamic::Part>("RR_P1", rr_p1_iv);
+    auto& rr_p2 = model->partPool().add<aris::dynamic::Part>("RR_P2", rr_p2_iv);
+    auto& rr_p3 = model->partPool().add<aris::dynamic::Part>("RR_P3", rr_p3_iv);
+    //leg4
+    auto& rf_p1 = model->partPool().add<aris::dynamic::Part>("RF_P1", rf_p1_iv);
+    auto& rf_p2 = model->partPool().add<aris::dynamic::Part>("RF_P2", rf_p2_iv);
+    auto& rf_p3 = model->partPool().add<aris::dynamic::Part>("RF_P3", rf_p3_iv);
+
+    //---add joints---//
+    //leg1
+    auto& lf_j1 = model->addRevoluteJoint(lf_p1, body, joint_pos[0], std::array<double, 3>{1, 0, 0}.data());
+    auto& lf_j2 = model->addRevoluteJoint(lf_p2, lf_p1, joint_pos[1], std::array<double, 3>{0, 0, 1}.data());
+    auto& lf_j3 = model->addRevoluteJoint(lf_p3, lf_p2, joint_pos[2], std::array<double, 3>{0, 0, 1}.data());
+    //leg2
+    auto& lr_j1 = model->addRevoluteJoint(lr_p1, body, joint_pos[3], std::array<double, 3>{1, 0, 0}.data());
+    auto& lr_j2 = model->addRevoluteJoint(lr_p2, lr_p1, joint_pos[4], std::array<double, 3>{0, 0, 1}.data());
+    auto& lr_j3 = model->addRevoluteJoint(lr_p3, lr_p2, joint_pos[5], std::array<double, 3>{0, 0, 1}.data());
+    //leg3
+    auto& rr_j1 = model->addRevoluteJoint(rr_p1, body, joint_pos[6], std::array<double, 3>{1, 0, 0}.data());
+    auto& rr_j2 = model->addRevoluteJoint(rr_p2, rr_p1, joint_pos[7], std::array<double, 3>{0, 0, 1}.data());
+    auto& rr_j3 = model->addRevoluteJoint(rr_p3, rr_p2, joint_pos[8], std::array<double, 3>{0, 0, 1}.data());
+    //leg4
+    auto& rf_j1 = model->addRevoluteJoint(rf_p1, body, joint_pos[9], std::array<double, 3>{1, 0, 0}.data());
+    auto& rf_j2 = model->addRevoluteJoint(rf_p2, rf_p1, joint_pos[10], std::array<double, 3>{0, 0, 1}.data());
+    auto& rf_j3 = model->addRevoluteJoint(rf_p3, rf_p2, joint_pos[11], std::array<double, 3>{0, 0, 1}.data());
+
+
+    // add motion //
+    //leg1
+    auto& lf_m1 = model->addMotion(lf_j1);
+    auto& lf_m2 = model->addMotion(lf_j2);
+    auto& lf_m3 = model->addMotion(lf_j3);
+    //leg2
+    auto& lr_m1 = model->addMotion(lr_j1);
+    auto& lr_m2 = model->addMotion(lr_j2);
+    auto& lr_m3 = model->addMotion(lr_j3);
+    //leg3
+    auto& rr_m1 = model->addMotion(rr_j1);
+    auto& rr_m2 = model->addMotion(rr_j2);
+    auto& rr_m3 = model->addMotion(rr_j3);
+    //leg4
+    auto& rf_m1 = model->addMotion(rf_j1);
+    auto& rf_m2 = model->addMotion(rf_j2);
+    auto& rf_m3 = model->addMotion(rf_j3);
+
+
+    // add end-effector //
+    auto body_ee_maki = body.addMarker("body_ee_mak_i");
+    auto body_ee_makj = model->ground().addMarker("body_ee_mak_j");
+
+    auto& body_ee = model->generalMotionPool().add<aris::dynamic::GeneralMotion>("body_ee", &body_ee_maki, &body_ee_makj);
+    body_ee.setPoseType(aris::dynamic::GeneralMotion::PoseType::POSE_MATRIX);
+
+    auto& lf_ee = model->addPointMotion(lf_p3, model->ground(), ee_pose[0]);
+    model->ground().markerPool().back().setPrtPe(std::array<double, 6>{0, 0, 0, 0, 0, 0}.data());
+    auto& lr_ee = model->addPointMotion(lr_p3, model->ground(), ee_pose[1]);
+    model->ground().markerPool().back().setPrtPe(std::array<double, 6>{0, 0, 0, 0, 0, 0}.data());
+    auto& rr_ee = model->addPointMotion(rr_p3, model->ground(), ee_pose[2]);
+    model->ground().markerPool().back().setPrtPe(std::array<double, 6>{0, 0, 0, 0, 0, 0}.data());
+    auto& rf_ee = model->addPointMotion(rf_p3, model->ground(), ee_pose[3]);
+    model->ground().markerPool().back().setPrtPe(std::array<double, 6>{0, 0, 0, 0, 0, 0}.data());
+
+
+    // add force //
+    auto& f1 = model->forcePool().add<aris::dynamic::GeneralForce>("f1", lf_ee.makI(), lf_ee.makJ());
+    auto& f2 = model->forcePool().add<aris::dynamic::GeneralForce>("f2", lr_ee.makI(), lr_ee.makJ());
+    auto& f3 = model->forcePool().add<aris::dynamic::GeneralForce>("f3", rr_ee.makI(), rr_ee.makJ());
+    auto& f4 = model->forcePool().add<aris::dynamic::GeneralForce>("f4", rf_ee.makI(), rf_ee.makJ());
+
+    // add solver //
+    auto& inverse_kinematic_solver = model->solverPool().add<aris::dynamic::InverseKinematicSolver>();
+    auto& forward_kinematic_solver = model->solverPool().add<aris::dynamic::ForwardKinematicSolver>();
+    auto& inverse_dynamic_solver = model->solverPool().add<aris::dynamic::InverseDynamicSolver>();
+    auto& forward_dynamic_solver = model->solverPool().add<aris::dynamic::ForwardDynamicSolver>();
+
+    auto& fix_body_universal = model->solverPool().add<aris::dynamic::UniversalSolver>();
+    auto& stand_universal = model->solverPool().add<aris::dynamic::UniversalSolver>();
+    auto& other = model->solverPool().add<aris::dynamic::UniversalSolver>();
+
+    // add simulator and simulation results //
+    auto& adams = model->simulatorPool().add<aris::dynamic::AdamsSimulator>();
+    auto& result = model->simResultPool().add<aris::dynamic::SimResult>();
+
+    // initialization  the model and output to verify it //
+    model->init();
+    std::cout << "Successful modeling Haha !" << std::endl;
+       return model;
+
+}
+ARIS_REGISTRATION
+{
+	   aris::core::class_<robot::QuadrupedRbtModel>("QuadrupedRbtModel");
+}
 
 // //-----------------Model and control of Whole body with four legs------------------------//
 // //

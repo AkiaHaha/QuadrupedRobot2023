@@ -3,10 +3,41 @@
 #include <aris.hpp>
 #include <motor/PidController.h>
 #include <control/Plan.h>
-#include "server/server.h"
+#include "server/Server.h"
 #include <tools/Operator.h>
 
 namespace robot {
+  class  StatePassive2Stance2 : public aris::core::CloneObject<StatePassive2Stance2, aris::plan::Plan> {
+  public:
+    auto virtual prepareNrt()->void;
+    auto virtual executeRT()->int;
+    auto virtual collectNrt()->void;
+
+    virtual ~StatePassive2Stance2();
+    explicit StatePassive2Stance2(const std::string& name = "StatePassive2Stance");
+
+  private:
+    robot::PidController2 legPidPosController[3] = {
+      robot::PidController2(20, 0.02, 0.1),
+      robot::PidController2(30, 0.03, 0.15),
+      robot::PidController2(40, 0.04, 0.2)
+    };
+    robot::PidController2 VelLoopController{ 25, 0.1, 0.1 };
+    robot::PidController2 PosLoopController{ 1, 1, 1 };
+
+    double init_mPos_[12]{};
+    double init_BodyPPFootEE_[28]{};
+    double move_height_{};
+    double move_BodyPPFootEE_[28]{};
+    double move_mPos_[12]{};
+
+    double toq_[12]{};
+    double vel_[12]{};
+    double pos_[12]{};
+    double vel_des_[12]{};
+    double toq_cmd_[12]{};
+  };
+
 
   class  StatePassive2Stance : public aris::core::CloneObject<StatePassive2Stance, aris::plan::Plan> {
   public:
@@ -31,13 +62,6 @@ namespace robot {
     double move_height_{};
     double move_BodyPPFootEE_[28]{};
     double move_mPos_[12]{};
-
-    double toq_[12]{};
-    double vel_[12]{};
-    double pos_[12]{};
-    double vel_des_[12]{};
-    double toq_cmd_[12]{};
-
   };
 
   /// <summary>

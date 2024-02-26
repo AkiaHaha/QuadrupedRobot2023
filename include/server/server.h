@@ -7,18 +7,14 @@
 #include <string>
 #include <bitset>
 #include <math.h>
-#include "control/Robot.h"
-#include "model/Model.h"
-#include "tools/Operator.h"
 #include <memory>
 #include "tools/Operator.h"
 #include "control/Plan.h"
 #include "tools/json.hpp"
 #include "control/Robot.h"
 #include "control/Plan.h"
-#include "server/server.h"
+#include "server/Server.h"
 #include "model/Model.h"
-#include "tools/Operator.h"
 using namespace aris::dynamic;
 using namespace aris::plan;
 const double PI = aris::PI;
@@ -31,7 +27,7 @@ namespace robot {
     auto virtual collectNrt()->void;
     explicit DogGet(const std::string& name = "DogGet_plan");
     // ARIS_DEFINE_BIG_FOUR(DogGet);
-    // Èç¹ûÓÐ²ÎÊý£¬ÐèÒªÖ¸¶¨ÏàÓ¦µÄ³ÉÔ±±äÁ¿ÓÃÀ´»ñÈ¡ºÍÊ¹ÓÃ²ÎÊý
+    // ï¿½ï¿½ï¿½ï¿½Ð²ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÒªÖ¸ï¿½ï¿½ï¿½ï¿½Ó¦ï¿½Ä³ï¿½Ô±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È¡ï¿½ï¿½Ê¹ï¿½Ã²ï¿½ï¿½ï¿½
   };
 
   /// <summary>
@@ -68,6 +64,56 @@ namespace robot {
   /// <returns></returns>
   auto setOperationMode(aris::control::Controller* controller, std::uint8_t mode, size_t index) -> bool;
   auto setAllOperationMode(aris::control::Controller* controller, std::uint8_t mode) -> bool;
+
+
+//--------------------------------------/ 
+    class  MotorConfig :public aris::control::EthercatMotor
+    {
+
+    public:
+
+        auto setFeedConstant(double feed_constant)->void;
+        auto getFeedConstant()const->double;
+
+        auto setGearRatio(double gear_ratio)->void;
+        auto getGearRatio()const->double;
+
+        auto setResolution(int resolution)->void;
+        auto getResolution()const ->int;
+
+        auto setDirection(int direction)->void;
+        auto getDirection()const ->int;
+
+        auto setMotionType(std::string motion_type)->void;
+        auto getMotionType()const->std::string;
+
+    private:
+
+        struct Imp;
+
+        aris::core::ImpPtr<Imp>imp_;
+
+    public:
+
+        virtual ~MotorConfig();
+
+        MotorConfig(aris::control::EthercatSlave* slave = nullptr
+
+            , double max_pos = 1.0, double min_pos = -1.0, double max_vel = 1.0, double min_vel = -1.0, double max_acc = 1.0, double min_acc = -1.0
+
+            , double max_pos_following_error = 1.0, double max_vel_following_error = 1.0, double pos_factor = 1.0, double pos_offset = 0.0, double home_pos = 0.0
+
+            , double unit_factor = 180.0 / aris::PI, double feed_constant = 360.0, double gear_ratio = 1.0, int resolution = 131072, int direction = 1, int motion_type = 1);
+
+        MotorConfig(const MotorConfig& other) = delete;
+
+        MotorConfig(EthercatMotor&& other) = delete;
+
+        MotorConfig& operator=(const MotorConfig& other) = delete;
+
+        MotorConfig& operator=(MotorConfig&& other) = delete;
+
+    };
 
 }
 #endif // !QRBT_SERVER_H

@@ -3,9 +3,9 @@
 #include<vector>
 #include<iostream>
 #include "aris.hpp"
-#include "tools/operator.h"
-#include "model/model.h"
+#include "model/Model.h"
 #include "control/Plan.h"
+#include "tools/Operator.h"
 using namespace std;
 
 auto Tcurve::getCurve(int count)->double
